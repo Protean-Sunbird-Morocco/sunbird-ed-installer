@@ -108,7 +108,7 @@ serviceMonitor:
 cloud_public_storage_endpoint: ""
 itext_license_enabled: false
 itext_license_path: "/home/sunbird/itext_trail_license.xml"
-cloud_service_provider: "azure"
+cloud_service_provider: "gcp"
 java_options: -Xmx600m
 sunbird_cert_enc_service_url: "http://enc-service:8013"
 download_link_expiry_timeout: "600"

@@ -8,7 +8,7 @@ provisioningAnnotations: &provisioningAnnotations
   "helm.sh/hook-weight": "-4"
 
 redis: &redis
-  enabled: true
+  enabled: false
   nameOverride: "redis"
   fullnameOverride: "redis"
   auth:
@@ -24,7 +24,7 @@ redis: &redis
       size: 25Gi
 
 elasticsearch: &es
-  enabled: true
+  enabled: false
   nameOverride: "elasticsearch"
   fullnameOverride: "elasticsearch"
   host: "elasticsearch"
@@ -64,7 +64,7 @@ elasticsearch: &es
 
 
 postgresql: &postgresql
-  enabled: true
+  enabled: false
   image:
     repository: bitnami/postgresql
     tag: 11.14.0-debian-10-r49
@@ -82,7 +82,7 @@ postgresql: &postgresql
   - name: "druid"
 
 cassandra: &cassandra
-  enabled: true
+  enabled: false
   nameOverride: "cassandra"
   fullnameOverride: "cassandra"
   host: "cassandra"
@@ -111,7 +111,7 @@ zookeeper: &zookeeper
 
 kafka: &kafka
   zookeeper: *zookeeper
-  enabled: true
+  enabled: false
   nameOverride: "kafka"
   fullnameOverride: "kafka"
   clientProtocol: PLAINTEXT
@@ -169,7 +169,7 @@ kafka: &kafka
     parallel: 1
 
 druid: &druid
-  enabled: true
+  enabled: false
   host: druid-raw-routers
   port: 8888
   coordinatorhost: druid-raw-coordinators
@@ -317,8 +317,8 @@ confVolume: &confVolume
               jar_location="$data_path/content-snapshot.zip"
               [[ -d $data_path ]] || mkdir -p $data_path
               # Download the ZIP file
-              [[ -f $jar_location ]] || curl -o $data_path/content-snapshot.zip "https://{{.Values.global.azure_storage_account_name}}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/artifacts-{{.Values.global.release_version}}/content-snapshot.zip"
-              curl -o /data/analytics/spark-3.1.3-bin-hadoop2.7.tgz "https://{{.Values.global.azure_storage_account_name}}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/artifacts-{{.Values.global.release_version}}/spark-3.1.3-bin-hadoop2.7.tgz"
+              [[ -f $jar_location ]] || curl -o $data_path/content-snapshot.zip "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/artifacts-{{.Values.global.release_version}}/content-snapshot.zip"
+              curl -o /data/analytics/spark-3.1.3-bin-hadoop2.7.tgz "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/artifacts-{{.Values.global.release_version}}/spark-3.1.3-bin-hadoop2.7.tgz"
               unzip -o $jar_location -d $data_path
 
               tar -xvf /data/analytics/spark-3.1.3-bin-hadoop2.7.tgz -C "/data/analytics"
@@ -330,7 +330,7 @@ confVolume: &confVolume
               [[ -d $data_path ]] || mkdir -p $data_path
 
               # Download the ZIP file if it doesn't exist
-              [[ -f $jar_location_sbob ]] || curl -o $jar_location_sbob "https://{{.Values.global.azure_storage_account_name}}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/artifacts-{{.Values.global.release_version}}/sunbird-obsrv-1.0-v3.zip"
+              [[ -f $jar_location_sbob ]] || curl -o $jar_location_sbob "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/artifacts-{{.Values.global.release_version}}/sunbird-obsrv-1.0-v3.zip"
 
               # Extract the ZIP file if not already extracted
               [[ -d $extracted_location ]] || unzip -o $jar_location_sbob -d $data_path
@@ -345,7 +345,7 @@ confVolume: &confVolume
               adhoc_extracted_loc="$data_path/dataproducts.tar.gz"
 
               # dowload the tar.gz adhoc dataproducts
-              curl -o $data_path/dataproducts.zip https://{{.Values.global.azure_storage_account_name}}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/artifacts-{{.Values.global.release_version}}/dataproducts_artifacts_release-3.6.zip
+              curl -o $data_path/dataproducts.zip https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/artifacts-{{.Values.global.release_version}}/dataproducts_artifacts_release-3.6.zip
 
               # Extract the ZIP file if not already extracted
               [[ -d $adhoc_extracted_loc ]] || unzip -o $adhoc_loc -d $data_path

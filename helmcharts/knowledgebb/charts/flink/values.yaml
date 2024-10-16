@@ -112,10 +112,10 @@ s3_endpoint: ""
 s3_path_style_access: ""
 
 cloud_storage:
-  type: "azure"
+  type: "gcp"
 cloudstorage_metadatalist: '["appIcon","posterImage","artifactUrl","downloadUrl","variants","previewUrl","pdfUrl", "streamingUrl", "toc_url"]'
-cloudstorage_write_base_path: '["https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"]'
-cloudstorage_read_base_path: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+cloudstorage_write_base_path: '["https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"]'
+cloudstorage_read_base_path: "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
 cloudstorage_relative_path_prefix: "CONTENT_STORAGE_BASE_PATH"
 
 log4j_console_properties: |
@@ -169,7 +169,7 @@ base_config: |
     statebackend {
       blob {
         storage {
-          account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+          account = "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
           container = "flink-check-points-store"
           checkpointing.dir = "checkpoint"
         }
@@ -245,9 +245,9 @@ flink_jobs:
       cloudstorage.metadata.replace_absolute_path=true
       cloudstorage.relative_path_prefix= "CONTENT_STORAGE_BASE_PATH"
       cloudstorage.read_base_path="{{ include "common.tplvalues.render" (dict "value" .Values.cloudstorage_read_base_path "context" $) }}"
-      cloudstorage.write_base_path=["https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"] 
+      cloudstorage.write_base_path=["https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/] 
       cloudstorage.mecloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
-      cloud_storage_container="{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
 
     flink-conf: |+
       jobmanager.memory.flink.size: 1024m
@@ -289,7 +289,7 @@ flink_jobs:
       }
 
       schema {
-        basePath = "{{ include "common.tplvalues.render" (dict "value" .Values.cloudstorage_read_base_path "context" $) }}/{{ .Values.global.azure_public_container_name }}/schemas/local/content/"
+        basePath = "{{ include "common.tplvalues.render" (dict "value" .Values.cloudstorage_read_base_path "context" $) }}/{{ .Values.global.gcp_public_bucket_name }}/schemas/local/content/"
       }
 
       channel.default = "org.sunbird"
@@ -358,9 +358,9 @@ flink_jobs:
       cloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
 
       cloud_storage_type="{{ .Values.cloud_storage.type }}"
-      cloud_storage_key="{{ .Values.global.azure_storage_account_name }}"
-      cloud_storage_secret="{{ .Values.global.azure_storage_account_key }}"
-      cloud_storage_container="{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_key="{{ .Values.global.gcp_storage_account_name }}"
+      cloud_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
+      cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_endpoint=""
 
 
@@ -435,9 +435,9 @@ flink_jobs:
       cloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
 
       cloud_storage_type="{{ .Values.cloud_storage.type }}"
-      cloud_storage_key="{{ .Values.global.azure_storage_account_name }}"
-      cloud_storage_secret="{{ .Values.global.azure_storage_account_key }}"
-      cloud_storage_container="{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_key="{{ .Values.global.gcp_storage_account_name }}"
+      cloud_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
+      cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_endpoint=""
 
 
@@ -560,9 +560,9 @@ flink_jobs:
       cloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
 
       cloud_storage_type="{{ .Values.cloud_storage.type }}"
-      cloud_storage_key="{{ .Values.global.azure_storage_account_name }}"
-      cloud_storage_secret="{{ .Values.global.azure_storage_account_key }}"
-      cloud_storage_container="{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_key="{{ .Values.global.gcp_storage_account_name }}"
+      cloud_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
+      cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_endpoint=""
 
 
@@ -915,9 +915,9 @@ flink_jobs:
       cloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
 
       cloud_storage_type="{{ .Values.cloud_storage.type }}"
-      cloud_storage_key="{{ .Values.global.azure_storage_account_name }}"
-      cloud_storage_secret="{{ .Values.global.azure_storage_account_key }}"
-      cloud_storage_container="{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_key="{{ .Values.global.gcp_storage_account_name }}"
+      cloud_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
+      cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_endpoint=""
     flink-conf: |+
       jobmanager.memory.flink.size: 1024m

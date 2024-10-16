@@ -97,7 +97,7 @@ serviceMonitor:
   honorLabels: true
   jobLabel: "app.kubernetes.io/name"
 
-cloud_storage_type: "azure"
+cloud_storage_type: "gcp"
 
 sunbird_default_device_token: ""
 sunbird_external_content_whitelisted_domains: ""
@@ -117,9 +117,11 @@ sidecars: {}
 opa_enabled: false
 
 global:
-  azure_private_container_name: ""
-  azure_storage_account_name: sunbird
-  azure_storage_account_key: xxxxxxx
+
+  gcp_storage_account_name: sunbird
+  gcp_bucket_name: sunbird-public
+  gcp_storage_account_key: /Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json
+  gcp_private_container_name: ""
   sunbird_admin_api_token: ""
   sunbird_anonymous_register_token: ""
   sunbird_loggedin_register_token: ""

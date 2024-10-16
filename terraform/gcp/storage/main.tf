@@ -1,7 +1,7 @@
 provider "google" {
   project     = var.project_id
   region      = var.location
-  credentials = file("/home/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json")
+  credentials = file("/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json")
 }
 
 locals {
@@ -29,7 +29,7 @@ resource "google_storage_bucket" "storage_bucket_private" {
     response_header = ["Access-Control-Allow-Origin", "Access-Control-Allow-Methods"]
   }
 
-  uniform_bucket_level_access = true 
+  uniform_bucket_level_access = false 
 }
 
 resource "google_storage_bucket" "storage_bucket_public" {
@@ -53,7 +53,7 @@ resource "google_storage_bucket" "storage_bucket_public" {
     response_header = ["Access-Control-Allow-Origin", "Access-Control-Allow-Methods"]
   }
 
-  uniform_bucket_level_access = true 
+  uniform_bucket_level_access = false 
 }
 
 resource "google_storage_bucket_iam_member" "storage_bucket_public_access" {
@@ -83,7 +83,7 @@ resource "google_storage_bucket" "reports_bucket_private" {
     response_header = ["Access-Control-Allow-Origin", "Access-Control-Allow-Methods"]
   }
 
-  uniform_bucket_level_access = true 
+  uniform_bucket_level_access = false
 }
 
 resource "google_storage_bucket" "telemetry_bucket_private" {
@@ -107,7 +107,7 @@ resource "google_storage_bucket" "telemetry_bucket_private" {
     response_header = ["Access-Control-Allow-Origin", "Access-Control-Allow-Methods"]
   }
 
-  uniform_bucket_level_access = true 
+  uniform_bucket_level_access = false
 }
 
 resource "google_storage_bucket" "backups_bucket_private" {
@@ -131,7 +131,7 @@ resource "google_storage_bucket" "backups_bucket_private" {
     response_header = ["Access-Control-Allow-Origin", "Access-Control-Allow-Methods"]
   }
 
-  uniform_bucket_level_access = true  
+  uniform_bucket_level_access = false 
 }
 
 resource "google_storage_bucket" "flink_state_bucket_private" {
@@ -155,7 +155,7 @@ resource "google_storage_bucket" "flink_state_bucket_private" {
     response_header = ["Access-Control-Allow-Origin", "Access-Control-Allow-Methods"]
   }
 
-  uniform_bucket_level_access = true  
+  uniform_bucket_level_access = false 
 }
 
 resource "google_storage_bucket" "dial_state_bucket_public" {
@@ -179,7 +179,7 @@ resource "google_storage_bucket" "dial_state_bucket_public" {
     response_header = ["Access-Control-Allow-Origin", "Access-Control-Allow-Methods"]
   }
 
-  uniform_bucket_level_access = true  
+  uniform_bucket_level_access = false 
 }
 
 resource "google_storage_bucket_iam_member" "dial_state_bucket_public_access" {

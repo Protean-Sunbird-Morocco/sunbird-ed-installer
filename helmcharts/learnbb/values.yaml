@@ -16,7 +16,7 @@ provisioningAnnotations: &provisioningAnnotations
   "helm.sh/hook-weight": "-4"
 
 postgresql: &postgresql
-  enabled: true
+  enabled: false
   fullnameOverride: "postgresql"
   host: postgresql
   port: 5432
@@ -34,7 +34,7 @@ postgresql: &postgresql
   - name: "registry"
 
 elasticsearch: &es
-  enabled: true
+  enabled: false
   fullnameOverride: "elasticsearch"
   host: "elasticsearch"
   port: 9200
@@ -71,7 +71,7 @@ elasticsearch: &es
     tag: 11-debian-11-r54
 
 redis: &redis
-  enabled: true
+  enabled: false
   fullnameOverride: "redis"
   auth:
     enabled: false
@@ -86,7 +86,7 @@ redis: &redis
       size: 25Gi
 
 cassandra: &cassandra
-  enabled: true
+  enabled: false
   nameOverride: "cassandra"
   fullnameOverride: "cassandra"
   host: "cassandra"
@@ -115,7 +115,7 @@ zookeeper: &zookeeper
 
 kafka: &kafka
   zookeeper: *zookeeper
-  enabled: true
+  enabled: false
   fullnameOverride: "kafka"
   clientProtocol: PLAINTEXT
   host: "kafka"
@@ -146,7 +146,7 @@ druid: &druid
     size: 25Gi
 
 neo4j: &neo4j
-  enabled: true
+  enabled: false
   host: "neo4j"
   port: 7687
   boltPort: 8687

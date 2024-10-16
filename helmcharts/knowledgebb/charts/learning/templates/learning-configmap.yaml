@@ -257,9 +257,9 @@ data:
 
     #Cloud Storage details
     cloud_storage_type="{{ .Values.cloud_storage.type }}"
-    cloud_storage_key="{{ .Values.global.azure_storage_account_name }}"
-    cloud_storage_secret="{{ .Values.global.azure_storage_account_key }}"
-    cloud_storage_container="{{ .Values.global.azure_public_container_name }}"
+    cloud_storage_key="{{ .Values.global.gcp_storage_account_name }}"
+    cloud_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
+    cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
     cloud_storage_endpoint=""
 
     installation.id="sunbird"
@@ -319,7 +319,7 @@ data:
       metadata.replace_absolute_path=true
       relative_path_prefix="{{ .Values.cloudstorage_relative_path_prefix_content }}"
       metadata.list={{ .Values.cloudstorage_metadata_list }}
-      read_base_path="https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
-      write_base_path="https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+      read_base_path="https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
+      write_base_path="https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
 
     }

@@ -208,7 +208,7 @@ druid_proxy_api_endpoint: /druid/v2/
 collection_summary_agg_data_source: 'audit-rollup-syncts'
 collection_summary_agg_cache_ttl: "21600"
 enrollment_list_size: "1000"
-sunbird_cloud_service_provider: "azure"
+sunbird_cloud_service_provider: "gcp"
 isMultiDCEnabled: "false"
 sunbird_dial_service_base_url: "http://dial-service:9000"
 sunbird_dial_service_search_url: "/dialcode/v3/search"

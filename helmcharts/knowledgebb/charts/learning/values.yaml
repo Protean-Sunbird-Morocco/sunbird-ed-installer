@@ -20,7 +20,7 @@ strategy:
 serviceType: ClusterIP
 
 cloud_storage:
-  type: "azure"
+  type: "gcp"
 cloudstorage_relative_path_prefix_content: contents
 cloudstorage_metadata_list: '["appIcon", "artifactUrl", "posterImage", "previewUrl", "thumbnail", "assetsMap", "certTemplate", "itemSetPreviewUrl", "grayScaleAppIcon", "sourceURL", "variants", "downloadUrl", "streamingUrl", "toc_url", "data", "question", "solutions", "editorState", "media", "pdfUrl", "transcripts"]'
 cloudstorage_read_base_path: ""

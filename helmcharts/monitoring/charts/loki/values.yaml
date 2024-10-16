@@ -291,7 +291,7 @@ loki:
       chunkBufferSize: 0
       requestTimeout: "0s"
       enableHttp2: true
-    azure:
+    gcp:
       accountName: null
       accountKey: null
       connectionString: null

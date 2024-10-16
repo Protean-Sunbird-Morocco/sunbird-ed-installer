@@ -27,10 +27,10 @@ CRON_SCHEDULE: '"00 00 * * *"'
 PG_USER: "postgres"
 PG_HOST: "postgresql"
 PGPASSWORD: "postgres"
-AZURE_STORAGE_ACCOUNT: ""
-AZURE_KEY: ""
-CLOUD_SERVICE: "azure"
-azure_backups_container_name: "backups"
+GCP_STORAGE_ACCOUNT: ""
+GCP_KEY: ""
+CLOUD_SERVICE: "gcp"
+gcp_backups_container_name: "sunbird-backups"
 
 postgresql: &postgresql
   enabled: true
@@ -39,6 +39,6 @@ postgresql: &postgresql
   postgresqlPassword: postgres
 
 global:
-  azure_storage_account_name: ""
-  azure_storage_account_key: ""
+  gcp_storage_account_name: ""
+  gcp_storage_account_key: ""
   postgresql: *postgresql

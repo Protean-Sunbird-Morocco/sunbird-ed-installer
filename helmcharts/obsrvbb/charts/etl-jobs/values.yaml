@@ -36,7 +36,7 @@ redis:
   scan_count: "100000"
 
 
-cloud_storage_type: "azure"
+cloud_storage_type: "gcp"
 elasticsearch:
   content:
     index: "compositesearch"

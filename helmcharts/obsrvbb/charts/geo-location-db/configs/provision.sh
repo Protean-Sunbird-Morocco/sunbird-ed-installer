@@ -8,7 +8,7 @@ echo "Download maxmind_custom_data_mapping.csv file"
 wget -O maxmind_custom_data_mapping.csv {{ .Values.maxmind_custom_data_mapping_url }}
 
 echo "Download Maxmind GeoCity database"
-wget "https://{{.Values.global.azure_storage_account_name}}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/artifacts-{{.Values.global.release_version}}/{{.Values.maxmind_db_zip_filename}}"
+wget "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}//artifacts-{{.Values.global.release_version}}/{{.Values.maxmind_db_zip_filename}}"
 
 echo "Unarchive Maxmind GeoCity database"
 unzip {{ .Values.maxmind_db_dir_name }}.zip

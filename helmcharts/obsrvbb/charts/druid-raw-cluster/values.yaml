@@ -85,7 +85,7 @@ storageClass: "managed-premium"
 
 ######################### Druid common variables ########################
 druid_directory: "/opt/druid"
-druid_extensions_loadList: '"postgresql-metadata-storage", "druid-kafka-indexing-service", "druid-azure-extensions"'
+druid_extensions_loadList: '"postgresql-metadata-storage", "druid-kafka-indexing-service", "druid-gcp-extensions"'
 
 # Logging
 # Log all runtime properties on startup. Disable to avoid logging properties on startup:
@@ -94,21 +94,21 @@ druid.startup.logging.logProperties: true
 # Druid Metadata Store
 druid_metadata_storage_type: "postgresql"
 druid_postgres: "jdbc:postgresql"
-druid_deepstorage_type: "azure"
+druid_deepstorage_type: "gcp"
 druid_storage_directory: "/data"
 druid_postgresql_db: "druid_raw"
 
 
-# Azure Container Details
-azure_storage_account_name: ""
-azure_storage_account_key: ""
-azure_storage_container: "reports"
+# Gcp Container Details
+gcp_storage_account_name: ""
+gcp_storage_account_key: ""
+gcp_storage_container: "sunbird-reports"
 
 
 # Indexing service logs
 # For local disk (only viable in a cluster_type if this is a network mount):
-druid_indexer_logs_type: "azure"
-druid_indexer_logs_container: "reports"
+druid_indexer_logs_type: "gcp"
+druid_indexer_logs_container: "sunbird-reports"
 druid_indexer_logs_prefix: "backups/druid/druid-task-logs"
 druid_indexer_logs_directory: "backups/druid/druid-task-logs"
 
@@ -309,7 +309,7 @@ druid_router_managementProxy_enabled: True
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations:
     serviceAccountName: ""

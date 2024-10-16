@@ -23,7 +23,7 @@
                "iconColor": "red",
                "name": "WAL Truncations",
                "target": {
-                  "queryType": "Azure Monitor",
+                  "queryType": "gcp Monitor",
                   "refId": "Anno"
                },
                "titleFormat": "{{tenant}}"

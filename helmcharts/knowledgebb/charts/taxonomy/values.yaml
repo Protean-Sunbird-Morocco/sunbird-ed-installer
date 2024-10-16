@@ -104,7 +104,7 @@ framework:
   categories_cached: '["subject", "medium", "gradeLevel", "board"]'
 
 cloud_storage: 
-  type: "azure"
+  type: "gcp"
 
 javaenv: 
   javaoptions: -Xms500m -Xmx500m

@@ -18,7 +18,7 @@ neo4j: &neo4j
     waitForNeo4j: "true"
 
 redis: &redis
-  enabled: true
+  enabled: false
   nameOverride: "redis"
   fullnameOverride: "redis"
   auth:
@@ -79,7 +79,7 @@ elasticsearch: &es
     tag: 11-debian-11-r54
 
 cassandra: &cassandra
-  enabled: true
+  enabled: false
   nameOverride: "cassandra"
   fullnameOverride: "cassandra"
   host: "cassandra"
@@ -101,7 +101,7 @@ cassandra: &cassandra
 
 kafka: &kafka
   zookeeper: *zookeeper
-  enabled: true
+  enabled: false
   nameOverride: "kafka"
   fullnameOverride: "kafka"
   clientProtocol: PLAINTEXT
@@ -158,7 +158,7 @@ global:
   gcp_storage_account_name: sunbird
   gcp_public_container_name: sunbird-public
   env: dev
-  gcp_storage_account_key: /Users/krishna/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
+  gcp_storage_account_key: /Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json
   gcp_bucket_name: sunbird-public
   private_ingressgateway_ip: 10.0.0.10
   gcp_project_id: sunbird-morocco-sandbox-434709

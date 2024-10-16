@@ -109,7 +109,7 @@ dialcode:
   cloudstorage:
     metadata_replace_absolute_path: "true"
     relative_path_prefix: "DIAL_STORAGE_BASE_PATH"
-    read_base_path: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+    read_base_path: "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
 dial_storage_container: "dial"
 
 search:
@@ -119,7 +119,7 @@ search:
   connection_timeout: 30
 
 jsonld:
-  basePath: "https://sunbirdstagingpublic.blob.core.windows.net/sunbird-dial-staging/jsonld-schema/local"
+  basePath: "https://storage.googleapis.com/sunbird-dial-staging/jsonld-schema/local"
   type: "sbed"
   localPath: "/tmp"
   ttl: 43200

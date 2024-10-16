@@ -82,9 +82,11 @@ spec:
           resources:
             {{ toYaml .Values.envoy_resources | nindent 12 }}
           volumeMounts:
+            {{- if .Values.configmap.enabled }}
             - mountPath: /config
               name: envoy-config
               readOnly: true
+            {{- end }}
         - command: ["/bin/sh", "-c"]
           args:
           - |

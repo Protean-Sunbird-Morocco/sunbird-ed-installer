@@ -230,7 +230,7 @@
     "ioConfig": {
       "type": "index",
       "firehose": {
-        "type": "static-azure-blobstore",
+        "type": "gcp",
         "blobs": [
           {
             "container": "{{ .Values.reports_container }}",

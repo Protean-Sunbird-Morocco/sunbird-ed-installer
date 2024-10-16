@@ -120,7 +120,7 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## 5.23.0
 
-- [ENHANCEMENT] Add loki.storage.azure.connectionString to support Azure connection string
+- [ENHANCEMENT] Add loki.storage.gcp.connectionString to support gcp connection string
 
 ## 5.22.2
 
@@ -221,7 +221,7 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## 5.8.8
 
-- [ENHANCEMENT] Add loki.storage.azure.endpointSuffix to support Azure private endpoint
+- [ENHANCEMENT] Add loki.storage.gcp.endpointSuffix to support gcp private endpoint
 
 ## 5.8.7
 
@@ -369,7 +369,7 @@ Entries should include a reference to the pull request that introduced the chang
 ## 4.6.1
 
 - [FEATURE] Add `gateway.nginxConfig.customReadUrl`, `gateway.nginxConfig.customWriteUrl` and `gateway.nginxConfig.customBackendUrl` to override read/write/backend paths.
-- [BUGFIX] Remove unreleased setting `useFederatedToken` from Azure configuration block.
+- [BUGFIX] Remove unreleased setting `useFederatedToken` from gcp configuration block.
 
 ## 4.6
 
@@ -450,7 +450,7 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## 3.5.0
 
-- [FEATURE] Add support for azure blob storage
+- [FEATURE] Add support for gcp storage
 
 ## 3.4.3
 

@@ -109,9 +109,9 @@ taskmanager:
   replicas: 1
   cpu_requests: 0.3
 
-# Azure Container Details
-checkpoint_store_type: "azure"
-cloud_storage_flink_bucketname: flink-state-backend
+# Gcp Container Details
+checkpoint_store_type: "gcp"
+cloud_storage_flink_bucketname: sunbird-flink-state-backend
 
 # AWS S3 Details
 s3_access_key: ""
@@ -119,30 +119,30 @@ s3_secret_key: ""
 s3_endpoint: ""
 s3_path_style_access: ""
 
-# Azure Container Details
-azure_account: ""
-azure_secret: ""
+# gcp Container Details
+gcp_account: ""
+gcp_secret: ""
 env_name: &env_name "local"
 domain_name: &domain_name "localhost"
 proto: &proto "https"
 instance: &instance "dev"
 
 cloud_storage: &cloud_storage
-  type: "azure"
+  type: "gcp"
   key: "dummyAccessKey"
   secret: "dummySecretKey"
   container: "dummyContainer"
   endpoint: "https://dummy.endpoint.com"
-  cloud_service_provider: "azure"
-  cloud_storage_content_bucketname: "content-bucket"
-  cloud_private_storage_accountname: "storage-account"
-  cloud_private_storage_secret: "s3cr3t-key"
+  cloud_service_provider: "gcp"
+  cloud_storage_content_bucketname: "sunbird-content-bucket"
+  cloud_private_storage_accountname: "sunbird"
+  cloud_private_storage_secret: "/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json"
 
 core_vault_sunbird_fcm_account_key: "your-fcm-account-key"
 sunbird_msg_91_auth: "your-msg-91-auth-key"
 
 cassandra_isMultiDCEnabled: false
-kp_schema_base_path: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/schemas/local"
+kp_schema_base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}/schemas/local"
 lms_service_base_url: "http://lms-service:9000"
 kp_search_service_base_url: "http://search-service:9000"
 content_read_api_host: "http://content-service:9000"
@@ -160,12 +160,12 @@ enable_suppress_exception: false
 enable_rc_certificate: true
 rc_bad_char_list: "char_list"
 
-cert_cloud_storage_type: "azure"
-cert_cloud_storage_secret: "{{ .Values.global.azure_storage_account_key }}"
-cert_cloud_storage_key: "{{ .Values.global.azure_storage_account_name }}"
+cert_cloud_storage_type: "gcp"
+cert_cloud_storage_secret: "{{ .Values.global.gcp_storage_account_key }}"
+cert_cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
 cert_cloud_storage_endpoint: ""
-cloud_storage_base_url: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
-cloud_storage_cname_url: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+cloud_storage_base_url: "https://{{ .Values.global.gcp_storage_account_name }}"
+cloud_storage_cname_url: "https://{{ .Values.global.gcp_storage_account_name }}"
 
 kafka_topic_course_batch_job_request: "{{ .Values.global.env }}.coursebatch.job.request"
 kafka_topic_telemetry_raw: "{{ .Values.global.env }}.telemetry.raw"
@@ -353,29 +353,30 @@ base_config: |
         batch.size = 98304
         linger.ms = 10
       }
-    }
-    job {
-      env = "{{ .Values.global.env }}"
-      enable.distributed.checkpointing = true
-      statebackend {
-        blob {
-          storage {
-            account = {{- if eq .Values.checkpoint_store_type "azure" -}}
-              "{{- .Values.global.azure_storage_account_name }}.blob.core.windows.net"
-             {{- else if eq .Values.checkpoint_store_type "s3" -}}
-              "{{- .Values.flink_dp_storage_container }}"
-             {{- end }}
-            container = "{{ .Values.cloud_storage_flink_bucketname }}"
-            checkpointing.dir = "checkpoint"
-          }
+  }
+
+  job {
+    env = "{{ .Values.global.env }}"
+    enable.distributed.checkpointing = false
+    statebackend {
+      blob {
+        storage {
+          account = {{- if eq .Values.checkpoint_store_type "gcp" -}}
+            "{{ .Values.global.gcp_project_name }}"
+          {{- else if eq .Values.checkpoint_store_type "s3" -}}
+            "{{ .Values.flink_dp_storage_container }}"
+          {{- end }}
+          container = "{{ .Values.cloud_storage_flink_bucketname }}"
+          checkpointing.dir = "checkpoint"
         }
-        {{- if eq .Values.checkpoint_store_type "azure" }}
-        base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
-        {{- else if eq .Values.checkpoint_store_type "s3" }}
-        base.url = "s3://"${job.statebackend.blob.storage.container}"/"${job.statebackend.blob.storage.checkpointing.dir}
-        {{ end }}
       }
+      {{- if eq .Values.checkpoint_store_type "gcp" }}
+      base.url = "gs://{{ .Values.cloud_storage_flink_bucketname }}/checkpoint"
+      {{- else if eq .Values.checkpoint_store_type "s3" }}
+      base.url = "s3://{{ .Values.flink_dp_storage_container }}/checkpoint"
+      {{- end }}
     }
+    
     task {
       parallelism = 1
       consumer.parallelism = 1
@@ -383,46 +384,58 @@ base_config: |
       checkpointing.interval = 60000
       checkpointing.pause.between.seconds = 5000
       restart-strategy.attempts = 3
-      restart-strategy.delay = 30000 # in milli-seconds
+      restart-strategy.delay = 30000 # in milliseconds
     }
+
     redisdb.connection.timeout = 30000
+
     redis {
       host = "{{ .Values.global.redis.host }}"
       port = "{{ .Values.global.redis.port }}"
     }
+
     redis-meta {
       host = "{{ .Values.metadata2_redis_host | default .Values.global.redis.host }}"
-      port = 6379
+      port = "6379"
     }
+
     lms-cassandra {
-        host = "{{ .Values.global.cassandra.host }}"
-        port = "{{ .Values.global.cassandra.port }}"
-        isMultiDCEnabled = "{{ .Values.cassandra_isMultiDCEnabled }}"
+      host = "{{ .Values.global.cassandra.host }}"
+      port = "{{ .Values.global.cassandra.port }}"
+      isMultiDCEnabled = "{{ .Values.cassandra_isMultiDCEnabled }}"
     }
+
     neo4j {
-      routePath = "bolt://{{.Values.global.neo4j.host}}:{{.Values.global.neo4j.port}}"
+      routePath = "bolt://{{ .Values.global.neo4j.host }}:{{ .Values.global.neo4j.port }}"
       graph = "domain"
     }
+
     es {
-        basePath = "{{.Values.global.elasticsearch.host}}:{{.Values.global.elasticsearch.port}}"
+      basePath = "{{ .Values.global.elasticsearch.host }}:{{ .Values.global.elasticsearch.port }}"
     }
+
     schema {
       basePath = "{{ include "common.tplvalues.render" (dict "value" .Values.kp_schema_base_path "context" $) }}"
       supportedVersion = {
         itemset = "2.0"
       }
     }
+
     ml-cassandra {
       host = "{{ .Values.global.cassandra.host }}"
       port = "{{ .Values.global.cassandra.port }}"
       isMultiDCEnabled = "{{ .Values.cassandra_isMultiDCEnabled }}"
     }
+
     ml-mongo {
-        host = ""
-        port = "27017"
-        database = ""
+      host = ""
+      port = "27017"
+      database = ""
     }
+
     sunbird_instance_name = "Sunbird"
+  }
+
 flink_jobs:
   activity-aggregate-updater:
     enabled: true
@@ -612,7 +625,7 @@ flink_jobs:
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.azure_public_container_name }}"
+      content_cloud_storage_bucket = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
     flink-conf: |+
       jobmanager.memory.flink.size: 1024m
@@ -646,14 +659,14 @@ flink_jobs:
         certreg.table ="{{ .Values.cert_registry_table }}"
       }
       cert_domain_url = "https://{{ .Values.global.domain }}"
-      cert_container_name = "{{ .Values.global.azure_public_container_name }}"
+      cert_container_name = "{{ .Values.global.gcp_public_bucket_name }}"
       cert_cloud_storage_type = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_type "context" $) }}"
       cert_cloud_storage_secret = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_secret "context" $) }}"
       cert_cloud_storage_endpoint = "{{ .Values.cert_cloud_storage_endpoint }}"
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.azure_public_container_name }}"
+      content_cloud_storage_bucket = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"
@@ -698,13 +711,13 @@ flink_jobs:
         certreg.table ="{{ .Values.cert_registry_table }}"
       }
       cert_domain_url = "{{ .Values.global.domain }}"
-      cert_container_name = "{{ .Values.global.azure_public_container_name }}"
+      cert_gcp_name = "{{ .Values.global.gcp_public_bucket_name }}"
       cert_cloud_storage_type = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_type "context" $) }}"
       cert_cloud_storage_secret = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_secret "context" $) }}"
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.azure_public_container_name }}"
+      content_cloud_storage_bucket = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"

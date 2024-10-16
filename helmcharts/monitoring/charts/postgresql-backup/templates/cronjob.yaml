@@ -36,9 +36,9 @@ spec:
               env:
                 - name: CLOUD_SERVICE
                   value: {{ .Values.CLOUD_SERVICE }}
-                - name: AZURE_CONTAINER
-                  value: {{ .Values.azure_backups_container_name }}
-                - name: AZURE_STORAGE_ACCOUNT
-                  value: {{ .Values.global.azure_storage_account_name }}
-                - name: AZURE_KEY
-                  value: {{ .Values.global.azure_storage_account_key }}
+                - name: GCP_BUCKET
+                  value: {{ .Values.gcp_backups_container_name }}
+                - name: GCP_STORAGE_ACCOUNT
+                  value: {{ .Values.global.gcp_storage_account_name }}
+                - name: GCP_KEY
+                  value: {{ .Values.global.gcp_storage_account_key }}

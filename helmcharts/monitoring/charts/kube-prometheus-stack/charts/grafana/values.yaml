@@ -495,7 +495,7 @@ extraSecretMounts: []
   #           expirationSeconds: 86400
   #           path: token
   #
-  # for CSI e.g. Azure Key Vault use the following
+  # for CSI e.g. Gcp Key Vault use the following
   # - name: secrets-store-inline
   #  mountPath: /run/secrets
   #  readOnly: true
@@ -693,8 +693,8 @@ dashboards: {}
   #   local-dashboard-bitbucket:
   #     url: cloudworklabs.in/repository/test-bitbucket.json
   #     bearerToken: ''
-  #   local-dashboard-azure:
-  #     url: cloudworklabs.in/repository/test-azure.json
+  #   local-dashboard-gcp:
+  #     url: cloudworklabs.in/repository/test-gcp.json
   #     basic: ''
   #     acceptHeader: '*/*'
 
@@ -833,7 +833,7 @@ sidecar:
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
-    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-gcp K8S
     # watchServerTimeout: 3600
     #
     # watchClientTimeout: is a client-side timeout, configuring your local socket.
@@ -884,7 +884,7 @@ sidecar:
     script: null
     skipReload: false
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
-    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-gcp K8S
     # watchServerTimeout: 3600
     #
     # watchClientTimeout: is a client-side timeout, configuring your local socket.
@@ -934,7 +934,7 @@ sidecar:
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
-    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-gcp K8S
     # watchServerTimeout: 3600
     #
     # watchClientTimeout: is a client-side timeout, configuring your local socket.
@@ -974,7 +974,7 @@ sidecar:
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
-    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-gcp K8S
     # watchServerTimeout: 3600
     #
     # watchClientTimeout: is a client-side timeout, configuring your local socket.
@@ -1014,7 +1014,7 @@ sidecar:
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
-    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-gcp K8S
     # watchServerTimeout: 3600
     #
     # watchClientTimeout: is a client-side timeout, configuring your local socket.

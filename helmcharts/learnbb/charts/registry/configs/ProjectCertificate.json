@@ -11,57 +11,55 @@
 	],
 	"title": "ProjectCertificate",
 	"definitions": {
-        "ProjectCertificate": {
-            "$id": "#/properties/ProjectCertificate",
-            "type": "object",
-            "title": "The ProjectCertificate Schema",
-            "required": [
-                "recipient"
-            ],
-            "properties": {
-                "status": {
-                    "type": "string",
-                    "enum": ["ACTIVE", "REVOKED", "DELETED"]
-                },
-                "recipient":{
-                    "$id": "#/properties/recipient",
-                    "$ref": "Recipient.json#/definitions/Recipient"
-                },
-                "templateUrl": {
-                    "type": "string"
-                },
-                "issuer":{
-                    "$id": "#/properties/issuer",
-                    "$ref": "Issuer.json#/definitions/Issuer"
-                },
-                "projectName":{
-                    "type": "string"
-                },
-                "projectId":{
-                    "type": "string"
-                },
-                "solutionId":{
-                    "type": "string"
-                },
-                "solutionName":{
-                    "type": "string"
-                },
-                "programId":{
-                    "type": "string"
-                },
-                "programName":{
-                    "type": "string"
-                },
-                "completedDate": {
-                    "type": "string"
-                }
-
-            }
-        }
-    },
+		"ProjectCertificate": {
+			"$id": "#/properties/ProjectCertificate",
+			"type": "object",
+			"title": "The ProjectCertificate Schema",
+			"required": [
+				"recipient"
+			],
+			"properties": {
+				"status": {
+					"type": "string",
+					"enum": ["ACTIVE", "REVOKED", "DELETED"]
+				},
+				"recipient": {
+					"$id": "#/properties/recipient",
+					"$ref": "Recipient.json#/definitions/Recipient"
+				},
+				"templateUrl": {
+					"type": "string"
+				},
+				"issuer": {
+					"$id": "#/properties/issuer",
+					"$ref": "Issuer.json#/definitions/Issuer"
+				},
+				"projectName": {
+					"type": "string"
+				},
+				"projectId": {
+					"type": "string"
+				},
+				"solutionId": {
+					"type": "string"
+				},
+				"solutionName": {
+					"type": "string"
+				},
+				"programId": {
+					"type": "string"
+				},
+				"programName": {
+					"type": "string"
+				},
+				"completedDate": {
+					"type": "string"
+				}
+			}
+		}
+	},
 	"_osConfig": {
-		"uniqueIndexFields": [
-		],
+		"uniqueIndexFields": [],
 		"ownershipAttributes": [],
 		"roles": [
 			"anonymous"
@@ -71,6 +69,6 @@
 		],
 		"systemFields": ["osCreatedAt", "osUpdatedAt", "osCreatedBy", "osUpdatedBy"],
 		"enableLogin": false,
-		"credentialTemplate": "https://{{ .Values.global.azure_storage_account_name}}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/schemas/project_credential_template.json"
+		"credentialTemplate": "gs://{{ .Values.global.gcp_public_bucket_name }}/schemas/project_credential_template.json"
 	}
 }

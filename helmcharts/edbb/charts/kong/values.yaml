@@ -149,7 +149,7 @@ postgresql: &postgresql
   postgresqlPassword: postgres
 
 global:
-  gcp_service_account_key: /home/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
+  gcp_service_account_key: /Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json
   postgresql: *postgresql
 
 provisioningAnnotations:

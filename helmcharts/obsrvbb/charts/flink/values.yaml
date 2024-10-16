@@ -128,16 +128,16 @@ s3_secret_key: ""
 s3_endpoint: ""
 s3_path_style_access: ""
 
-# Azure Container Details
-azure_account: "azure-test"
-azure_secret: "azure-secret"
+#GCP Container Details
+gcp_account: "gcp-test"
+gcp_secret: "gcp-secret"
 
-# Azure Container Details
-checkpoint_store_type: "azure"
-cloud_storage_flink_bucketname: flink-state-backend
+# GCP Container Details
+checkpoint_store_type: "gcp"
+cloud_storage_flink_bucketname: sunbird-flink-state-backend
 cloud_storage_content_bucketname: sunbird-content-dev
 cert_container_name: dev-e-credentials
-cloud_storage_endpoint: https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net
+cloud_storage_endpoint: https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/
 
 flink_dp_storage_container: ""
 checkpoint_interval: 60000
@@ -286,7 +286,7 @@ base_config: |
         statebackend {
           blob {
             storage {
-              account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+              account = "{{ .Values.global.gcp_storage_account_name }}"
               container = "{{ .Values.container }}"
               checkpointing.dir = "checkpoint"
             }
@@ -325,7 +325,7 @@ base_config: |
         port = "{{ .Values.global.cassandra.port }}"
       }
       schema {
-        basePath = "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net/contents/schemas/local"
+        basePath = "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/contents/schemas/local"
         supportedVersion = {
           itemset = "2.0"
         }
