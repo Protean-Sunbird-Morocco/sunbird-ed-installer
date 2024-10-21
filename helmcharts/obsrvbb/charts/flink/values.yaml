@@ -129,8 +129,8 @@ s3_endpoint: ""
 s3_path_style_access: ""
 
 #GCP Container Details
-gcp_account: "gcp-test"
-gcp_secret: "gcp-secret"
+gcp_account: "sunbird"
+gcp_secret: "/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json"
 
 # GCP Container Details
 checkpoint_store_type: "gcp"
