@@ -105,7 +105,7 @@ taskmanager:
 ### base-config related vars
 oci_flink_s3_storage_endpoint: "s3/storage/endpoint"
 postgres_max_connections: 2
-flink_container_name: flink-check-points-store
+flink_container_name: sunbird-flink-check-points-store
 checkpoint_interval: 60000
 checkpoint_pause_between_seconds: 5000
 checkpoint_compression_enabled: true
@@ -191,30 +191,46 @@ base_config: |
 
   job {
     env = "{{ .Values.global.env }}"
-    enable.distributed.checkpointing = false
+    enable.distributed.checkpointing = true
+    
     {{- if eq "oci" .Values.cloud_storage.type }}
     statebackend {
-      s3 {
-        storage {
-          endpoint = "{{ .Values.oci_flink_s3_storage_endpoint }}"
-          container = "{{ .Values.flink_container_name }}"
-          checkpointing.dir = "checkpoint"
+        s3 {
+            storage {
+                endpoint = "{{ .Values.oci_flink_s3_storage_endpoint }}"
+                container = "{{ .Values.flink_container_name }}"
+                checkpointing.dir = "checkpoint"
+            }
         }
-      }
-      base.url = "s3://"${job.statebackend.s3.storage.container}"/"${job.statebackend.s3.storage.checkpointing.dir}
+        base.url = "s3://${job.statebackend.s3.storage.container}/${job.statebackend.s3.storage.checkpointing.dir}"
     }
+    
+    {{- else if eq "gcp" .Values.cloud_storage.type }}
+    statebackend {
+        blob {
+            storage {
+                account = "storage.googleapis.com"
+                container = "{{ .Values.flink_container_name }}"
+                checkpointing.dir = "checkpoint"
+            }
+        }
+        base.url = "gs://${job.statebackend.blob.storage.container}/${job.statebackend.blob.storage.checkpointing.dir}"
+    }
+
     {{- else }}
     statebackend {
-      gcs {
-        storage {
-          bucket = "{{ .Values.global.gcp_bucket_name }}"
-          checkpointing.dir = "checkpoint"
+        blob {
+            storage {
+                account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+                container = "{{ .Values.global.azure_public_container_name }}"
+                checkpointing.dir = "checkpoint"
+            }
         }
-      }
-      base.url = "gs://sunbird-public/checkpoint"
+        base.url = "wasbs://${job.statebackend.blob.storage.container}@${job.statebackend.blob.storage.account}/${job.statebackend.blob.storage.checkpointing.dir}"
     }
     {{- end }}
   }
+
   task {
     parallelism = 1
     consumer.parallelism = 1

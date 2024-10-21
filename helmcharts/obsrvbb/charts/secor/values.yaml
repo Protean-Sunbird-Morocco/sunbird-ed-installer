@@ -11,7 +11,7 @@ s3_path_style_access: "s3_path_style_access"
 s3_bucket_name: "telemetry-data-store"
 
 storage_type: "gcp"
-storageClass: "default"
+storageClass: "standard-rwo"
 
 image:
   pullSecrets: []

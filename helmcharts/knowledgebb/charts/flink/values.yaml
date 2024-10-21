@@ -170,7 +170,7 @@ base_config: |
       blob {
         storage {
           account = "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
-          container = "flink-check-points-store"
+          container = "sunbird-flink-check-points-store"
           checkpointing.dir = "checkpoint"
         }
       }

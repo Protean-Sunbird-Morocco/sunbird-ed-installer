@@ -38,7 +38,7 @@ ingress: {}
 resources:
   requests:
     cpu: "0.5"
-    memory: "25Gi"
+    memory: "12Gi"
 
 autoscaling:
   enabled: false

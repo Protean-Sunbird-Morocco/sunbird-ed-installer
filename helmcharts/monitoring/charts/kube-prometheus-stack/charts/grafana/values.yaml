@@ -324,7 +324,7 @@ extraContainerVolumes: []
 persistence:
   type: pvc
   enabled: false
-  # storageClassName: default
+  # storageClassName: standard-rwo
   accessModes:
     - ReadWriteOnce
   size: 10Gi
