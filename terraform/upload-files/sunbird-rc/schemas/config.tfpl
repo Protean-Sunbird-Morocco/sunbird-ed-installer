@@ -1,7 +1,9 @@
 [gcpbucket]
 type = google cloud storage
 project = sunbird-morocco-sandbox-434709
-service_account_file = /Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json
+service_account_file = key.json 
+gcp_service_account_key_configmap: gcp-service-account-config
+gcp_service_account_key_file: key.json 
 
 
 [sunbird]

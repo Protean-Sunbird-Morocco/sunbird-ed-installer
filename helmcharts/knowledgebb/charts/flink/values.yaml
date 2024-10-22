@@ -5,7 +5,7 @@ replicaCount: 1
 
 image:
   repository: sunbirded.azurecr.io/knowledge-platform-jobs
-  tag: "release-5.5.0_RC2_037e2e9_84"
+  tag: "release-5.5.0_RC4_b5a56fc_57"
   pullPolicy: IfNotPresent
   pullSecrets: []
 
@@ -166,17 +166,26 @@ base_config: |
   job {
     env = "{{ .Values.global.env }}"
     enable.distributed.checkpointing = false
+    
     statebackend {
-      blob {
-        storage {
-          account = "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
-          container = "sunbird-flink-check-points-store"
-          checkpointing.dir = "checkpoint"
+        blob {
+            storage {
+                account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+                container = "flink-check-points-store"
+                checkpointing.dir = "checkpoint"
+            }
         }
-      }
-      base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
+
+        gcs {
+            bucket = "{{ .Values.global.gcp_bucket_name }}"
+            checkpointing.dir = "checkpoint"
+        }
+        
+        base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
+        gcs.base.url = "gs://"${job.statebackend.gcs.bucket}"/"${job.statebackend.gcs.checkpointing.dir}
     }
   }
+
   task {
     parallelism = 1
     consumer.parallelism = 1
@@ -435,9 +444,9 @@ flink_jobs:
       cloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
 
       cloud_storage_type="{{ .Values.cloud_storage.type }}"
-      cloud_storage_key="{{ .Values.global.gcp_storage_account_name }}"
-      cloud_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
-      cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
+      cloud_storage_key="{{ .Values.global.azure_storage_account_name }}"
+      cloud_storage_secret="{{ .Values.global.azure_storage_account_key }}"
+      cloud_storage_container="{{ .Values.global.azure_public_container_name }}"
       cloud_storage_endpoint=""
 
 

@@ -128,9 +128,21 @@ s3_secret_key: ""
 s3_endpoint: ""
 s3_path_style_access: ""
 
+# Azure Container Details
+azure_account: "azure-test"
+azure_secret: "azure-secret"
+
+# Azure Container Details
+checkpoint_store_type: "azure"
+cloud_storage_flink_bucketname: flink-state-backend
+cloud_storage_content_bucketname: sunbird-content-dev
+cert_container_name: dev-e-credentials
+cloud_storage_endpoint: https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net
+
 #GCP Container Details
 gcp_account: "sunbird"
-gcp_secret: "/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json"
+gcp_service_account_key_configmap: gcp-service-account-config
+gcp_service_account_key_file: key.json 
 
 # GCP Container Details
 checkpoint_store_type: "gcp"
@@ -138,6 +150,7 @@ cloud_storage_flink_bucketname: sunbird-flink-state-backend
 cloud_storage_content_bucketname: sunbird-content-dev
 cert_container_name: dev-e-credentials
 cloud_storage_endpoint: https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/
+
 
 flink_dp_storage_container: ""
 checkpoint_interval: 60000
@@ -281,19 +294,31 @@ base_config: |
         }
       }
       job {
-        env = "dev"
-        enable.distributed.checkpointing = false
-        statebackend {
-          blob {
+    env = "dev"
+    enable.distributed.checkpointing = false
+    
+    statebackend {
+        blob {
             storage {
-              account = "{{ .Values.global.gcp_storage_account_name }}"
-              container = "{{ .Values.container }}"
-              checkpointing.dir = "checkpoint"
+                {{- if eq .Values.checkpoint_store_type "azure" -}}
+                account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+                container = "{{ .Values.container }}"
+                {{- else if eq .Values.checkpoint_store_type "gcs" -}}
+                account = "{{ .Values.global.gcs_bucket_name }}"
+                container = "{{ .Values.container }}"
+                {{- end }}
+                checkpointing.dir = "checkpoint"
             }
-          }
-          base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
         }
-      }
+        
+        {{- if eq .Values.checkpoint_store_type "azure" }}
+        base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
+        {{- else if eq .Values.checkpoint_store_type "gcp" }}
+        base.url = "gs://"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
+        {{ end }}
+    }
+    }
+
       task {
         parallelism = 1
         consumer.parallelism = 1
@@ -945,4 +970,3 @@ assessment_aggregator_job_classname: org.sunbird.dp.assessment.task.AssessmentAg
 
 commonAnnotations:
   reloader.stakater.com/auto: "true"
-

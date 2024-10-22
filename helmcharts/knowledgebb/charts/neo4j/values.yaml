@@ -89,7 +89,7 @@ neo4j:
     annotations: "keep"
     resources:
       requests:
-        storage: 16Gi
+        storage: 25Gi
 
 
 logstash:

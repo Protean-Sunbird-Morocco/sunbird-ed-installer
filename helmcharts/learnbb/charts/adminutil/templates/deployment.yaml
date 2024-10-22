@@ -45,7 +45,7 @@ spec:
             {{- range .Values.service.ports }}
             - name: {{ .name }}
               containerPort: {{ .targetPort }}
-            {{- end }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           securityContext:
@@ -78,9 +78,9 @@ spec:
             name: keys
           - name: keycloak-key
             mountPath: /keycloak-keys/
-        {{- with .Values.sidecars }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- with .Values.sidecars }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
       - name: env
         configMap:

@@ -57,6 +57,7 @@ autoscaling:
           type: Utilization
           averageUtilization: 80
 
+
 nodeSelector: {}
 tolerations: []
 affinity: {}
@@ -105,7 +106,7 @@ taskmanager:
 ### base-config related vars
 oci_flink_s3_storage_endpoint: "s3/storage/endpoint"
 postgres_max_connections: 2
-flink_container_name: sunbird-flink-check-points-store
+flink_container_name: flink-check-points-store
 checkpoint_interval: 60000
 checkpoint_pause_between_seconds: 5000
 checkpoint_compression_enabled: true
@@ -121,7 +122,7 @@ inquiry_assessment_post_publish_kafka_topic_name: "{{ .Values.global.env }}.asse
 inquiry_assessment_publish_group: "{{ .Values.global.env }}-questionset-publish-group"
 question_keyspace_name: "{{ .Values.global.env }}_question_store"
 hierarchy_keyspace_name: "{{ .Values.global.env }}_hierarchy_store"
-kp_print_service_base_url: "http://print:9000"
+kp_print_service_base_url: "http://print:5000"
 # CNAME Config
 cloudstorage_relative_path_prefix: "CONTENT_STORAGE_BASE_PATH"
 cloudstorage_base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}"
@@ -142,7 +143,7 @@ user_pii_target_object_types: '{
   "Collection": ["1.0"]
 }'
 user_pii_replacement_value: "Deleted User"
-user_org_service_base_url: "http://{{ .Values.global.private_ingressgateway_ip }}/userorg"
+user_org_service_base_url: "http://userorg-service:9000"
 email_notification_subject: "User Account Deletion Notification"
 email_notification_regards: "Team"
 
@@ -151,7 +152,7 @@ cloud_storage:
 
 log4j_console_properties: |
   # This affects logging for both user code and Flink
-  rootLogger.level = debug
+  rootLogger.level = INFO
   rootLogger.appenderRef.console.ref = ConsoleAppender
 
   # Uncomment this if you want to _only_ change Flink's logging
@@ -163,7 +164,7 @@ log4j_console_properties: |
   # change the log levels here.
   logger.akka.name = akka
   logger.akka.level = ERROR
-  logger.kafka.name = org.apache.kafka
+  logger.kafka.name= org.apache.kafka
   logger.kafka.level = ERROR
   logger.hadoop.name = org.apache.hadoop
   logger.hadoop.level = ERROR
@@ -182,86 +183,79 @@ log4j_console_properties: |
 
 base_config: |
   kafka {
-    broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
-    zookeeper = "{{ .Values.global.zookeeper.host }}:{{ .Values.global.zookeeper.port }}"
-    producer {
-      max-request-size = {{ .Values.producer_max_request_size }}
+      broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
+      zookeeper = "{{ .Values.global.zookeeper.host }}:{{ .Values.global.zookeeper.port }}"
+      producer {
+        max-request-size = {{ .Values.producer_max_request_size }}
+      }
     }
-  }
-
-  job {
-    env = "{{ .Values.global.env }}"
-    enable.distributed.checkpointing = true
-    
-    {{- if eq "oci" .Values.cloud_storage.type }}
-    statebackend {
-        s3 {
-            storage {
-                endpoint = "{{ .Values.oci_flink_s3_storage_endpoint }}"
-                container = "{{ .Values.flink_container_name }}"
-                checkpointing.dir = "checkpoint"
+    job {
+      env = "{{ .Values.global.env }}"
+      enable.distributed.checkpointing = false
+      {{- if eq "oci" .Values.cloud_storage.type }}
+            statebackend {
+              s3 {
+                storage {
+                  endpoint = "{{ .Values.oci_flink_s3_storage_endpoint }}"
+                  container = "{{ .Values.flink_container_name }}"
+                  checkpointing.dir = "checkpoint"
+                }
+              }
+              base.url = "s3://"${job.statebackend.s3.storage.container}"/"${job.statebackend.s3.storage.checkpointing.dir}
             }
-        }
-        base.url = "s3://${job.statebackend.s3.storage.container}/${job.statebackend.s3.storage.checkpointing.dir}"
-    }
-    
-    {{- else if eq "gcp" .Values.cloud_storage.type }}
-    statebackend {
+      {{- else if eq "gcp" .Values.cloud_storage.type }}
+            statebackend {
+              gcs {
+                storage {
+                  bucket = "{{ .Values.gcp_public_bucket_name }}"
+                  checkpointing.dir = "checkpoint"
+                }
+              }
+              base.url = "gs://"${job.statebackend.gcs.storage.bucket}"/"${job.statebackend.gcs.storage.checkpointing.dir}
+            }
+      {{- else }}
+      statebackend {
         blob {
-            storage {
-                account = "storage.googleapis.com"
-                container = "{{ .Values.flink_container_name }}"
-                checkpointing.dir = "checkpoint"
-            }
+          storage {
+            account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+            container = "{{ .Values.global.azure_public_container_name }}"
+            checkpointing.dir = "checkpoint"
+          }
         }
-        base.url = "gs://${job.statebackend.blob.storage.container}/${job.statebackend.blob.storage.checkpointing.dir}"
-    }
-
-    {{- else }}
-    statebackend {
-        blob {
-            storage {
-                account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
-                container = "{{ .Values.global.azure_public_container_name }}"
-                checkpointing.dir = "checkpoint"
-            }
-        }
-        base.url = "wasbs://${job.statebackend.blob.storage.container}@${job.statebackend.blob.storage.account}/${job.statebackend.blob.storage.checkpointing.dir}"
-    }
+        base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
+      }
     {{- end }}
-  }
-
-  task {
-    parallelism = 1
-    consumer.parallelism = 1
-    checkpointing.compressed = {{ .Values.checkpoint_compression_enabled }}
-    checkpointing.interval = {{ .Values.checkpoint_interval }}
-    checkpointing.pause.between.seconds = {{ .Values.checkpoint_pause_between_seconds }}
-    restart-strategy.attempts = {{ .Values.restart_attempts }}
-    restart-strategy.delay = {{ .Values.restart_delay }} # in milli-seconds
-  }
-  redis {
-    host = {{ .Values.global.redis.host }}
-    port = {{ .Values.global.redis.port }}
-  }
-  lms-cassandra {
-    host = "{{ .Values.global.cassandra.host }}"
-    port = {{ .Values.global.cassandra.port }}
-  }
-  neo4j {
-    routePath = "bolt://{{ .Values.global.neo4j.host }}:{{ .Values.global.neo4j.port }}"
-    graph = "domain"
-  }
-  es {
-    basePath = "{{ .Values.global.elasticsearch.host }}:{{ .Values.global.elasticsearch.port }}"
-  }
-  schema {
-    basePath = "{{- include "common.tplvalues.render" (dict "value" .Values.global.schema.base_path "context" $) }}"
-    supportedVersion = {
-      itemset = "2.0"
     }
-  }
-
+    task {
+      parallelism = 1
+      consumer.parallelism = 1
+      checkpointing.compressed = {{ .Values.checkpoint_compression_enabled }}
+      checkpointing.interval = {{ .Values.checkpoint_interval }}
+      checkpointing.pause.between.seconds = {{ .Values.checkpoint_pause_between_seconds }}
+      restart-strategy.attempts = {{ .Values.restart_attempts }}
+      restart-strategy.delay = {{ .Values.restart_delay }} # in milli-seconds
+    }
+    redis {
+      host = {{ .Values.global.redis.host }}
+      port = {{ .Values.global.redis.port }}
+    }
+    lms-cassandra {
+      host = "{{ .Values.global.cassandra.host }}"
+      port = {{ .Values.global.cassandra.port }}
+    }
+    neo4j {
+      routePath = "bolt://{{.Values.global.neo4j.host}}:{{.Values.global.neo4j.port}}"
+      graph = "domain"
+    }
+    es {
+        basePath = "{{.Values.global.elasticsearch.host}}:{{.Values.global.elasticsearch.port}}"
+    }
+    schema {
+      basePath = "{{- include "common.tplvalues.render" (dict "value" .Values.global.schema.base_path "context" $) }}"
+      supportedVersion = {
+        itemset = "2.0"
+      }
+    }
 flink_jobs:
   async-questionset-publish:
     enabled: true
@@ -286,22 +280,22 @@ flink_jobs:
         table = "questionset_hierarchy"
       }
       print_service.base_url = "{{ .Values.kp_print_service_base_url }}"
-      # Cloud Storage Config
+      #Cloud Storage Config
       cloud_storage_type: "{{ .Values.cloud_storage.type }}"
       cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
       cloud_storage_secret: "{{ .Values.global.gcp_storage_account_key }}"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "{{ .Values.global.gcp_public_container_name }}"
+      cloud_storage_container: "{{ .Values.global.gcp_public_bucket_name }}"
 
-      master.category.validation.enabled = "{{ .Values.master_category_validation_enabled }}"
+      master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {
-        metadata.replace_absolute_path = {{ .Values.cloudstorage_replace_absolute_path | default false }}
-        metadata.list = {{ .Values.cloudstorage_metadata_list }}
-        relative_path_prefix = "{{ .Values.cloudstorage_relative_path_prefix }}"
-        read_base_path = "{{- include "common.tplvalues.render" (dict "value" .Values.cloudstorage_base_path "context" $) }}"
-        write_base_path = {{- include "common.tplvalues.render" (dict "value" .Values.valid_cloudstorage_base_urls "context" $) }}
+        metadata.replace_absolute_path={{ .Values.cloudstorage_replace_absolute_path | default false }}
+        metadata.list= {{ .Values.cloudstorage_metadata_list }}
+        relative_path_prefix="{{ .Values.cloudstorage_relative_path_prefix }}"
+        read_base_path="{{- include "common.tplvalues.render" (dict "value" .Values.cloudstorage_base_path "context" $) }}"
+        write_base_path= {{- include "common.tplvalues.render" (dict "value" .Values.valid_cloudstorage_base_urls "context" $) }}
       }
-
+     
     flink-conf: |+
       jobmanager.memory.flink.size: 1024m
       taskmanager.memory.flink.size: 1024m
@@ -334,22 +328,22 @@ flink_jobs:
         table = "questionset_hierarchy"
       }
       print_service.base_url = "{{ .Values.kp_print_service_base_url }}"
-      # Cloud Storage Config
+      #Cloud Storage Config
       cloud_storage_type: "{{ .Values.cloud_storage.type }}"
-      cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
-      cloud_storage_secret: "{{ .Values.global.gcp_storage_account_key }}"
+      cloud_storage_key: "{{ .Values.global.azure_storage_account_name }}"
+      cloud_storage_secret: "{{ .Values.global.azure_storage_account_key }}"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "{{ .Values.global.gcp_public_container_name }}"
-
-      master.category.validation.enabled = "{{ .Values.master_category_validation_enabled }}"
+      cloud_storage_container: "{{ .Values.global.azure_public_container_name }}"
+      
+      master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {
-        metadata.replace_absolute_path = {{ .Values.cloudstorage_replace_absolute_path | default false }}
-        metadata.list = {{ .Values.cloudstorage_metadata_list }}
-        relative_path_prefix = "{{ .Values.cloudstorage_relative_path_prefix }}"
-        read_base_path = "{{- include "common.tplvalues.render" (dict "value" .Values.cloudstorage_base_path "context" $) }}"
-        write_base_path = {{- include "common.tplvalues.render" (dict "value" .Values.valid_cloudstorage_base_urls "context" $) }}
+        metadata.replace_absolute_path={{ .Values.cloudstorage_replace_absolute_path | default false }}
+        metadata.list={{ .Values.cloudstorage_metadata_list }}
+        relative_path_prefix="{{ .Values.cloudstorage_relative_path_prefix }}"
+        read_base_path="{{- include "common.tplvalues.render" (dict "value" .Values.cloudstorage_base_path "context" $) }}"
+        write_base_path= {{- include "common.tplvalues.render" (dict "value" .Values.valid_cloudstorage_base_urls "context" $) }}
       }
-
+     
     flink-conf: |+
       jobmanager.memory.flink.size: 1024m
       taskmanager.memory.flink.size: 1024m
@@ -357,17 +351,36 @@ flink_jobs:
       parallelism.default: 1
       jobmanager.execution.failover-strategy: region
       taskmanager.memory.network.fraction: 0.1
-    job_classname: org.sunbird.job.questionset.republish.task.QuestionSetRePublishStreamTask
+    job_classname: org.sunbird.job.questionset.republish.task.QuestionSetRePublishStreamTask  
   
   user-pii-data-updater:
     enabled: true
     config: |+
       include file("/data/flink/conf/base-config.conf")
       kafka {
-        input.topic = "{{ .Values.user_pii_updater_kafka_topic_name }}"
-        groupId = "{{ .Values.user_pii_updater_group }}"
+        input.topic = "{{- include "common.tplvalues.render" (dict "value" .Values.user_pii_updater_kafka_topic_name "context" $) }}"
+        groupId = "{{- include "common.tplvalues.render" (dict "value" .Values.user_pii_updater_group "context" $) }}"
       }
       task {
         consumer.parallelism = 1
         parallelism = 1
-        router
+        router.parallelism = 1
+      }
+      target_object_types={{ .Values.user_pii_target_object_types }}
+      user_pii_replacement_value="{{ .Values.user_pii_replacement_value }}"
+      admin_email_notification_enable=true
+      userorg_service_base_url="{{- include "common.tplvalues.render" (dict "value" .Values.user_org_service_base_url "context" $) }}"
+      notification {
+        email {
+          subject: "{{ .Values.email_notification_subject }}",
+          regards: "{{ .Values.email_notification_regards }}"
+        }
+      }
+    flink-conf: |+
+      jobmanager.memory.flink.size: 1024m
+      taskmanager.memory.flink.size: 1024m
+      taskmanager.numberOfTaskSlots: 1
+      parallelism.default: 1
+      jobmanager.execution.failover-strategy: region
+      taskmanager.memory.network.fraction: 0.1
+    job_classname: org.sunbird.job.user.pii.updater.task.UserPiiUpdaterStreamTask

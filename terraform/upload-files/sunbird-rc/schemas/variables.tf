@@ -44,6 +44,7 @@ variable "gcp_bucket" {
 variable "gcp_credentials" {
     type        = string
     description = "The path to the GCP credentials file for authenticating with the GCP bucket."
-    default     = "/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json"
+    default     = gcp-service-account-config
+    gcp_service_account_key_file: key.json 
 }
 

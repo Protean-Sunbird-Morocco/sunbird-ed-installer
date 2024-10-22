@@ -109,14 +109,14 @@ taskmanager:
   replicas: 1
   cpu_requests: 0.3
 
- # Azure Container Details
-checkpoint_store_type: ""
-cloud_storage_flink_bucketname: 
-
+# Azure Container Details
+checkpoint_store_type: "azure"
+cloud_storage_flink_bucketname: flink-state-backend
 
 # Gcp Container Details
 checkpoint_store_type: "gcp"
 cloud_storage_flink_bucketname: sunbird-flink-state-backend
+
 
 # AWS S3 Details
 s3_access_key: ""
@@ -124,17 +124,19 @@ s3_secret_key: ""
 s3_endpoint: ""
 s3_path_style_access: ""
 
-# gcp Container Details
-gcp_account: "sunbird"
-gcp_secret: "/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json"
+# Azure Container Details
+azure_account: ""
+azure_secret: ""
 env_name: &env_name "local"
 domain_name: &domain_name "localhost"
 proto: &proto "https"
 instance: &instance "dev"
 
-# Azure Container Details
-azure_account: ""
-azure_secret: ""
+# gcp Container Details
+gcp_account: "sunbird"
+gcp_service_account_key_configmap: gcp-service-account-config
+gcp_service_account_key: gcp-service-account-config
+gcp_service_account_key_file: key.json 
 env_name: &env_name "local"
 domain_name: &domain_name "localhost"
 proto: &proto "https"
@@ -145,12 +147,14 @@ cloud_storage: &cloud_storage
   type: "gcp"
   key: "dummyAccessKey"
   secret: "dummySecretKey"
-  bucket: "dummycontainer"
+  container: "dummyContainer"
   endpoint: "https://dummy.endpoint.com"
   cloud_service_provider: "gcp"
   cloud_storage_content_bucketname: "sunbird-content-bucket"
   cloud_private_storage_accountname: "sunbird"
-  cloud_private_storage_secret: "/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json"
+  cloud_private_storage_secret: gcp-service-account-config
+  gcp_service_account_key_file: key.json 
+
 
 core_vault_sunbird_fcm_account_key: "your-fcm-account-key"
 sunbird_msg_91_auth: "your-msg-91-auth-key"
@@ -367,41 +371,35 @@ base_config: |
         batch.size = 98304
         linger.ms = 10
       }
-  }
-
-  job {
-  env = "{{ .Values.global.env }}"
-  enable.distributed.checkpointing = false
-
-  statebackend {
-    blob {
-      storage {
-        account = {{- if eq .Values.checkpoint_store_type "azure" -}}
-          "{{- .Values.global.azure_storage_account_name }}.blob.core.windows.net"
-        {{- else if eq .Values.checkpoint_store_type "s3" -}}
-          "{{- .Values.flink_dp_storage_container }}"
-        {{- else if eq .Values.checkpoint_store_type "gcp" -}}
-          "storage.googleapis.com"
-        {{- end }}
-        container = "{{ .Values.cloud_storage_flink_bucketname }}"
-        checkpointing.dir = "checkpoint"
-      }
     }
-    
-    {{- if eq .Values.checkpoint_store_type "azure" }}
-    base.url = "wasbs://${job.statebackend.blob.storage.container}@${job.statebackend.blob.storage.account}/${job.statebackend.blob.storage.checkpointing.dir}"
-    
-    {{- else if eq .Values.checkpoint_store_type "s3" }}
-    base.url = "s3://${job.statebackend.blob.storage.container}/${job.statebackend.blob.storage.checkpointing.dir}"
-    
-    {{- else if eq .Values.checkpoint_store_type "gcp" }}
-    base.url = "gs://${job.statebackend.blob.storage.container}/${job.statebackend.blob.storage.checkpointing.dir}"
-    
-    {{ end }}
-  }
+    job {
+    env = "{{ .Values.global.env }}"
+    enable.distributed.checkpointing = false
+    statebackend {
+        blob {
+            storage {
+                account = {{- if eq .Values.checkpoint_store_type "azure" -}}
+                    "{{- .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+                {{- else if eq .Values.checkpoint_store_type "s3" -}}
+                    "{{- .Values.flink_dp_storage_container }}"
+                {{- else if eq .Values.checkpoint_store_type "gcs" -}}
+                    "{{- .Values.global.gcp_bucket_name }}"
+                {{- end }}
+                container = "{{ .Values.cloud_storage_flink_bucketname }}"
+                checkpointing.dir = "checkpoint"
+            }
+        }
+        
+        {{- if eq .Values.checkpoint_store_type "azure" }}
+        base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
+        {{- else if eq .Values.checkpoint_store_type "s3" }}
+        base.url = "s3://"${job.statebackend.blob.storage.container}"/"${job.statebackend.blob.storage.checkpointing.dir}
+        {{- else if eq .Values.checkpoint_store_type "gcs" }}
+        base.url = "gs://"${job.statebackend.blob.storage.container}"/"${job.statebackend.blob.storage.checkpointing.dir}
+        {{ end }}
+    }
   }
 
-    
     task {
       parallelism = 1
       consumer.parallelism = 1
@@ -409,58 +407,46 @@ base_config: |
       checkpointing.interval = 60000
       checkpointing.pause.between.seconds = 5000
       restart-strategy.attempts = 3
-      restart-strategy.delay = 30000 # in milliseconds
+      restart-strategy.delay = 30000 # in milli-seconds
     }
-
     redisdb.connection.timeout = 30000
-
     redis {
       host = "{{ .Values.global.redis.host }}"
       port = "{{ .Values.global.redis.port }}"
     }
-
     redis-meta {
       host = "{{ .Values.metadata2_redis_host | default .Values.global.redis.host }}"
-      port = "6379"
+      port = 6379
     }
-
     lms-cassandra {
-      host = "{{ .Values.global.cassandra.host }}"
-      port = "{{ .Values.global.cassandra.port }}"
-      isMultiDCEnabled = "{{ .Values.cassandra_isMultiDCEnabled }}"
+        host = "{{ .Values.global.cassandra.host }}"
+        port = "{{ .Values.global.cassandra.port }}"
+        isMultiDCEnabled = "{{ .Values.cassandra_isMultiDCEnabled }}"
     }
-
     neo4j {
-      routePath = "bolt://{{ .Values.global.neo4j.host }}:{{ .Values.global.neo4j.port }}"
+      routePath = "bolt://{{.Values.global.neo4j.host}}:{{.Values.global.neo4j.port}}"
       graph = "domain"
     }
-
     es {
-      basePath = "{{ .Values.global.elasticsearch.host }}:{{ .Values.global.elasticsearch.port }}"
+        basePath = "{{.Values.global.elasticsearch.host}}:{{.Values.global.elasticsearch.port}}"
     }
-
     schema {
       basePath = "{{ include "common.tplvalues.render" (dict "value" .Values.kp_schema_base_path "context" $) }}"
       supportedVersion = {
         itemset = "2.0"
       }
     }
-
     ml-cassandra {
       host = "{{ .Values.global.cassandra.host }}"
       port = "{{ .Values.global.cassandra.port }}"
       isMultiDCEnabled = "{{ .Values.cassandra_isMultiDCEnabled }}"
     }
-
     ml-mongo {
-      host = ""
-      port = "27017"
-      database = ""
+        host = ""
+        port = "27017"
+        database = ""
     }
-
     sunbird_instance_name = "Sunbird"
-  }
-
 flink_jobs:
   activity-aggregate-updater:
     enabled: true
@@ -480,7 +466,6 @@ flink_jobs:
         restart-strategy.attempts = "{{ .Values.restart_attempts }}"
         restart-strategy.delay = 240000 # in milli-seconds # on max restarts (3) within 4 min the job will fail.
         consumer.parallelism = "{{ .Values.activity_agg_consumer_parallelism }}"
-        parallelism = "{{ .Values.activity_agg_consumer_parallelism }}"
         dedup.parallelism = "{{ .Values.activity_agg_dedup_parallelism }}"
         activity.agg.parallelism = "{{ .Values.activity_agg_parallelism }}"
         enrolment.complete.parallelism = "{{ .Values.enrolment_complete_parallelism }}"
@@ -570,7 +555,6 @@ flink_jobs:
       task {
         restart-strategy.attempts = "{{ .Values.restart_attempts }}" # max 3 restart attempts
         restart-strategy.delay = 240000 # in milli-seconds # on max restarts (3) within 4 min the job will fail.
-        parallelism = "{{ .Values.enrolment_reconciliation_consumer_parallelism  }}"
         consumer.parallelism = "{{ .Values.enrolment_reconciliation_consumer_parallelism }}"
         enrolment.reconciliation.parallelism = "{{ .Values.enrolment_reconciliation_parallelism }}"
         enrolment.complete.parallelism = "{{ .Values.enrolment_complete_parallelism }}"
@@ -619,9 +603,6 @@ flink_jobs:
         parallelism = "{{ .Values.collection_cert_pre_processor_consumer_parallelism }}"
         consumer.parallelism = "{{ .Values.collection_cert_pre_processor_consumer_parallelism }}"
         generate_certificate.parallelism = "{{.Values.generate_certificate_parallelism }}"
-        checkpointing.compressed = true
-        checkpointing.interval = 60000
-        checkpointing.pause.between.seconds = 5000
       }
       lms-cassandra {
         keyspace = "{{ .Values.middleware_course_keyspace }}"
@@ -655,7 +636,7 @@ flink_jobs:
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_bucket = "{{ .Values.global.gcp_public_bucket_name }}"
+      content_cloud_storage_container = "{{ .Values.global.azure_public_container_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
     flink-conf: |+
       jobmanager.memory.flink.size: 1024m
@@ -680,9 +661,6 @@ flink_jobs:
         restart-strategy.delay = 240000 # in milli-seconds # on max restarts (3) within 4 min the job will fail.
         consumer.parallelism = "{{ .Values.collection_certificate_generator_consumer_parallelism }}"
         parallelism = "{{ .Values.collection_certificate_generator_parallelism }}"
-        checkpointing.compressed = true
-        checkpointing.interval = 60000
-        checkpointing.pause.between.seconds = 5000
       }
       lms-cassandra {
         keyspace = "{{ .Values.middleware_course_keyspace }}"
@@ -699,7 +677,7 @@ flink_jobs:
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_bucket = "{{ .Values.global.gcp_public_bucket_name }}"
+      content_cloud_storage_container = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"
@@ -735,9 +713,6 @@ flink_jobs:
         restart-strategy.delay = 240000 # in milli-seconds # on max restarts (3) within 4 min the job will fail.
         consumer.parallelism = "{{ .Values.legacy_certificate_migrator_consumer_parallelism }}"
         parallelism = "{{ .Values.legacy_certificate_migrator_parallelism }}"
-        checkpointing.compressed = true
-        checkpointing.interval = 60000
-        checkpointing.pause.between.seconds = 5000
       }
       lms-cassandra {
         keyspace = "{{ .Values.middleware_course_keyspace }}"
@@ -755,7 +730,6 @@ flink_jobs:
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
       content_cloud_storage_container = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
-      
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"
         learner.basePath = "{{ .Values.userorg_service_base_url }}"
@@ -787,14 +761,9 @@ flink_jobs:
         output.course.batch.updater.topic = "{{ include "common.tplvalues.render" (dict "value" .Values.kafka_topic_course_batch_job_request "context" $) }}"
       }
       task {
-        restart-strategy.attempts = "{{ .Values.restart_attempts }}" # max 3 restart attempts
-        restart-strategy.delay = 240000 # in milli-seconds # on max restarts (3) within 4 min the job will fail.
         consumer.parallelism = "{{ .Values.merge_user_courses_consumer_parallelism }}"
         parallelism = "{{ .Values.merge_user_courses_parallelism }}"
         course_batch_updater.parallelism = "{{ .Values.merge_user_courses_course_batch_parallelism }}"
-        checkpointing.compressed = true
-        checkpointing.interval = 60000
-        checkpointing.pause.between.seconds = 5000
       }
       lms-cassandra {
         keyspace = "{{ .Values.middleware_course_keyspace }}"
@@ -828,9 +797,6 @@ flink_jobs:
       task {
         consumer.parallelism = "{{ .Values.assessaggregator_consumer_parallelism }}"
         downstream.parallelism = "{{ .Values.assessaggregator_downstream_parallelism }}"
-        restart-strategy.attempts = "{{ .Values.restart_attempts }}" # max 3 restart attempts
-        restart-strategy.delay = 240000 # in milli-seconds # on max restarts (3) within 4 min the job will fail.
-        
         assessaggregator {
           parallelism = "{{ .Values.assessaggregator_parallelism }}"
         }
@@ -874,13 +840,10 @@ flink_jobs:
         restart-strategy.delay = 240000 # in milli-seconds # on max restarts (3) within 4 min the job will fail.
         consumer.parallelism = "{{ .Values.notification_job_consumer_parallelism }}"
         parallelism = "{{ .Values.notification_job_parallelism }}"
-        checkpointing.compressed = true
-        checkpointing.interval = 60000
-        checkpointing.pause.between.seconds = 5000
       }
       fcm_account_key= "{{ .Values.core_vault_sunbird_fcm_account_key }}"
       sms_auth_key= "{{ .Values.global.sunbird_msg_91_auth }}"
-      mail_server_from_email= "{{ .Values.global.sunbird_mail_server_from_email }}"
+      mail_server_from_email= "{{ .Values.global.mail_server_from_email }}"
       sms_default_sender= "{{ .Values.notification_msg_default_sender }}"
       mail_server_username= "{{ .Values.global.mail_server_username }}"
       mail_server_password= "{{ .Values.global.mail_server_password }}"
@@ -912,11 +875,6 @@ flink_jobs:
         programuser {
           parallelism = "{{ .Values.programuserinfo_programuser_parallelism }}"
         }
-        checkpointing.compressed = true
-        checkpointing.interval = 60000
-        checkpointing.pause.between.seconds = 5000
-        restart-strategy.attempts = 3
-        restart-strategy.delay = 30000 # in milliseconds
 
       }
       ml-cassandra {
