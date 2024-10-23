@@ -1,6 +1,9 @@
 nameOverride: ""
 fullnameOverride: ""
 
+commonLabels:
+  name: edbb
+
 image:
   repository: keshavprasad/kong-scripts
   tag: "0.1.8"

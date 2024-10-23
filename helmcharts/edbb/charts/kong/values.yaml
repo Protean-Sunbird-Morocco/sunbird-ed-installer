@@ -3,6 +3,9 @@ fullnameOverride: "kong"
 
 replicaCount: 1
 
+commonLabels:
+  name: edbb
+
 image:
   repository: sunbirded.azurecr.io/kong
   tag: "0.14.1"

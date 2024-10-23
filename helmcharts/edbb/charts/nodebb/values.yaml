@@ -1,6 +1,9 @@
 nameOverride: "nodebb"
 fullnameOverride: "nodebb"
 
+commonLabels:
+  name: edbb
+
 replicaCount: 1
 
 image:

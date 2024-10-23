@@ -1,6 +1,9 @@
 nameOverride: "player"
 fullnameOverride: "player"
 
+commonLabels:
+  name: edbb
+
 replicaCount: 1
 
 image:
