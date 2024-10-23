@@ -31,7 +31,8 @@ fullnameOverride: ""
 kubeVersion: ""
 ## @param commonLabels Labels to add to all deployed objects (sub-charts are not considered)
 ##
-commonLabels: {}
+commonLabels:
+  app: inquirybb
 ## @param commonAnnotations Annotations to add to all deployed objects
 ##
 commonAnnotations: {}
