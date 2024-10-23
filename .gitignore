@@ -18,3 +18,4 @@ terragrunt
 **/charts/common
 # Ignoring test directories
 **/kitchen
+**/sunbird-morocco-sandbox.json
