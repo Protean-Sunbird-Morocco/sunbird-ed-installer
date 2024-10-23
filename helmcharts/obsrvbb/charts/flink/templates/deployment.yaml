@@ -19,11 +19,13 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
+      
       app.kubernetes.io/name: {{ include "common.names.name" . }}
       app.kubernetes.io/component: {{ printf "%s-%s" $jobName $component }}
   template:
     metadata:
       labels:
+        
         app.kubernetes.io/name: {{ include "common.names.name" . }}
         app.kubernetes.io/component: {{ printf "%s-%s" $jobName $component }}
       annotations:
@@ -101,6 +103,7 @@ kind: Deployment
 metadata:
   name: {{ printf "%s-%s" $jobName $component }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    
   annotations:
     checksum/config: {{ .Files.Glob "configs/*" | toYaml | sha256sum }}
     checksum/job-config: {{ $jobData | toYaml | sha256sum }}
@@ -111,11 +114,13 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
+      
       app.kubernetes.io/name: {{ include "common.names.name" . }}
       app.kubernetes.io/component: {{ printf "%s-%s" $jobName $component }}
   template:
     metadata:
       labels:
+        
         app.kubernetes.io/name: {{ include "common.names.name" . }}
         app.kubernetes.io/component: {{ printf "%s-%s" $jobName $component }}
       annotations:

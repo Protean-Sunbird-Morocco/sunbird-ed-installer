@@ -4,10 +4,11 @@ kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels:
-{{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    {{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    obsrvbb: "true"
   {{- if .Values.commonAnnotations }}
   annotations:
-{{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+    {{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
   {{- end }}
 data:
 {{- $currentScope := .}}
@@ -27,10 +28,11 @@ kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}-env
   labels:
-{{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    {{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    obsrvbb: "true"
   {{- if .Values.commonAnnotations }}
   annotations:
-{{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+    {{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
   {{- end }}
 data:
   {{- $var := .Files.Get "configs/env.yaml" }}
@@ -41,10 +43,11 @@ kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}-opa
   labels:
-{{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    {{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    obsrvbb: "true"
   {{- if .Values.commonAnnotations }}
   annotations:
-{{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+    {{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
   {{- end }}
 data:
 {{- $currentScope := .}}
@@ -61,10 +64,11 @@ kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}-envoy
   labels:
-{{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    {{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    obsrvbb: "true"
   {{- if .Values.commonAnnotations }}
   annotations:
-{{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+    {{ include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
   {{- end }}
 data:
 {{- $currentScope := .}}

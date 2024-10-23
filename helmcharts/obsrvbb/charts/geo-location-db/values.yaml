@@ -10,6 +10,9 @@ image:
 nameOverride: "geo-location-db-setup"
 fullnameOverride: "geo-location-db-setup"
 
+commonLabels:
+  name: obsrvbb
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
