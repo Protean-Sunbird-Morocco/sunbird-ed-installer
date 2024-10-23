@@ -100,7 +100,7 @@ druid_storage_directory: "/data"
 druid_postgresql_db: "druid_raw"
 
 
-# Azure Container Details
+# GCP Container Details
 gcp_storage_account_name: ""
 gcp_storage_account_key: ""
 gcp_storage_container: "sunbird-reports"

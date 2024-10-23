@@ -50,7 +50,7 @@ spec:
           args: [
             "start-foreground",
             {{- if eq .Values.checkpoint_store_type "azure" }}
-              "-Dfs.azure.account.key.{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net={{ .Values.global.azure_storage_account_key }}",
+              "-Dfs.azure.account.key.{{ .Values.global.gcp_storage_account_name }}.blob.core.windows.net={{ .Values.global.azure_storage_account_key }}",
             {{- end }}
 
             {{- if eq .Values.checkpoint_store_type "gcp" }}
@@ -138,7 +138,7 @@ spec:
           args: [
             "start-foreground",
             {{- if eq .Values.checkpoint_store_type "azure" }}
-              "-Dfs.azure.account.key.{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net={{ .Values.global.azure_storage_account_key }}",
+              "-Dfs.azure.account.key.{{ .Values.global.gcp_storage_account_name }}.blob.core.windows.net={{ .Values.global.azure_storage_account_key }}",
             {{- end }}
 
             {{- if eq .Values.checkpoint_store_type "gcp" }}
