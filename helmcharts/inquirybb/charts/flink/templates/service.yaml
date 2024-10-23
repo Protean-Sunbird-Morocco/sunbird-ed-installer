@@ -7,7 +7,8 @@ kind: Service
 metadata:
   name: {{ $jobName }}-{{ $component }}
   labels:
-    {{- include "common.labels.standard" (dict "customLabels" .context.Values.commonLabels "context" .context) | nindent 4 }}
+    app: inquirybb
+    {{- include "common.labels.standard" (dict "customLabels" (default dict .context.Values.commonLabels) "context" .context) | nindent 4 }}
   {{- if .context.Values.commonAnnotations }}
   annotations:
     {{- include "common.tplvalues.render" (dict "value" .context.Values.commonAnnotations "context" .context) | nindent 4 }}
