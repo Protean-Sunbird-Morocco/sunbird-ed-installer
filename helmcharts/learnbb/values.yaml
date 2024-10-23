@@ -170,7 +170,9 @@ global:
   gcp_service_account_key_configmap: gcp-service-account-config
   gcp_service_account_key_file: key.json
   gcp_storage_account_key: /Users/parmindersingh/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
-  .env: dev
+  env: dev
+  cloud_storage:
+    type: "gcp"
 migration:
   cassandra:
     waitTime: 120

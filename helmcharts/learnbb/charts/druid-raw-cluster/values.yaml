@@ -104,7 +104,7 @@ druid_postgresql_db: "druid_raw"
 gcp_storage_account_name: ""
 gcp_storage_account_key: ""
 gcp_storage_container: "sunbird-reports"
-
+gcp_bucket_name: sunbird-public
 
 # Indexing service logs
 # For local disk (only viable in a cluster_type if this is a network mount):

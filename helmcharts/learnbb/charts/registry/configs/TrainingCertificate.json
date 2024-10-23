@@ -71,6 +71,6 @@
 		],
 		"systemFields": ["osCreatedAt", "osUpdatedAt", "osCreatedBy", "osUpdatedBy"],
 		"enableLogin": false,
-		"credentialTemplate": "gs://{{ .Values.global.gcp_public_bucket_name }}/schemas/credential_template.json"
+		"credentialTemplate": "gs://{{ .Values.global.gcp_bucket_name }}/schemas/credential_template.json"
 	}
 }

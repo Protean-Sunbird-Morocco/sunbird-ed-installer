@@ -160,8 +160,8 @@ cert_cloud_storage_type: "gcp"
 cert_cloud_storage_secret: "{{ .Values.global.gcp_storage_account_key }}"
 cert_cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
 cert_cloud_storage_endpoint: ""
-cloud_storage_base_url: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}"
-cloud_storage_cname_url: "https://{{ .Values.global.gcp_public_bucket_name }}.storage.googleapis.com"
+cloud_storage_base_url: "https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}"
+cloud_storage_cname_url: "https://{{ .Values.global.gcp_bucket_name }}.storage.googleapis.com"
 kafka_topic_course_batch_job_request: "{{ .Values.global.env }}.coursebatch.job.request"
 kafka_topic_telemetry_raw: "{{ .Values.global.env }}.telemetry.raw"
 kafka_topic_activity_agg_failed: "{{ .Values.global.env }}.activity.agg.failed"
@@ -349,7 +349,7 @@ base_config: |
             statebackend {
               gcs {
                 storage {
-                  bucket = "{{ .Values.gcp_public_bucket_name }}"
+                  bucket = "{{ .Values.global.gcp_bucket_name }}"
                   checkpointing.dir = "checkpoint"
                 }
               }
@@ -636,14 +636,14 @@ flink_jobs:
         certreg.table ="{{ .Values.cert_registry_table }}"
       }
       cert_domain_url = "https://{{ .Values.global.domain }}"
-      cert_container_name = "{{ .Values.global.gcp_public_bucket_name }}"
+      cert_container_name = "{{ .Values.global.gcp_bucket_name }}"
       cert_cloud_storage_type = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_type "context" $) }}"
       cert_cloud_storage_secret = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_secret "context" $) }}"
       cert_cloud_storage_endpoint = "{{ .Values.cert_cloud_storage_endpoint }}"
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.gcp_public_bucket_name }}"
+      content_cloud_storage_container = "{{ .Values.global.gcp_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"
@@ -687,13 +687,13 @@ flink_jobs:
         certreg.table ="{{ .Values.cert_registry_table }}"
       }
       cert_domain_url = "{{ .Values.global.domain }}"
-      cert_container_name = "{{ .Values.global.gcp_public_bucket_name }}"
+      cert_container_name = "{{ .Values.global.gcp_bucket_name }}"
       cert_cloud_storage_type = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_type "context" $) }}"
       cert_cloud_storage_secret = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_secret "context" $) }}"
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.gcp_public_bucket_name }}"
+      content_cloud_storage_container = "{{ .Values.global.gcp_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"

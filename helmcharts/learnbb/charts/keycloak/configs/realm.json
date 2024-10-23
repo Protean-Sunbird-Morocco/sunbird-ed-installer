@@ -3535,7 +3535,7 @@
           "subComponents": {},
           "config": {
             "host": [
-              "localhost"
+              "cassandra"
             ],
             "cachePolicy": [
               "DEFAULT"
