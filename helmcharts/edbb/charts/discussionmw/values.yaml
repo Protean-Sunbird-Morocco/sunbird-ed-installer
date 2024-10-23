@@ -1,6 +1,10 @@
 nameOverride: "discussionmw"
 fullnameOverride: "discussionmw"
 
+commonLabels:
+  name: edbb
+
+
 replicaCount: 1
 
 image:
