@@ -6,6 +6,7 @@ metadata:
   name: {{ include "common.names.name" . }}-servicemonitor
   labels:
     {{- toYaml .Values.serviceMonitor.labels | nindent 4 }}
+    obsrvbb: "true"
 spec:
   endpoints:
   - honorLabels: true

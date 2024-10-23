@@ -3,6 +3,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "common.names.fullname" . }}
+  labels:
+    obsrvbb: "true"
   annotations:
     "helm.sh/hook": post-install,post-upgrade
 spec:

@@ -4,6 +4,7 @@ metadata:
   name: {{ include "common.names.fullname" . }}-service
   labels:
     app: {{ include "common.names.fullname" . }}
+    obsrvbb: "true"
 spec:
   ports:
   {{- range .Values.service.ports }}

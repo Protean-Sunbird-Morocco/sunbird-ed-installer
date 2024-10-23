@@ -3,6 +3,9 @@ fullnameOverride: ""
 
 replicaCount: 1
 
+commonLabels: 
+  name: observbb
+
 # repository: sunbirded.azurecr.io/data-pipeline
 #   tag: "release-5.2.0_RC1_2c615f8_12"
 # docker pull sunbirded.azurecr.io/sunbird-datapipeline:release-4.9.0_RC4_1

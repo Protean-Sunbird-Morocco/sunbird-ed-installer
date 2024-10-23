@@ -11,6 +11,7 @@ metadata:
   name: {{ $jobName }}
   labels:
     app: secor
+    obsrvbb: "true"
 spec:
   serviceName: secor
   updateStrategy:
