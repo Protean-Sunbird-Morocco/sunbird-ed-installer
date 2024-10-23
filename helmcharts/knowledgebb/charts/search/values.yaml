@@ -60,24 +60,29 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
 
-livenessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-  httpGet:
-    path: /health
-    port: 9000
-readinessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-  httpGet:
-    path: /health
-    port: 9000
+# livenessProbe: 
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   timeoutSeconds: 5
+#   failureThreshold: 6
+#   successThreshold: 1
+#   httpGet:
+#     path: /health
+#     port: 9000
+
+# readinessProbe: 
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   timeoutSeconds: 5
+#   failureThreshold: 6
+#   successThreshold: 1
+#   httpGet:
+#     path: /health
+#     port: 9000
+
+livenessProbe: null
+readinessProbe: null
+
 
 nodeSelector: {}
 tolerations: []

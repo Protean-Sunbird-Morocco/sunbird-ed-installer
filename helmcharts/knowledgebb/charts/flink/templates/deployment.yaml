@@ -51,10 +51,11 @@ spec:
 
   {{- if eq .Values.cloud_storage.type "gcp" }}
             "-Dfs.gs.project.id={{ .Values.global.gcp_project_id }}",
-            "-Dfs.gs.system.bucket={{ .Values.global.gcp_bucket_name }}",
+            "-Dfs.gs.system.bucket=sunbird-public",
             "-Dgoogle.cloud.auth.service.account.enable=true",
-            "-Dgoogle.cloud.auth.service.account.keyfile={{ .Values.global.gcp_storage_account_key }}",
-  {{- end }}
+            "-Dgoogle.cloud.auth.service.account.keyfile=/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json",
+{{- end }}
+
 
   {{- if eq .Values.cloud_storage.type "azure" }}
             "-Dfs.azure.account.key.{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net={{ .Values.global.azure_storage_account_key }}",
@@ -147,13 +148,13 @@ spec:
             "-Dfs.azure.account.key.{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net={{ .Values.global.azure_storage_account_key }}",
   {{- end }}
 
-  {{- if eq .Values.cloud_storage.type "gcp" }}
+   {{- if eq .Values.cloud_storage.type "gcp" }}
             "-Dfs.gs.project.id={{ .Values.global.gcp_project_id }}",
-            "-Dfs.gs.system.bucket={{ .Values.global.gcp_bucket_name }}",
+            "-Dfs.gs.system.bucket=sunbird-public",
             "-Dgoogle.cloud.auth.service.account.enable=true",
-            "-Dgoogle.cloud.auth.service.account.keyfile={{ .Values.global.gcp_storage_account_key }}",
-  {{- end }}
-  
+            "-Dgoogle.cloud.auth.service.account.keyfile=/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json",
+{{- end }}
+
   {{- if eq .Values.cloud_storage.type "s3" }}
             "-Ds3.access-key={{ .Values.s3_access_key }}",
             "-Ds3.secret-key={{ .Values.s3_secret_key }}",
