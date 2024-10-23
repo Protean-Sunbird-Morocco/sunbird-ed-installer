@@ -21,7 +21,10 @@ data:
   {{- end }}
 {{- end }}
 {{- end }}
+
+
 ---
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -37,7 +40,11 @@ data:
   {{- include "common.tplvalues.render" (dict "value" $var "context" $) | nindent 2 }}
 
 {{- if .Values.opa_enabled }}
+
+
 ---
+
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -57,7 +64,11 @@ data:
   {{- include "common.tplvalues.render" (dict "value" $var "context" $) | nindent 6 }}
   {{- end }}
 {{- end }}
+
+
 ---
+
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -78,7 +89,11 @@ data:
   {{- end }}
 {{- end }}
 {{- end }}
+
+
 ---
+
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
