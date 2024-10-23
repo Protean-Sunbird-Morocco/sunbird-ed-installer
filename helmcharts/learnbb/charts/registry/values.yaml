@@ -9,7 +9,8 @@ image:
   pullSecrets: []
 
 podAnnotations: {}
-
+commonLabels:
+  name: learnbb
 service:
   type: ClusterIP
   ports:

@@ -11,10 +11,8 @@ notification:
   opa_enabled: true
 registry:
   opa_enabled: false
-
 provisioningAnnotations: &provisioningAnnotations
   "helm.sh/hook-weight": "-4"
-
 postgresql: &postgresql
   enabled: false
   fullnameOverride: "postgresql"
@@ -27,12 +25,11 @@ postgresql: &postgresql
   persistence:
     size: 25Gi
   databases:
-  - name: "keycloak"
-  - name: "quartz"
-  - name: "userorg"
-  - name: "enc-keys"
-  - name: "registry"
-
+    - name: "keycloak"
+    - name: "quartz"
+    - name: "userorg"
+    - name: "enc-keys"
+    - name: "registry"
 elasticsearch: &es
   enabled: false
   fullnameOverride: "elasticsearch"
@@ -69,7 +66,6 @@ elasticsearch: &es
     registry: docker.io
     repository: bitnami/bitnami-shell-archived
     tag: 11-debian-11-r54
-
 redis: &redis
   enabled: false
   fullnameOverride: "redis"
@@ -84,7 +80,6 @@ redis: &redis
   master:
     persistence:
       size: 25Gi
-
 cassandra: &cassandra
   enabled: false
   nameOverride: "cassandra"
@@ -104,7 +99,6 @@ cassandra: &cassandra
     "helm.sh/hook-weight": "-5"
   persistence:
     size: 25Gi
-
 zookeeper: &zookeeper
   fullnameOverride: zookeeper
   nameOverride: zookeeper
@@ -112,7 +106,6 @@ zookeeper: &zookeeper
   port: 2181
   persistence:
     size: 2Gi
-
 kafka: &kafka
   zookeeper: *zookeeper
   enabled: false
@@ -128,7 +121,6 @@ kafka: &kafka
     "helm.sh/hook-weight": "-5"
   persistence:
     size: 25Gi
-
 druid: &druid
   enabled: true
   fullnameOverride: "druid"
@@ -136,7 +128,7 @@ druid: &druid
   port: 8888
   coordinatorhost: druid-raw-coordinators
   coordinatorport: 8081
-  overlordhost:  druid-raw-overlords
+  overlordhost: druid-raw-overlords
   overlordport: 8090
   brokerhost: druid-raw-brokers
   brokerport: 8082
@@ -144,7 +136,6 @@ druid: &druid
     "helm.sh/hook-weight": "-5"
   persistence:
     size: 25Gi
-
 neo4j: &neo4j
   enabled: false
   host: "neo4j"
@@ -158,7 +149,6 @@ neo4j: &neo4j
     "helm.sh/hook-weight": "-5"
   provisioning:
     annotations: *provisioningAnnotations
-
 global:
   redis: *redis
   elasticsearch: *es
@@ -172,7 +162,14 @@ global:
   keycloak_kid_keys_configmap: keycloak-kids-keys
   keycloak_key_configmap: keycloak-key
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
-
+  gcp_storage_account_name: sunbird
+  gcp_public_container_name: sunbird-public
+  gcp_bucket_name: sunbird-public
+  gcp_project_id: sunbird-morocco-sandbox-434709
+  cassandra.host: cassandra
+  gcp_service_account_key_configmap: gcp-service-account-config
+  gcp_service_account_key_file: key.json
+  gcp_storage_account_key: /Users/parmindersingh/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
 migration:
   cassandra:
     waitTime: 120

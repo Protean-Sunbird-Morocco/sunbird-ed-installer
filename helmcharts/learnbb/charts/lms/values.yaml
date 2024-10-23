@@ -14,7 +14,8 @@ podSecurityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1001
   # fsGroup: 1001
-
+commonLabels:
+  name: learnbb
 securityContext: {}
   # readOnlyRootFilesystem: false
   # capabilities:

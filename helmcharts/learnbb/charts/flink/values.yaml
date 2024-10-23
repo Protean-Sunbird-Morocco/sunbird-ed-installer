@@ -110,9 +110,10 @@ taskmanager:
   cpu_requests: 0.3
 
 # Azure Container Details
-checkpoint_store_type: "azure"
-cloud_storage_flink_bucketname: flink-state-backend
-
+# checkpoint_store_type: "azure"
+# cloud_storage_flink_bucketname: flink-state-backend
+commonLabels:
+  name: learnbb
 # Gcp Container Details
 checkpoint_store_type: "gcp"
 cloud_storage_flink_bucketname: sunbird-flink-state-backend
@@ -380,8 +381,6 @@ base_config: |
             storage {
                 account = {{- if eq .Values.checkpoint_store_type "azure" -}}
                     "{{- .Values.global.azure_storage_account_name }}.blob.core.windows.net"
-                {{- else if eq .Values.checkpoint_store_type "s3" -}}
-                    "{{- .Values.flink_dp_storage_container }}"
                 {{- else if eq .Values.checkpoint_store_type "gcs" -}}
                     "{{- .Values.global.gcp_bucket_name }}"
                 {{- end }}
@@ -392,8 +391,6 @@ base_config: |
         
         {{- if eq .Values.checkpoint_store_type "azure" }}
         base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
-        {{- else if eq .Values.checkpoint_store_type "s3" }}
-        base.url = "s3://"${job.statebackend.blob.storage.container}"/"${job.statebackend.blob.storage.checkpointing.dir}
         {{- else if eq .Values.checkpoint_store_type "gcs" }}
         base.url = "gs://"${job.statebackend.blob.storage.container}"/"${job.statebackend.blob.storage.checkpointing.dir}
         {{ end }}

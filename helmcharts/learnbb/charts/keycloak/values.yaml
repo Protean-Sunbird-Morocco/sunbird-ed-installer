@@ -10,7 +10,8 @@ image:
   pullSecrets: []
 
 podAnnotations: {}
-
+commonLabels:
+  name: learnbb
 podSecurityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1001
