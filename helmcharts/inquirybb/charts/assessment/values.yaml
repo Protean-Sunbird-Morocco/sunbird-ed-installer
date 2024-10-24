@@ -3,6 +3,9 @@ fullnameOverride: "assessment"
 
 replicaCount: 1
 
+commonLabels:
+  app: inquirybb
+
 image:
   repository: sunbirded.azurecr.io/assessment-service
   tag: release-7.0.0_RC2_aeccd6e_16
@@ -26,6 +29,15 @@ service:
       targetPort: 9000
 
 ingress: {}
+
+gcp_storage_account_name: sunbird
+gcp_public_container_name: sunbird-public
+env: dev
+gcp_bucket_name: sunbird-public
+gcp_project_id: sunbird-morocco-sandbox-434709
+gcp_service_account_key_configmap: gcp-service-account-config
+gcp_service_account_key_file: key.json 
+gcp_public_bucket_name: sunbird-public
 
 resources:
   requests:
@@ -122,8 +134,6 @@ inquiry:
   # V5 API Configurations
   v5_supported_qumlVersions: '[1.1]'
   v5_default_qumlVersion: 1.1
-
-
 
 commonAnnotations:
   reloader.stakater.com/auto: "true"

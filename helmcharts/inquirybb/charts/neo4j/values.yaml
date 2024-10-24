@@ -14,11 +14,11 @@ podAnnotations: {}
 commonAnnotations:
   reloader.stakater.com/auto: "true"
 
-commonLabels: {}
+commonLabels:
+  app: inquirybb
 
 livenessProbe: {}
 readinessProbe: {}
-
 
 service:
   type: ClusterIP
@@ -34,6 +34,15 @@ service:
       targetPort: 8687
 
 ingress: {}
+
+gcp_storage_account_name: sunbird
+gcp_public_container_name: sunbird-public
+env: dev
+gcp_bucket_name: sunbird-public
+gcp_project_id: sunbird-morocco-sandbox-434709
+gcp_service_account_key_configmap: gcp-service-account-config
+gcp_service_account_key_file: key.json 
+gcp_public_bucket_name: sunbird-public
 
 resources:
   requests:

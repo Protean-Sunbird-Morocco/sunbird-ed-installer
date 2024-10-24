@@ -3,6 +3,9 @@ fullnameOverride: "flink"
 
 replicaCount: 1
 
+commonLabels:
+  app: inquirybb
+
 image:
   repository: sunbirded.azurecr.io/data-pipeline
   tag: release-7.0.0_RC7_7425f7c_15
@@ -31,6 +34,16 @@ service:
 
 ingress: {}
 
+gcp_storage_account_name: sunbird
+gcp_public_container_name: sunbird-public
+env: dev
+gcp_bucket_name: sunbird-public
+gcp_project_id: sunbird-morocco-sandbox-434709
+gcp_service_account_key_configmap: gcp-service-account-config
+gcp_service_account_key_file: key.json 
+gcp_public_bucket_name: sunbird-public
+gcp_storage_account_key: /Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
+
 resources:
   requests:
     cpu: 100m
@@ -57,7 +70,6 @@ autoscaling:
           type: Utilization
           averageUtilization: 80
 
-
 nodeSelector: {}
 tolerations: []
 affinity: {}
@@ -83,7 +95,6 @@ sidecars: {}
 
 opa:
   enabled: false
-
 
 jobmanager:
   rpc_port: 6123
@@ -117,24 +128,24 @@ producer_max_request_size: 1572864
 ### QuestionSet Publish Config
 master_category_validation_enabled: "Yes"
 
-inquiry_assessment_publish_kafka_topic_name: "{{ .Values.global.env }}.assessment.publish.request"
-inquiry_assessment_post_publish_kafka_topic_name: "{{ .Values.global.env }}.assessment.postpublish.request"
-inquiry_assessment_publish_group: "{{ .Values.global.env }}-questionset-publish-group"
-question_keyspace_name: "{{ .Values.global.env }}_question_store"
-hierarchy_keyspace_name: "{{ .Values.global.env }}_hierarchy_store"
+inquiry_assessment_publish_kafka_topic_name: "dev.assessment.publish.request"
+inquiry_assessment_post_publish_kafka_topic_name: "dev.assessment.postpublish.request"
+inquiry_assessment_publish_group: "dev-questionset-publish-group"
+question_keyspace_name: "dev_question_store"
+hierarchy_keyspace_name: "dev_hierarchy_store"
 kp_print_service_base_url: "http://print:5000"
 # CNAME Config
 cloudstorage_relative_path_prefix: "CONTENT_STORAGE_BASE_PATH"
-cloudstorage_base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}"
+cloudstorage_base_path: "https://storage.googleapis.com/sunbird-public"
 cloudstorage_metadata_list: '["appIcon","posterImage","artifactUrl","downloadUrl","variants","previewUrl","pdfUrl"]'
-valid_cloudstorage_base_urls: '["https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}"]'
+valid_cloudstorage_base_urls: '["https://storage.googleapis.com/sunbird-public"]'
 cloudstorage_replace_absolute_path: false
 ### QuestionSet RePublish Job Config
-inquiry_assessment_republish_kafka_topic_name: "{{ .Values.global.env }}.assessment.republish.request"
-inquiry_assessment_republish_group: "{{ .Values.global.env }}-questionset-republish-group"
+inquiry_assessment_republish_kafka_topic_name: "dev.assessment.republish.request"
+inquiry_assessment_republish_group: "dev-questionset-republish-group"
 ### user_pii Job Config
-user_pii_updater_kafka_topic_name: "{{ .Values.global.env }}.delete.user"
-user_pii_updater_group: "{{ .Values.global.env }}-user-pii-updater-group"
+user_pii_updater_kafka_topic_name: "dev.delete.user"
+user_pii_updater_group: "dev-user-pii-updater-group"
 user_pii_target_object_types: '{
   "Question": ["1.0", "1.1"],
   "QuestionSet": ["1.0", "1.1"],
@@ -190,7 +201,7 @@ base_config: |
       }
     }
     job {
-      env = "{{ .Values.global.env }}"
+      env = "dev"
       enable.distributed.checkpointing = false
       {{- if eq "oci" .Values.cloud_storage.type }}
             statebackend {
@@ -283,9 +294,9 @@ flink_jobs:
       #Cloud Storage Config
       cloud_storage_type: "{{ .Values.cloud_storage.type }}"
       cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
-      cloud_storage_secret: "{{ .Values.global.gcp_storage_account_key }}"
+      cloud_storage_secret: "/Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "{{ .Values.global.gcp_public_bucket_name }}"
+      cloud_storage_container: "sunbird-public"
 
       master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {
@@ -330,10 +341,10 @@ flink_jobs:
       print_service.base_url = "{{ .Values.kp_print_service_base_url }}"
       #Cloud Storage Config
       cloud_storage_type: "{{ .Values.cloud_storage.type }}"
-      cloud_storage_key: "{{ .Values.global.azure_storage_account_name }}"
-      cloud_storage_secret: "{{ .Values.global.azure_storage_account_key }}"
+      cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
+      cloud_storage_secret: "/Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_container: "sunbird-public"
       
       master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {

@@ -56,6 +56,11 @@ spec:
               configMapKeyRef:
                 name: {{ .Values.global.keycloak_kid_keys_configmap }}
                 key: KEYCLOAK_PUBLIC_KEY
+          - name: CLOUD_PRIVATE_STORAGE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: gcp-credentials
+                key: sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
           envFrom:
           - configMapRef:
               name: {{ include "common.names.fullname" . }}-env

@@ -166,7 +166,8 @@ global:
   private_ingressgateway_ip: 10.0.0.10
   gcp_project_id: sunbird-morocco-sandbox-434709
   gcp_service_account_key_configmap: gcp-service-account-config
-  gcp_service_account_key_file: key.json 
+  gcp_service_account_key_file: key.json
+  gcp_storage_account_key: /Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
 
 migration:
   cassandra:
