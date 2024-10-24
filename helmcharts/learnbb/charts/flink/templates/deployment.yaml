@@ -154,6 +154,9 @@ spec:
             "-Djobmanager.rpc.port={{ .Values.jobmanager.rpc_port }}",
             "-Dparallelism.default=1",
             "-Dblob.server.port={{ .Values.jobmanager.blob_port }}",
+            "-Dqueryable-state.server.ports={{ .Values.jobmanager.query_port }}",
+            "--config.file.path",
+            "/data/flink/conf/{{ $jobName }}.conf"
           ]
           ports:
             {{- range .Values.service.ports }}
@@ -171,6 +174,12 @@ spec:
             - name: flink-config-volume
               mountPath: /opt/flink/conf/log4j-console.properties
               subPath: log4j-console.properties
+            - name: flink-config-volume
+              mountPath: /data/flink/conf/base-config.conf
+              subPath: base-config.conf
+            - name: flink-config-volume
+              mountPath: /data/flink/conf/{{ $jobName }}.conf
+              subPath: {{ $jobName }}.conf
       volumes:
         - name: flink-config-volume
           configMap:
@@ -180,6 +189,10 @@ spec:
                 path: flink-conf.yaml
               - key: log4j_console_properties
                 path: log4j-console.properties
+              - key: base-config
+                path: base-config.conf
+              - key: config
+                path: {{ $jobName }}.conf
 {{- end }}
 {{- end }}
 {{- end }}
