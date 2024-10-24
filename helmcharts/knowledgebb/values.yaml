@@ -4,6 +4,9 @@ knowlg_automation_repo_branch: release-5.5.0
 provisioningAnnotations: &provisioningAnnotations
   "helm.sh/hook-weight": "-4"
 
+commonLabels:
+  app: knowledgebb
+
 neo4j: &neo4j
   enabled: false
   host: "neo4j"
@@ -163,7 +166,7 @@ kafka: &kafka
 play_http: &play_http
   secret_key: "secretKey"
 schema: &schema
-  base_path: "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}//schemas/local"
+  base_path: "https://storage.googleapis.com/{{.Values.global.gcp_public_bucket_name}}//schemas/local"
 graph_passport: &graph_passport
   key_base: "secretKey"
 installation: &installation
@@ -189,6 +192,10 @@ global:
   provisioningAnnotations: *provisioningAnnotations
   keycloak_kid_keys_configmap: keycloak-kids-keys
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
+  gcp_bucket_name: sunbird-public
+  gcp_storage_account_name: sunbird
+  gcp_storage_account_key: /Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json
+  gcp_public_bucket_name: sunbird-public
 
 content:
   opa_enabled: true

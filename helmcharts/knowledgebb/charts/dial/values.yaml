@@ -29,24 +29,29 @@ service:
       port: 9000
       targetPort: 9000
 
-livenessProbe: &livenessProbe
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-  httpGet:
-    path: /health
-    port: 9000
-readinessProbe: &readinessProbe
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-  httpGet:
-    path: /health
-    port: 9000
+# livenessProbe: 
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   timeoutSeconds: 5
+#   failureThreshold: 6
+#   successThreshold: 1
+#   httpGet:
+#     path: /health
+#     port: 9000
+
+# readinessProbe: 
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   timeoutSeconds: 5
+#   failureThreshold: 6
+#   successThreshold: 1
+#   httpGet:
+#     path: /health
+#     port: 9000
+
+livenessProbe: null
+readinessProbe: null
+
 
 ingress: {}
 
