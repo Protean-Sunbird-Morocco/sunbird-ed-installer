@@ -9,6 +9,7 @@ metadata:
   name: {{ include "common.names.fullname" . }}
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    obsrvbb: "true"
 subjects:
 - kind: ServiceAccount
   name: {{ include "common.names.fullname" . }}

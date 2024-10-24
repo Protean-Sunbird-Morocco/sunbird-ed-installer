@@ -3,6 +3,9 @@ fullnameOverride: ""
 
 replicaCount: 1
 
+commonLabels: 
+  name: observbb
+
 # repository: sunbirded.azurecr.io/data-pipeline
 #   tag: "release-5.2.0_RC1_2c615f8_12"
 # docker pull sunbirded.azurecr.io/sunbird-datapipeline:release-4.9.0_RC4_1
@@ -129,15 +132,15 @@ s3_endpoint: ""
 s3_path_style_access: ""
 
 # Azure Container Details
-azure_account: "azure-test"
-azure_secret: "azure-secret"
+#azure_account: "azure-test"
+#azure_secret: "azure-secret"
 
 # Azure Container Details
-checkpoint_store_type: "azure"
-cloud_storage_flink_bucketname: flink-state-backend
-cloud_storage_content_bucketname: sunbird-content-dev
-cert_container_name: dev-e-credentials
-cloud_storage_endpoint: https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net
+# checkpoint_store_type: "gcp"
+# cloud_storage_flink_bucketname: flink-state-backend
+# cloud_storage_content_bucketname: sunbird-content-dev
+# cert_container_name: dev-e-credentials
+# cloud_storage_endpoint: https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net
 
 #GCP Container Details
 gcp_account: "sunbird"
@@ -283,78 +286,67 @@ log4j_console_properties: |
 
 base_config: |
     kafka {
-        broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
-        producer.broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
-        consumer.broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
-        zookeeper = "{{ .Values.global.zookeeper.host }}:{{ .Values.global.zookeeper.port }}"
-        producer {
-          max-request-size = 1572864
-          batch.size = 98304
-          linger.ms = 10
-        }
+      broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
+      producer.broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
+      consumer.broker-servers = "{{ .Values.global.kafka.host }}:{{ .Values.global.kafka.port }}"
+      zookeeper = "{{ .Values.global.zookeeper.host }}:{{ .Values.global.zookeeper.port }}"
+      producer {
+        max-request-size = 1572864
+        batch.size = 98304
+        linger.ms = 10
       }
-      job {
-    env = "dev"
-    enable.distributed.checkpointing = false
-    
-    statebackend {
-        blob {
-            storage {
-                {{- if eq .Values.checkpoint_store_type "azure" -}}
-                account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
-                container = "{{ .Values.container }}"
-                {{- else if eq .Values.checkpoint_store_type "gcs" -}}
-                account = "{{ .Values.global.gcs_bucket_name }}"
-                container = "{{ .Values.container }}"
-                {{- end }}
-                checkpointing.dir = "checkpoint"
-            }
-        }
-        
-        {{- if eq .Values.checkpoint_store_type "azure" }}
-        base.url = "wasbs://"${job.statebackend.blob.storage.container}"@"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
-        {{- else if eq .Values.checkpoint_store_type "gcp" }}
-        base.url = "gs://"${job.statebackend.blob.storage.account}"/"${job.statebackend.blob.storage.checkpointing.dir}
-        {{ end }}
     }
+    
+    job {
+      env = "dev"
+      enable.distributed.checkpointing = false
+        statebackend {
+          gcs {
+            storage {
+              bucket = "{{ .Values.gcp_public_bucket_name }}"
+              checkpointing.dir = "checkpoint"
+            }
+          }
+          base.url = "gs://"${job.statebackend.gcs.storage.bucket}"/"${job.statebackend.gcs.storage.checkpointing.dir}
+        }
     }
 
-      task {
-        parallelism = 1
-        consumer.parallelism = 1
-        checkpointing.compressed = true
-        checkpointing.interval = 60000
-        checkpointing.pause.between.seconds = 5000
-        restart-strategy.attempts = 3
-        restart-strategy.delay = 30000 # in milli-seconds
+    task {
+      parallelism = 1
+      consumer.parallelism = 1
+      checkpointing.compressed = true
+      checkpointing.interval = 60000
+      checkpointing.pause.between.seconds = 5000
+      restart-strategy.attempts = 3
+      restart-strategy.delay = 30000 # in milli-seconds
+    }
+    redisdb.connection.timeout = 30000
+    redis {
+      host = "{{ .Values.global.redis.host }}"
+      port = {{ .Values.global.redis.port }}
+    }
+    redis-meta {
+      host = "{{ .Values.metadata2_redis_host | default .Values.global.redis.host }}"
+      port = 6379
+    }
+    postgres {
+      host = "{{ .Values.global.postgresql.host }}"
+      port = "{{ .Values.global.postgresql.port }}"
+      maxConnections = "{{ .Values.postgres.max_connections }}"
+      sslMode = "{{ .Values.postgres.sslmode }}"
+      user = "{{ .Values.global.postgresql.postgresqlUsername }}"
+      password = "{{ .Values.global.postgresql.postgresqlPassword }}"
+    }
+    lms-cassandra {
+      host = "{{ .Values.global.cassandra.host }}"
+      port = "{{ .Values.global.cassandra.port }}"
+    }
+    schema {
+      basePath = "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/contents/schemas/local"
+      supportedVersion = {
+        itemset = "2.0"
       }
-      redisdb.connection.timeout = 30000
-      redis {
-        host = "{{ .Values.global.redis.host }}"
-        port = {{ .Values.global.redis.port }}
-      }
-      redis-meta {
-        host = "{{ .Values.metadata2_redis_host | default .Values.global.redis.host }}"
-        port = 6379
-      }
-      postgres {
-        host = "{{ .Values.global.postgresql.host }}"
-        port = "{{ .Values.global.postgresql.port }}"
-        maxConnections = "{{ .Values.postgres.max_connections }}"
-        sslMode = "{{ .Values.postgres.sslmode }}"
-        user = "{{ .Values.global.postgresql.postgresqlUsername }}"
-        password = "{{ .Values.global.postgresql.postgresqlPassword }}"
-      }
-      lms-cassandra {
-        host = "{{ .Values.global.cassandra.host }}"
-        port = "{{ .Values.global.cassandra.port }}"
-      }
-      schema {
-        basePath = "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/contents/schemas/local"
-        supportedVersion = {
-          itemset = "2.0"
-        }
-      }
+    }
 
 flink_jobs:
   ingest-router:

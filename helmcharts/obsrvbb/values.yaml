@@ -376,6 +376,14 @@ global:
   spark: *spark
   keycloak_kid_keys_configmap: keycloak-kids-keys
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
+  gcp_bucket_name: sunbird-public
+  gcp_project_id: sunbird-morocco-sandbox-434709
+  env: dev
+  gcp_public_container_name: sunbird-public
+  gcp_storage_account_key: /Users/dishab/sunbird-morocco.json
+  gcp_storage_account_name: sunbird
+  gcp_service_account_key_file: key.json
+
 
 analytics:
   opa_enabled: true

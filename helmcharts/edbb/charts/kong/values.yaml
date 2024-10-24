@@ -34,10 +34,10 @@ service:
       targetPort: 8001
 
 ingress:
-  enabled: false
+  enabled: true
   annotations: {}
   hosts:
-    - host: chart-example.local
+    - host: gcp-dev.sunbirded.org
       paths:
       - /
 
