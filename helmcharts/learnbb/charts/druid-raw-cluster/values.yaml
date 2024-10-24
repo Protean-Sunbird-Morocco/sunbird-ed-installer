@@ -1,6 +1,7 @@
 nameOverride: "druid-raw-cluster"
 fullnameOverride: "druid-raw-cluster"
-
+commonLabels:
+  name: learnbb
 replicaCount:
   druid_coordinator: 1
   druid_overlord: 1
@@ -99,11 +100,11 @@ druid_storage_directory: "/data"
 druid_postgresql_db: "druid_raw"
 
 
-# Azure Container Details
+# GCP Container Details
 gcp_storage_account_name: ""
 gcp_storage_account_key: ""
 gcp_storage_container: "sunbird-reports"
-
+gcp_bucket_name: sunbird-public
 
 # Indexing service logs
 # For local disk (only viable in a cluster_type if this is a network mount):

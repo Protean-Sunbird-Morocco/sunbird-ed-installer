@@ -8,7 +8,8 @@ image:
   pullPolicy: IfNotPresent
   pullSecrets: []
 podAnnotations: {}
-
+commonLabels:
+  name: learnbb
 podSecurityContext: {}
   # runAsNonRoot: false
   # runAsUser: 0

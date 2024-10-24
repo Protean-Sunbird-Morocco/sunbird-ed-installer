@@ -70,7 +70,7 @@ spec:
     # Azure
     druid.google.account = {{ .Values.global.gcp_storage_account_name }}
     druid.google.key = {{ .Values.global.gcp_storage_account_key }}
-    druid.google.bucket = {{ .Values.gcp_bucket_name }}
+    druid.google.bucket = {{ .Values.global.gcp_bucket_name }}
     #druid.storage.storageDirectory = {{ .Values.druid_storage_directory }}
     druid.storage.disableAcl=true
 
@@ -83,7 +83,7 @@ spec:
 
     {{- if eq .Values.druid_deepstorage_type "gcp" }}
     druid.indexer.logs.bucket={{ .Values.druid_indexer_logs_bucket }}
-    druid.indexer.logs.s3Bucket={{ .Values.gcp_bucket_name }}
+    druid.indexer.logs.s3Bucket={{ .Values.global.gcp_bucket_name }}
     druid.indexer.logs.s3Prefix= {{ .Values.druid_indexer_logs_prefix }}
     {{- end }}
 

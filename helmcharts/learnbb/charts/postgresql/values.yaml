@@ -8,6 +8,8 @@
 ## @param global.imagePullSecrets Global Docker registry secret names as an array
 ## @param global.storageClass Global StorageClass for Persistent Volume(s)
 ##
+commonLabels:
+  name: learnbb
 global:
   imageRegistry: ""
   ## E.g.
@@ -282,6 +284,7 @@ postgresqlExtendedConf: {}
 ## @param primaryAsStandBy.primaryHost The Host of replication primary in the other cluster
 ## @param primaryAsStandBy.primaryPort The Port of replication primary in the other cluster
 ##
+
 primaryAsStandBy:
   enabled: false
   primaryHost: ""
