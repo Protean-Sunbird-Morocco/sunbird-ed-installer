@@ -81,14 +81,8 @@ spec:
     druid.indexer.logs.prefix={{ .Values.druid_indexer_logs_prefix }}
     druid.indexer.logs.disableAcl=true
 
-    {{- if eq .Values.druid_deepstorage_type "gcp" }}
-    druid.indexer.logs.bucket={{ .Values.druid_indexer_logs_bucket }}
-    druid.indexer.logs.s3Bucket={{ .Values.global.gcp_bucket_name }}
-    druid.indexer.logs.s3Prefix= {{ .Values.druid_indexer_logs_prefix }}
-    {{- end }}
-
     {{- if eq .Values.druid_deepstorage_type "google" }}
-    druid.indexer.logs.bucket={{ .Values.gcs_bucket }}
+    druid.indexer.logs.bucket={{ .Values.global.gcp_bucket_name }}
     {{- end }}
 
     # Service discovery
