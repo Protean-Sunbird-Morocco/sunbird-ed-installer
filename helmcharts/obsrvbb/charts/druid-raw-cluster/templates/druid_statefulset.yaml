@@ -188,7 +188,7 @@ spec:
         druid.coordinator.startDelay={{ .Values.druid_coordinator_startDelay }}
         druid.coordinator.period={{ .Values.druid_coordinator_period }}
         druid.coordinator.balancer.strategy={{ .Values.druid_coordinator_balancer_strategy }}
-        druid.coordinator.asOverlord.enabled=false
+        druid.coordinator.asOverlord.enabled=true
       extra.jvm.options: |-
         -Xms{{ .Values.druid_coordinator_min_heap_size }}
         -Xmx{{ .Values.druid_coordinator_max_heap_size }}
