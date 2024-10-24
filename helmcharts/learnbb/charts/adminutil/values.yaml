@@ -66,25 +66,25 @@ autoscaling:
           type: Utilization
           averageUtilization: 80
 
-# livenessProbe: {}
-# Example:
-livenessProbe:
-  httpGet:
-    path: "/health"
-    port: 4000
-  initialDelaySeconds: 15
-  periodSeconds: 15
-  failureThreshold: 5
+# livenessProbe:
+#   httpGet:
+#     path: "/health"
+#     port: 4000
+#   initialDelaySeconds: 15
+#   periodSeconds: 15
+#   failureThreshold: 5
 
-# readinessProbe: {}
-# Example:
-readinessProbe:
-  httpGet:
-    path: "/health"
-    port: 4000
-  initialDelaySeconds: 15
-  periodSeconds: 15
-  failureThreshold: 5
+livenessProbe: null
+
+# readinessProbe:
+#   httpGet:
+#     path: "/health"
+#     port: 4000
+#   initialDelaySeconds: 15
+#   periodSeconds: 15
+#   failureThreshold: 5
+
+readinessProbe: null
 
 nodeSelector: {}
 tolerations: []
