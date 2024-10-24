@@ -1,6 +1,9 @@
 nameOverride: "nginx-public-ingress"
 fullnameOverride: "nginx-public-ingress"
 
+commonLabels:
+  name: edbb
+
 replicaCount: 1
 
 image:

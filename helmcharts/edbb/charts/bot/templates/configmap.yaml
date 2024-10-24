@@ -1,3 +1,5 @@
+###################  bot
+
 {{- if .Values.configmap.enabled }}
 apiVersion: v1
 kind: ConfigMap
@@ -21,7 +23,11 @@ data:
   {{- end }}
 {{- end }}
 {{- end }}
+
 ---
+
+################### bot-env
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -37,7 +43,11 @@ data:
   {{- include "common.tplvalues.render" (dict "value" $var "context" $) | nindent 2 }}
 
 {{- if .Values.opa.enabled }}
+
 ---
+
+################### bot-opa
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -57,7 +67,11 @@ data:
   {{- include "common.tplvalues.render" (dict "value" $var "context" $) | nindent 6 }}
   {{- end }}
 {{- end }}
+
 ---
+
+################### bot-envoy
+
 apiVersion: v1
 kind: ConfigMap
 metadata:

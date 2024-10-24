@@ -1,6 +1,10 @@
 nameOverride: "report"
 fullnameOverride: "report"
 
+
+commonLabels:
+  name: edbb
+
 replicaCount: 1
 
 image:

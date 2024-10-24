@@ -1,6 +1,10 @@
 nameOverride: "bot"
 fullnameOverride: "bot"
 
+commonLabels:
+  name: edbb
+
+
 replicaCount: 1
 
 image:
