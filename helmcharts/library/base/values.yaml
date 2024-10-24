@@ -1,6 +1,9 @@
 nameOverride: ""
 fullnameOverride: ""
 
+commonLabels:
+  name: library-base
+
 replicaCount: 1
 
 image:
