@@ -1,2 +1,2 @@
-export GCP_TERRAFORM_BACKEND_BUCKET=upload-filestfstate-1729069450
+export GCP_TERRAFORM_BACKEND_BUCKET=devtfstate-1729859290
 export GCP_PROJECT_ID=sunbird-morocco-sandbox-434709

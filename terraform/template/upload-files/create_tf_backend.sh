@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-environment=$1
+environment=dev
 PROJECT_ID=$(gcloud config get-value project)
 BUCKET_NAME="${environment}tfstate-$(date +%s)"
 LOCATION="asia-south1"  # Choose an appropriate location for your bucket

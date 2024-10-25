@@ -6,7 +6,8 @@ echo "The installation will fail if any of the mandatory variables are missing."
 echo "Press Enter to continue..."
 read -r
 
-environment=$(basename "$(pwd)")
+RELEASE="release700"
+environment=dev
 
 function backup_configs() {
     echo -e "\nUsing existing config files if they exist"
@@ -140,7 +141,7 @@ function generate_postman_env() {
     if [ "$(basename "$current_directory")" != "$environment" ]; then
         cd ../terraform/gcp/$environment 2>/dev/null || true
     fi
-    domain_name=$(kubectl get cm -n sunbird report-env -ojsonpath='{.data.SUNBIRD_ENV}')
+    domain_name=$(kubectl get cm -n sunbird report-env -ojsonpath='{.data.SUNBIRD_ENV}') 
     api_key=$(kubectl get cm -n sunbird player-env -ojsonpath='{.data.sunbird_api_auth_token}')
     keycloak_secret=$(kubectl get cm -n sunbird player-env -ojsonpath='{.data.sunbird_portal_session_secret}')
     keycloak_admin=$(kubectl get cm -n sunbird userorg-env -ojsonpath='{.data.sunbird_sso_username}')
@@ -162,15 +163,29 @@ function generate_postman_env() {
 function run_post_install() {
     echo "Running post-installation tasks..."
     echo "Please ensure that your application is up and running."
+    echo "Starting post install..."
+    cp ../../../postman-collection/collection${RELEASE}.json .
+    postman collection run collection${RELEASE}.json --environment postman.env.json --delay-request 500 --bail --insecure
 }
 
-backup_configs
-create_tf_backend
-create_tf_resources
-install_helm_components
-dns_mapping
-generate_postman_env
+function restart_workloads_using_keys() {
+    echo -e "\nRestart workloads using keycloak keys and wait for them to start..."
+    kubectl rollout restart deployment -n sunbird neo4j knowledge-mw player report content adminutil cert-registry groups userorg lms notification registry analytics
+    kubectl rollout status deployment -n sunbird neo4j knowledge-mw player report content adminutil cert-registry groups userorg lms notification registry analytics
+    echo -e "\nWaiting for all pods to start"
+}
+
+# certificate_config
+# generate_postman_env
+restart_workloads_using_keys
 run_post_install
 
-echo "Installation completed successfully!"
+# backup_configs
+# create_tf_backend
+# create_tf_resources
+# install_helm_components
+# dns_mapping
+# generate_postman_env
+# run_post_install
 
+echo "Installation completed successfully!"

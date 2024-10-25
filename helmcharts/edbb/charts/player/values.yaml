@@ -120,7 +120,6 @@ sidecars: {}
 opa_enabled: false
 
 global:
-
   gcp_storage_account_name: sunbird
   gcp_bucket_name: sunbird-public
   gcp_service_account_key_configmap: gcp-service-account-config

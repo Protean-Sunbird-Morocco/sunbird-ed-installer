@@ -34,7 +34,7 @@ service:
       targetPort: 8001
 
 ingress:
-  enabled: true
+  enabled: false
   annotations: {}
   hosts:
     - host: gcp-dev.sunbirded.org

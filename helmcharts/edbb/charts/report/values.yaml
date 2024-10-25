@@ -167,7 +167,7 @@ postgresql: &postgresql
 
 global:
   postgresql: *postgresql
-  domain: "https://dummy.sunbird.com"
+  domain: "gcp-dev.sunbirded.org"
 
 commonAnnotations:
   reloader.stakater.com/auto: "true"
