@@ -166,7 +166,7 @@ kafka: &kafka
 play_http: &play_http
   secret_key: "secretKey"
 schema: &schema
-  base_path: "https://storage.googleapis.com/{{.Values.global.gcp_public_bucket_name}}//schemas/local"
+  base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}/schemas/local"
 graph_passport: &graph_passport
   key_base: "secretKey"
 installation: &installation

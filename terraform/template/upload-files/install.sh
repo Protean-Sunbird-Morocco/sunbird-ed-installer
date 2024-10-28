@@ -177,8 +177,8 @@ function restart_workloads_using_keys() {
 # certificate_config
 # generate_postman_env
 # restart_workloads_using_keys
-# run_post_install
-install_helm_components
+run_post_install
+# install_helm_components
 
 # backup_configs
 # create_tf_backend

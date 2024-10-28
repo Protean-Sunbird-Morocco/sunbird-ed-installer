@@ -254,7 +254,7 @@ flink_jobs:
       cloudstorage.metadata.replace_absolute_path=true
       cloudstorage.relative_path_prefix= "CONTENT_STORAGE_BASE_PATH"
       cloudstorage.read_base_path="{{ include "common.tplvalues.render" (dict "value" .Values.cloudstorage_read_base_path "context" $) }}"
-      cloudstorage.write_base_path=["https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/] 
+      cloudstorage.write_base_path=["https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}/"] 
       cloudstorage.mecloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
       cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
 
