@@ -68,39 +68,38 @@ function certificate_config() {
 }
 
 function install_component() {
-    kubectl create configmap keycloak-key -n sunbird 2>/dev/null || true
-    local current_directory="$(pwd)"
-    if [ "$(basename "$current_directory")" != "helmcharts" ]; then
-        cd ../../../helmcharts 2>/dev/null || true
-    fi
-    local component="$1"
-    kubectl create namespace sunbird 2>/dev/null || true
-    echo -e "\nInstalling $component"
-    local ed_values_flag=""
-    if [ -f "$component/ed-values.yaml" ]; then
-        ed_values_flag="-f $component/ed-values.yaml --wait --wait-for-jobs"
-    fi
+    # kubectl create configmap keycloak-key -n sunbird 2>/dev/null || true
+    # local current_directory="$(pwd)"
+    # if [ "$(basename "$current_directory")" != "helmcharts" ]; then
+    #     cd ../../../helmcharts 2>/dev/null || true
+    # fi
+    # local component="$1"
+    # kubectl create namespace sunbird 2>/dev/null || true
+    # echo -e "\nInstalling $component"
+    # local ed_values_flag=""
+    # if [ -f "$component/ed-values.yaml" ]; then
+    #     ed_values_flag="-f $component/ed-values.yaml --wait --wait-for-jobs"
+    # fi
 
-    # Generate the key pair required for the certificate template
-    if [ "$component" = "learnbb" ]; then
-        if kubectl get job keycloak-kids-keys -n sunbird >/dev/null 2>&1; then
-            echo "Deleting existing job keycloak-kids-keys..."
-            kubectl delete job keycloak-kids-keys -n sunbird
-        fi
+    # # Generate the key pair required for the certificate template
+    # if [ "$component" = "learnbb" ]; then
+    #     if kubectl get job keycloak-kids-keys -n sunbird >/dev/null 2>&1; then
+    #         echo "Deleting existing job keycloak-kids-keys..."
+    #         kubectl delete job keycloak-kids-keys -n sunbird
+    #     fi
 
-        if [ -f "certkey.pem" ] && [ -f "certpubkey.pem" ]; then
-            echo "Certificate keys are already created. Skipping the keys creation..."
-        else
-            certificate_keys
-        fi
-    fi
+    #     if [ -f "certkey.pem" ] && [ -f "certpubkey.pem" ]; then
+    #         echo "Certificate keys are already created. Skipping the keys creation..."
+    #     else
+    #         certificate_keys
+    #     fi
+    # fi
 
-    helm upgrade --install "$component" "$component" --namespace sunbird -f "$component/values.yaml" \
-        $ed_values_flag \
-        -f "../terraform/gcp/$environment/global-values.yaml" \
-        -f "../terraform/gcp/$environment/global-values-jwt-tokens.yaml" \
-        -f "../terraform/gcp/$environment/global-values-rsa-keys.yaml" \
-        -f "../terraform/gcp/$environment/global-cloud-values.yaml" --timeout 30m --debug
+    helm upgrade --install "$component" "../../../helmcharts/$component" --debug --namespace sunbird -f "../../../helmcharts/$component/values.yaml" \
+        -f "../../../terraform/gcp/global-values.yaml" \
+        -f "../../../terraform/gcp/global-values-jwt-tokens.yaml" \
+        -f "../../../terraform/gcp/global-values-rsa-keys.yaml" \
+        -f "../../../terraform/gcp/global-cloud-values.yaml" --timeout 30m --debug
 }
 
 function install_helm_components() {
@@ -170,15 +169,16 @@ function run_post_install() {
 
 function restart_workloads_using_keys() {
     echo -e "\nRestart workloads using keycloak keys and wait for them to start..."
-    kubectl rollout restart deployment -n sunbird neo4j knowledge-mw player content cert-registry groups userorg lms notification registry analytics
-    kubectl rollout status deployment -n sunbird neo4j knowledge-mw player content cert-registry groups userorg lms notification registry analytics
+    kubectl rollout restart deployment -n sunbird neo4j knowledge-mw player content cert-registry groups adminutil userorg lms notification registry analytics
+    kubectl rollout status deployment -n sunbird neo4j knowledge-mw player content cert-registry groups adminutil userorg lms notification registry analytics
     echo -e "\nWaiting for all pods to start"
 }
 
 # certificate_config
 # generate_postman_env
 # restart_workloads_using_keys
-run_post_install
+# run_post_install
+install_helm_components
 
 # backup_configs
 # create_tf_backend

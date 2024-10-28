@@ -19,3 +19,7 @@ terragrunt
 # Ignoring test directories
 **/kitchen
 **/sunbird-morocco-sandbox.json
+**/global-values-jwt-tokens.yaml
+**/global-values-rsa-keys.yaml
+**/global-values.yaml
+**/global-cloud-values.yaml
