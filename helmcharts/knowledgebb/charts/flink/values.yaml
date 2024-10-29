@@ -106,6 +106,7 @@ taskmanager:
 
 global:
   gcp_project_id: sunbird-morocco-sandbox-434709
+  env: dev
 
 # S3 Details
 s3_access_key: ""

@@ -197,6 +197,7 @@ global:
   gcp_storage_account_key: /Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
   gcp_public_bucket_name: sunbird-public
   gcp_project_id: sunbird-morocco-sandbox-434709
+  env: dev
 
 content:
   opa_enabled: true
