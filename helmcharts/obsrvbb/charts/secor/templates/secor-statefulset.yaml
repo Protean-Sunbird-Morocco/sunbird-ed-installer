@@ -65,9 +65,9 @@ spec:
             runAsUser: 9999
 
       volumes:
-        - name: {{ $jobName }}-config
+        - name: secor-config
           configMap:
-            name: secor-config
+            name: {{ $jobName }}-config
         - name: google-credentials-volume
           configMap:
             name: gcp-service-account-config

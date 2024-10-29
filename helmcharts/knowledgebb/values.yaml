@@ -194,8 +194,9 @@ global:
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
   gcp_bucket_name: sunbird-public
   gcp_storage_account_name: sunbird
-  gcp_storage_account_key: /Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4 (1).json
+  gcp_storage_account_key: /Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
   gcp_public_bucket_name: sunbird-public
+  gcp_project_id: sunbird-morocco-sandbox-434709
 
 content:
   opa_enabled: true

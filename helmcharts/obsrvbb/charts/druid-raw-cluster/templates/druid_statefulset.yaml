@@ -81,7 +81,7 @@ spec:
     druid.indexer.logs.prefix={{ .Values.druid_indexer_logs_prefix }}
     druid.indexer.logs.disableAcl=true
 
-    {{- if eq .Values.druid_deepstorage_type "gcp" }}
+    {{- if eq .Values.druid_deepstorage_type "google" }}
     druid.indexer.logs.container={{ .Values.druid_indexer_logs_container }}
     druid.indexer.logs.s3Bucket={{ .Values.gcp_storage_container }}
     druid.indexer.logs.s3Prefix= {{ .Values.druid_indexer_logs_prefix }}
@@ -188,7 +188,7 @@ spec:
         druid.coordinator.startDelay={{ .Values.druid_coordinator_startDelay }}
         druid.coordinator.period={{ .Values.druid_coordinator_period }}
         druid.coordinator.balancer.strategy={{ .Values.druid_coordinator_balancer_strategy }}
-        druid.coordinator.asOverlord.enabled=true
+        druid.coordinator.asOverlord.enabled=false
       extra.jvm.options: |-
         -Xms{{ .Values.druid_coordinator_min_heap_size }}
         -Xmx{{ .Values.druid_coordinator_max_heap_size }}

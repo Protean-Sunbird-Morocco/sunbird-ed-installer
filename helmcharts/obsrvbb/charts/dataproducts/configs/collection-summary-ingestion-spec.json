@@ -230,7 +230,7 @@
     "ioConfig": {
       "type": "index",
       "firehose": {
-        "type": "gcp",
+        "type": "google",
         "blobs": [
           {
             "container": "{{ .Values.reports_container }}",

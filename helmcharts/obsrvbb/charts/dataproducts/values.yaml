@@ -101,7 +101,7 @@ run_logs_directory: "/data/analytics/logs/data-products"
 
 reports_container: "reports"
 blob_container_name: "telemetry-data-store"
-cloud_storage_type: "gcp"
+cloud_storage_type: "google"
 dp_raw_telemetry_backup_location: "unique/raw/"
 cloud_storage_endpoint: https://console.cloud.google.com/storage/browser/sunbird-public
 

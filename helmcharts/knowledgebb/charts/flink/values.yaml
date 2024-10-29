@@ -104,6 +104,8 @@ taskmanager:
   replicas: 1
   cpu_requests: 0.3
 
+global:
+  gcp_project_id: sunbird-morocco-sandbox-434709
 
 # S3 Details
 s3_access_key: ""

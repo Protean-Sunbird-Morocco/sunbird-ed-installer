@@ -53,7 +53,7 @@ spec:
             "-Dfs.gs.project.id={{ .Values.global.gcp_project_id }}",
             "-Dfs.gs.system.bucket=sunbird-public",
             "-Dgoogle.cloud.auth.service.account.enable=true",
-            "-Dgoogle.cloud.auth.service.account.keyfile=/Users/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json",
+            "-Dgoogle.cloud.auth.service.account.keyfile=/Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json",
 {{- end }}
 
 

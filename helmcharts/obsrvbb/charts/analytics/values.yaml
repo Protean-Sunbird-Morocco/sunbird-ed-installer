@@ -101,7 +101,7 @@ serviceAccount:
   name: ""
 
 ## Can be one of - azure, aws, gcloud
-cloud_service_provider: "gcp"
+cloud_service_provider: "google"
 cassandra_keyspace_prefix: dev_
 postgres_db: "analytics"
 # postgres_user: "postgres"
