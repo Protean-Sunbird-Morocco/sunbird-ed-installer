@@ -3,6 +3,9 @@ fullnameOverride: "keycloak-kids-keys"
 
 replicaCount: 1
 
+global:
+  random_string: sunbird12345
+
 image:
   repository: sunbirded.azurecr.io/keycloak-kids-keys
   tag: "0.1.5"
