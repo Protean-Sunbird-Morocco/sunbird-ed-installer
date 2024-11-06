@@ -1,8 +1,7 @@
 provider "google" {
   project     = var.project_id
   region      = var.location
-  credentials = gcp-service-account-config
-  gcp_service_account_key_file: key.json 
+  credentials = file("key.json") 
 }
 
 locals {

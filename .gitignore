@@ -13,6 +13,11 @@ vendor
 terragrunt
 .DS_Store
 *.terrahelpbkp
+terraform/gcp/modules/gke/key.json
+terraform/gcp/modules/serviceaccount/key.json
+terraform/gcp/modules/serviceaccount/sunbird-service-account-key.json
+
+
 
 # Ignoring common charts
 **/charts/common

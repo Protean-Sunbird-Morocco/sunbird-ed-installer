@@ -1,7 +1,7 @@
 provider "google" {
   project     = var.project_id
   region      = var.location
-  credentials = file("/home/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json")
+  credentials = file("key.json")
 }
 
 provider "helm" {
@@ -30,7 +30,7 @@ resource "google_compute_subnetwork" "subnet" {
 }
 
 resource "google_container_cluster" "primary" {
-  name                     = "${var.environment_name}-gke-cluster"
+  name                     = "${var.environment_name}-cluster"
   location                 = var.location
   network                  = google_compute_network.vpc_network.name
   subnetwork               = google_compute_subnetwork.subnet.name
@@ -60,37 +60,10 @@ resource "google_container_node_pool" "worker_pool" {
   }
 
    autoscaling {
-   min_node_count = var.worker_node_min_count
-   max_node_count = var.worker_node_max_count
- }
+     min_node_count = var.worker_node_min_count
+     max_node_count = var.worker_node_max_count
+   }
 
   depends_on = [google_container_cluster.primary]
-}
-
-resource "kubernetes_namespace" "ingress_nginx" {
-  metadata {
-    name = "nginx-ingress" 
-  }
-}
-
-resource "helm_release" "nginx_ingress" {
-  name       = "ingress-nginx"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
-  namespace  = kubernetes_namespace.ingress_nginx.metadata[0].name
-
-  create_namespace = true
-
-  set {
-    name  = "controller.replicaCount"
-    value = "1"
-  }
-
-  set {
-    name  = "controller.service.type"
-    value = "ClusterIP" 
-  }
-
-  depends_on = [kubernetes_namespace.ingress_nginx]
 }
 
