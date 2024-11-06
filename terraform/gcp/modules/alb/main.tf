@@ -1,6 +1,6 @@
 provider "google" {
   project     = var.project_id
-  credentials = file("/home/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json")
+  credentials = file("key.json")
 }
 
 data "google_compute_network" "existing_vpc" {

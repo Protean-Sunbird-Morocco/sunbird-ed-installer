@@ -1,7 +1,7 @@
 provider "google" {
   project     = var.project_id
   region      = var.location
-  credentials = file("/home/mansi/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json")
+  credentials = file("key.json")
 }
 
 resource "google_compute_network" "vpc_network" {

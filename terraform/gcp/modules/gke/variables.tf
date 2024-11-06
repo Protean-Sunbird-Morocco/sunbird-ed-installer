@@ -21,7 +21,7 @@ variable "subnet_cidr" {
 variable "worker_node_count" {
   description = "Number of nodes for the worker node pool."
   type        = number
-  default     = 2
+  default     = 5
 }
 
 variable "worker_node_size" {
@@ -39,7 +39,7 @@ variable "worker_node_min_count" {
 variable "worker_node_max_count" {
   description = "Maximum number of nodes for autoscaling in the worker node pool."
   type        = number
-  default     = 5
+  default     = 10
 }
 
 
