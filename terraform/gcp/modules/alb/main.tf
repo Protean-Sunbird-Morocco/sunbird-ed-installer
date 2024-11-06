@@ -1,67 +1,70 @@
 provider "google" {
   project     = var.project_id
+  region      = var.location
   credentials = file("key.json")
 }
 
-data "google_compute_network" "existing_vpc" {
-  name = var.existing_vpc_name
-}
-
-data "google_compute_subnetwork" "existing_subnet" {
-  name   = var.existing_subnet_name
-  region = var.primary_region
-}
-
-resource "google_compute_global_address" "static_ip" {
-  name = "${var.environment_name}-static-ip"
-}
-
-resource "google_compute_managed_ssl_certificate" "ssl_certificate" {
-  name = "${var.environment_name}-ssl-cert"
-  managed {
-    domains = [var.domain_name]
+provider "helm" {
+  kubernetes {
+    config_path = pathexpand("~/.kube/config") 
   }
 }
 
-resource "google_compute_target_https_proxy" "https_proxy" {
-  name            = "${var.environment_name}-https-proxy"
-  ssl_certificates = [google_compute_managed_ssl_certificate.ssl_certificate.id]
-  url_map         = google_compute_url_map.lb_url_map.id
+provider "kubernetes" {
+  config_path = pathexpand("~/.kube/config")
 }
 
-resource "google_compute_global_forwarding_rule" "https_forwarding_rule" {
-  name       = "${var.environment_name}-frontend-service"
-  target     = google_compute_target_https_proxy.https_proxy.id
-  port_range = "443"
-  ip_address = google_compute_global_address.static_ip.address
-  ip_protocol = "TCP"
+resource "google_compute_network" "vpc_network" {
+  name                   = "${var.environment_name}-vpc"
+  auto_create_subnetworks = false
+  routing_mode            = "GLOBAL"
 }
 
-resource "google_compute_url_map" "lb_url_map" {
-  name            = "${var.environment_name}-loadbalancer"
-  default_service = google_compute_backend_service.backend.id
+resource "google_compute_subnetwork" "subnet" {
+  name          = "${var.environment_name}-subnet"
+  ip_cidr_range = var.subnet_cidr
+  region        = var.location
+  network       = google_compute_network.vpc_network.id
+
+  depends_on = [google_compute_network.vpc_network]
 }
 
-# Global Network Endpoint Group (NEG) for external IP
-resource "google_compute_global_network_endpoint_group" "internet_neg" {
-  name                = "${var.environment_name}-internet-neg"
-  network_endpoint_type = "INTERNET_IP_PORT"
-}
+resource "google_container_cluster" "primary" {
+  name                     = "${var.environment_name}-cluster"
+  location                 = var.location
+  network                  = google_compute_network.vpc_network.name
+  subnetwork               = google_compute_subnetwork.subnet.name
+  remove_default_node_pool = true  
 
-resource "google_compute_global_network_endpoint" "add_endpoint" {
-  global_network_endpoint_group = google_compute_global_network_endpoint_group.internet_neg.id
-  ip_address = "34.118.230.66" 
-  port       = 80
-}
-
-resource "google_compute_backend_service" "backend" {
-  name                  = "${var.environment_name}-backend-service"
-  protocol              = "HTTPS"
-  load_balancing_scheme = "EXTERNAL"
-
-  backend {
-    group = google_compute_global_network_endpoint_group.internet_neg.id
-    balancing_mode = "UTILIZATION"
+  initial_node_count = 1 
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = true
+    }
   }
 }
+
+resource "google_container_node_pool" "worker_pool" {
+  cluster    = google_container_cluster.primary.name
+  name       = "worker-node-pool"
+  location   = var.location
+  node_count = var.worker_node_count
+
+  node_config {
+    machine_type = var.worker_node_size
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring"
+    ]
+  }
+
+   autoscaling {
+     min_node_count = var.worker_node_min_count
+     max_node_count = var.worker_node_max_count
+   }
+
+  depends_on = [google_container_cluster.primary]
+}
+
 
