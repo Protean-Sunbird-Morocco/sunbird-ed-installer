@@ -1,11 +1,19 @@
 variable "project_id" {
   type        = string
   description = "The ID of the GCP project."
+  default     = "sunbird-morocco-sandbox-434709"
 }
 
-variable "environment_name" {
+variable "environment" {
   type        = string
+  default     = "sunbird"
   description = "Environment name. All resources will be prefixed with this value."
+}
+
+variable "building_block" {
+  description = "Building block name"
+  type        = string
+  default     = "ed"  # Set a default value or override from `environment.hcl`
 }
 
 variable "location" {

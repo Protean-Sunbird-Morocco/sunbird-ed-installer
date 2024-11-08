@@ -5,8 +5,13 @@ provider "google" {
 }
 
 locals {
-  environment_name = var.environment_name 
+  common_tags = {
+    environment = "${var.environment}"
+    BuildingBlock = "${var.building_block}"
+  }
+  environment_name = "${var.building_block}-${var.environment}"
 }
+
 
 resource "google_storage_bucket" "storage_bucket_private" {
   name                         = "${local.environment_name}-private"

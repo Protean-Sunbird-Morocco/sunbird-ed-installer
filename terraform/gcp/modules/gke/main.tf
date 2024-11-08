@@ -6,7 +6,7 @@ provider "google" {
 
 provider "helm" {
   kubernetes {
-    config_path = pathexpand("~/.kube/config") 
+    config_path = pathexpand("~/.kube/config")
   }
 }
 
@@ -14,29 +14,37 @@ provider "kubernetes" {
   config_path = pathexpand("~/.kube/config")
 }
 
-resource "google_compute_network" "vpc_network" {
-  name                   = "${var.environment_name}-vpc"
-  auto_create_subnetworks = false
-  routing_mode            = "GLOBAL"
+# Define locals based on the provided variables
+locals {
+  common_tags = {
+    environment    = var.environment
+    building_block = var.building_block
+  }
+  environment_name = "${var.building_block}-${var.environment}"
 }
 
-resource "google_compute_subnetwork" "subnet" {
-  name          = "${var.environment_name}-subnet"
-  ip_cidr_range = var.subnet_cidr
-  region        = var.location
-  network       = google_compute_network.vpc_network.id
-
-  depends_on = [google_compute_network.vpc_network]
+# Reference the existing VPC
+data "google_compute_network" "existing_vpc" {
+  name    = "ed-sunbird-vpc" 
+  project = var.project_id
 }
 
+# Reference the existing Subnet
+data "google_compute_subnetwork" "existing_subnet" {
+  name   = "ed-sunbird-subnet" 
+  region = var.location
+  project = var.project_id
+}
+
+# GKE Cluster using existing VPC and Subnet
 resource "google_container_cluster" "primary" {
-  name                     = "${var.environment_name}-cluster"
+  name                     = "${local.environment_name}-cluster"
   location                 = var.location
-  network                  = google_compute_network.vpc_network.name
-  subnetwork               = google_compute_subnetwork.subnet.name
-  remove_default_node_pool = true  
+  network                  = data.google_compute_network.existing_vpc.self_link
+  subnetwork               = data.google_compute_subnetwork.existing_subnet.self_link
+  remove_default_node_pool = true
 
-  initial_node_count = 1 
+  initial_node_count = 1
   master_auth {
     client_certificate_config {
       issue_client_certificate = true
@@ -59,10 +67,10 @@ resource "google_container_node_pool" "worker_pool" {
     ]
   }
 
-   autoscaling {
-     min_node_count = var.worker_node_min_count
-     max_node_count = var.worker_node_max_count
-   }
+  autoscaling {
+    min_node_count = var.worker_node_min_count
+    max_node_count = var.worker_node_max_count
+  }
 
   depends_on = [google_container_cluster.primary]
 }

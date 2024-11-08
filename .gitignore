@@ -1,4 +1,7 @@
-.*.sw?
+# Ignore any key.json files in any subdirectory
+**/key.json
+
+# Existing entries
 .idea
 terragrunt.iml
 vendor
@@ -17,8 +20,6 @@ terraform/gcp/modules/gke/key.json
 terraform/gcp/modules/serviceaccount/key.json
 terraform/gcp/modules/serviceaccount/sunbird-service-account-key.json
 
-
-
 # Ignoring common charts
 **/charts/common
 # Ignoring test directories
@@ -28,3 +29,4 @@ terraform/gcp/modules/serviceaccount/sunbird-service-account-key.json
 **/global-values-rsa-keys.yaml
 **/global-values.yaml
 **/global-cloud-values.yaml
+

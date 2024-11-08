@@ -38,13 +38,11 @@ variable "sunbird_public_artifacts_container" {
 variable "gcp_bucket" {
     type        = string
     description = "The GCP bucket name where artifacts will be uploaded."
-    default     = "sunbird-public"
+    default     = "ed-sunbird-public"
 }
 
 variable "gcp_credentials" {
     type        = string
     description = "The path to the GCP credentials file for authenticating with the GCP bucket."
-    default     = gcp-service-account-config
-    gcp_service_account_key_file: key.json 
+    default     = "key.json" 
 }
-
