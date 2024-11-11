@@ -139,7 +139,7 @@ play_http: &play_http
   secret_key: "a-dummy-play-http-secret-key"
 
 schema: &schema
-  base_path: "https://storage.googleapis.com/sunbird-public/schemas/local"
+  base_path: "https://storage.googleapis.com/ed-sunbird-public/schemas/local"
 
 graph_passport: &graph_passport
   key_base: "a-dummy-graph_passport-secret-key"
@@ -160,9 +160,9 @@ global:
   elasticsearch: *es
   provisioningAnnotations: *provisioningAnnotations
   gcp_storage_account_name: sunbird
-  gcp_public_container_name: sunbird-public
+  gcp_public_container_name: ed-sunbird-public
   env: dev
-  gcp_bucket_name: sunbird-public
+  gcp_bucket_name: ed-sunbird-public
   private_ingressgateway_ip: 10.0.0.10
   gcp_project_id: sunbird-morocco-sandbox-434709
   gcp_service_account_key_configmap: gcp-service-account-config

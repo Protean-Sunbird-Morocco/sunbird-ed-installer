@@ -6,10 +6,10 @@ provider "google" {
 
 locals {
   global_values_keys_file = "${var.base_location}/global-keys-values.yaml"
-  jwt_script_location = "${var.base_location}/../../../scripts/jwt-keys.py"
-  rsa_script_location = "${var.base_location}/../../../scripts/rsa-keys.py"
-  global_values_jwt_file_location = "${var.base_location}/../../../scripts/global-values-jwt-tokens.yaml"
-  global_values_rsa_file_location = "${var.base_location}/../../../scripts/global-values-rsa-keys.yaml"
+  jwt_script_location = "${var.base_location}/../../../../scripts/jwt-keys.py"
+  rsa_script_location = "${var.base_location}/../../../../scripts/rsa-keys.py"
+  global_values_jwt_file_location = "${var.base_location}/../../../../scripts/global-values-jwt-tokens.yaml"
+  global_values_rsa_file_location = "${var.base_location}/../../../../scripts/global-values-rsa-keys.yaml"
 }
 
 resource "null_resource" "generate_jwt_keys" {

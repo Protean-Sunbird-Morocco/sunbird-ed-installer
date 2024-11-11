@@ -165,8 +165,8 @@ global:
   keycloak_key_configmap: keycloak-key
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
   gcp_storage_account_name: sunbird
-  gcp_public_container_name: sunbird-public
-  gcp_bucket_name: sunbird-public
+  gcp_public_container_name: ed-sunbird-public
+  gcp_bucket_name: ed-sunbird-public
   gcp_project_id: sunbird-morocco-sandbox-434709
   cassandra.host: cassandra
   gcp_service_account_key_configmap: gcp-service-account-config

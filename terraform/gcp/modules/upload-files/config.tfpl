@@ -10,3 +10,4 @@ gcp_service_account_key_file: key.json
 type = azureblob
 account = ${sunbird_public_artifacts_account}
 sas_url = ${sunbird_public_artifacts_account_sas_url}
+

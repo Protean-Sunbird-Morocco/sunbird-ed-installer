@@ -1,7 +1,7 @@
 # Gcp Container Details
 gcp_account: "{{.Values.global.gcp_storage_account_name}}"
 gcp_secret: "{{ .Values.global.gcp_storage_account_key }}"
-gcp_bucket_name: "sunbird-telemetry-data-store"
+gcp_bucket_name: "ed-sunbird-telemetry-data-store"
 
 s3_access_key: "cloud_private_storage_accountname"
 s3_secret_id: "cloud_private_storage_secret"

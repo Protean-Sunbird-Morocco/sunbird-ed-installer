@@ -1,0 +1,8 @@
+global:
+  env: ${env}
+  environment: ${environment}
+  building_block: ${building_block}
+  gcp_public_bucket_name: ${_public_bucket_name}
+  gcp_private_bucket_name: ${private_bucket_name}
+  private_ingressgateway_ip: ${private_ingressgateway_ip}
+  random_string: ${random_string}

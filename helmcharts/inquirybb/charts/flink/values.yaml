@@ -35,13 +35,13 @@ service:
 ingress: {}
 
 gcp_storage_account_name: sunbird
-gcp_public_container_name: sunbird-public
+gcp_public_container_name: ed-sunbird-public
 env: dev
-gcp_bucket_name: sunbird-public
+gcp_bucket_name: ed-sunbird-public
 gcp_project_id: sunbird-morocco-sandbox-434709
 gcp_service_account_key_configmap: gcp-service-account-config
 gcp_service_account_key_file: key.json 
-gcp_public_bucket_name: sunbird-public
+gcp_public_bucket_name: ed-sunbird-public
 gcp_storage_account_key: /Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
 
 resources:
@@ -136,9 +136,9 @@ hierarchy_keyspace_name: "dev_hierarchy_store"
 kp_print_service_base_url: "http://print:5000"
 # CNAME Config
 cloudstorage_relative_path_prefix: "CONTENT_STORAGE_BASE_PATH"
-cloudstorage_base_path: "https://storage.googleapis.com/sunbird-public"
+cloudstorage_base_path: "https://storage.googleapis.com/ed-sunbird-public"
 cloudstorage_metadata_list: '["appIcon","posterImage","artifactUrl","downloadUrl","variants","previewUrl","pdfUrl"]'
-valid_cloudstorage_base_urls: '["https://storage.googleapis.com/sunbird-public"]'
+valid_cloudstorage_base_urls: '["https://storage.googleapis.com/ed-sunbird-public"]'
 cloudstorage_replace_absolute_path: false
 ### QuestionSet RePublish Job Config
 inquiry_assessment_republish_kafka_topic_name: "dev.assessment.republish.request"
@@ -296,7 +296,7 @@ flink_jobs:
       cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
       cloud_storage_secret: "/Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "sunbird-public"
+      cloud_storage_container: "ed-sunbird-public"
 
       master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {
@@ -344,7 +344,7 @@ flink_jobs:
       cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
       cloud_storage_secret: "/Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "sunbird-public"
+      cloud_storage_container: "ed-sunbird-public"
       
       master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {

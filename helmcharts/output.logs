@@ -4992,7 +4992,7 @@ nginx-public-ingress:
           annotations:
             helm.sh/hook-weight: "-4"
       domain: example.com
-      gcp_bucket_name: sunbird-public
+      gcp_bucket_name: ed-sunbird-public
       gcp_cloud_storage_base_url: cloudworklabs.in
       kafka:
         clientProtocol: PLAINTEXT
@@ -5139,7 +5139,7 @@ nginx-public-ingress:
         annotations:
           helm.sh/hook-weight: "-4"
     domain: example.com
-    gcp_bucket_name: sunbird-public
+    gcp_bucket_name: ed-sunbird-public
     gcp_cloud_storage_base_url: cloudworklabs.in
     kafka:
       clientProtocol: PLAINTEXT
@@ -5767,7 +5767,7 @@ player:
         provisioning:
           annotations:
             helm.sh/hook-weight: "-4"
-      gcp_bucket_name: sunbird-public
+      gcp_bucket_name: ed-sunbird-public
       gcp_private_container_name: ""
       gcp_service_account_key_configmap: gcp-service-account-config
       gcp_service_account_key_file: key.json
@@ -5922,7 +5922,7 @@ player:
       provisioning:
         annotations:
           helm.sh/hook-weight: "-4"
-    gcp_bucket_name: sunbird-public
+    gcp_bucket_name: ed-sunbird-public
     gcp_private_container_name: ""
     gcp_service_account_key_configmap: gcp-service-account-config
     gcp_service_account_key_file: key.json
@@ -35005,10 +35005,10 @@ data:
               add_header Content-Type text/plain;
               return 200;
           }
-          set $bucket           "https://storage.googleapis.com/sunbird-public/";
+          set $bucket           "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full         '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35038,10 +35038,10 @@ data:
               add_header Content-Type text/plain;
               return 200;
           }
-          set $bucket           "https://storage.googleapis.com/sunbird-public/";
+          set $bucket           "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full         '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35085,10 +35085,10 @@ data:
               add_header Content-Type text/plain;
               return 200;
           }
-          set $bucket           "https://storage.googleapis.com/sunbird-public/";
+          set $bucket           "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full         '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35109,10 +35109,10 @@ data:
           gzip_min_length 100000;
           gzip_proxied    expired no-cache no-store private auth;
           gzip_types application/javascript application/x-javascript text/css text/javascript;
-          set $bucket            "https://storage.googleapis.com/sunbird-public/";
+          set $bucket            "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full          '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35142,10 +35142,10 @@ data:
               add_header Content-Type text/plain;
               return 200;
           }
-          set $bucket            "https://storage.googleapis.com/sunbird-public/";
+          set $bucket            "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full          '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35175,10 +35175,10 @@ data:
               add_header Content-Type text/plain;
               return 200;
           }
-          set $bucket            "https://storage.googleapis.com/sunbird-public/";
+          set $bucket            "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full          '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35212,10 +35212,10 @@ data:
               add_header Content-Type text/plain;
               return 200;
           }
-          set $bucket           "https://storage.googleapis.com/sunbird-public/";
+          set $bucket           "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full         '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35272,10 +35272,10 @@ data:
               add_header Content-Type text/plain;
               return 200;
           }
-          set $bucket           "https://storage.googleapis.com/sunbird-public/";
+          set $bucket           "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full         '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35309,10 +35309,10 @@ data:
                add_header Content-Type text/plain;
                return 200;
           }
-          set $offline_bucket        "https://storage.googleapis.com/sunbird-public/";
+          set $offline_bucket        "https://storage.googleapis.com/ed-sunbird-public/";
           set $url_full         '$1';
           proxy_http_version     1.1;
-          proxy_set_header       Host "https://storage.googleapis.com/sunbird-public/";
+          proxy_set_header       Host "https://storage.googleapis.com/ed-sunbird-public/";
           proxy_set_header       Authorization '';
           proxy_hide_header      Access-Control-Allow-Origin;
           proxy_hide_header      Access-Control-Allow-Methods;
@@ -35590,14 +35590,14 @@ metadata:
 data:
   GCP_STORAGE_ACCOUNT: sunbird
   GCP_STORAGE_KEY: 
-  sunbird_public_storage_account_name: "https://storage.googleapis.com/sunbird-public/"
+  sunbird_public_storage_account_name: "https://storage.googleapis.com/ed-sunbird-public/"
   cloud_service_provider: gcp
   sunbird_cloud_storage_provider: gcp
-  sunbird_cloud_storage_urls: https://storage.googleapis.com/sunbird-public/
+  sunbird_cloud_storage_urls: https://storage.googleapis.com/ed-sunbird-public/
   cloud_private_storage_accountname: "sunbird"
   cloud_private_storage_secret: "gcp-service-account-config"
-  cloud_storage_privatereports_bucketname: "sunbird-reports"
-  cloud_storage_resourceBundle_bucketname: "sunbird-public"
+  cloud_storage_privatereports_bucketname: "ed-sunbird-reports"
+  cloud_storage_resourceBundle_bucketname: "ed-sunbird-public"
   cloud_storage_desktopCrash_bucketname: ""
   cloud_private_storage_region: "asia-south1"
   cloud_private_storage_project: "sunbird-morocco-sandbox-434709"
@@ -35994,7 +35994,7 @@ data:
   gcp_service_account_key_configmap: gcp-service-account-config
   gcp_service_account_key_file: key.json 
   gcp_project_id: sunbird-morocco-sandbox-434709
-  gcp_storage_bucket: sunbird-public
+  gcp_storage_bucket: ed-sunbird-public
   sunbird_api_auth_token: ""
   sunbird_super_admin_slug: 'sunbird'
   sunbird_portal_auth_server_url: ""

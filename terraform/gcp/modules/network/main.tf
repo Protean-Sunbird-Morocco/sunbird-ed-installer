@@ -4,14 +4,23 @@ provider "google" {
   credentials = file("key.json")
 }
 
+# Define locals based on the provided variables
+locals {
+  common_tags = {
+    environment    = var.environment
+    building_block = var.building_block
+  }
+  environment_name = "${var.building_block}-${var.environment}"
+}
+
 resource "google_compute_network" "vpc_network" {
-  name                   = "${var.environment_name}-vpc"
+  name                    = "${local.environment_name}-vpc"
   auto_create_subnetworks = false
   routing_mode            = "GLOBAL"
 }
 
 resource "google_compute_subnetwork" "subnet" {
-  name          = "${var.environment_name}-subnet"
+  name          = "${local.environment_name}-subnet"
   ip_cidr_range = var.subnet_cidr
   region        = var.location
   network       = google_compute_network.vpc_network.id
@@ -20,7 +29,7 @@ resource "google_compute_subnetwork" "subnet" {
 }
 
 resource "google_compute_firewall" "allow_http_https" {
-  name    = "${var.environment_name}-allow-http-https"
+  name    = "${local.environment_name}-allow-http-https"
   network = google_compute_network.vpc_network.name
 
   allow {

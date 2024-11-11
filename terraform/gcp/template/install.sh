@@ -6,50 +6,52 @@ echo "The installation will fail if any of the mandatory variables are missing."
 echo "Press Enter to continue..."
 read -r
 
-RELEASE="release700"
-environment=dev
-
-function backup_configs() {
-    echo -e "\nUsing existing config files if they exist"
-    
-    # Ensure the Kube config directory exists
-    mkdir -p ~/.kube
-    
-    # Ensure the rclone config directory exists
-    mkdir -p ~/.config/rclone
-    
-    # Set the KUBECONFIG environment variable to use the existing config file
-    export KUBECONFIG=~/.kube/config
-}
+environment=$(basename "$(pwd)")
 
 function create_tf_backend() {
     echo -e "Creating terraform state backend"
     bash create_tf_backend.sh "$environment"
 }
 
-function create_tf_resources() {
-    source tf.sh
-    echo -e "\nCreating resources on GCP"
-    terragrunt run-all apply --terragrunt-non-interactive
-    # Check if the Kube config file exists before changing permissions
-    if [ -f ~/.kube/config ]; then
-        chmod 600 ~/.kube/config
-    else
-        echo "Warning: Kubernetes config file does not exist at ~/.kube/config. Skipping permission change."
-    fi
+function backup_configs() {
+    timestamp=$(date +%d%m%y_%H%M%S)
+    echo -e "\nBackup existing config files if they exist"
+    mkdir -p ~/.kube
+    mv ~/.kube/config ~/.kube/config.$timestamp || true
+    mkdir -p ~/.config/rclone
+    mv ~/.config/rclone/rclone.conf ~/.config/rclone/rclone.conf.$timestamp || true
+    export KUBECONFIG=~/.kube/config
 }
 
+function create_tf_resources() {
+    source tf.sh
+    echo -e "\nCreating resources on gcp cloud"
+    terragrunt run-all apply --terragrunt-non-interactive 
+    chmod 600 ~/.kube/config
+}
 function certificate_keys() {
     # Generate private and public keys using openssl
     echo "Creation of RSA keys for certificate signing"
-    openssl genrsa -out ../terraform/gcp/$environment/certkey.pem
-    openssl rsa -in ../terraform/gcp/$environment/certkey.pem -pubout -out ../terraform/gcp/$environment/certpubkey.pem
+    
+    # Generate private and public keys for GCP
+    openssl genrsa -out ../terraform/gcp/$environment/certkey.pem;
+    openssl rsa -in ../terraform/gcp/$environment/certkey.pem -pubout -out ../terraform/gcp/$environment/certpubkey.pem;
+
+    # Format private and public keys for the certificate
     CERTPRIVATEKEY=$(sed 's/KEY-----/KEY-----\\n/g' ../terraform/gcp/$environment/certkey.pem | sed 's/-----END/\\n-----END/g' | awk '{printf("%s",$0)}')
-    echo "CERTIFICATE_PRIVATE_KEY: \"$CERTPRIVATEKEY\"" >> ../terraform/gcp/$environment/global-values.yaml
-    awk '{if($0 !~ /END/)  printf "%s\\r\\n",$0;} END{printf "-----END PUBLIC KEY-----"}' ../terraform/gcp/$environment/certpubkey.pem | awk '{print "CERTIFICATE_PUBLIC_KEY: \""$0"\""}' >> ../terraform/gcp/$environment/global-values.yaml
-    echo "CERTIFICATESIGN_PRIVATE_KEY: \"$CERTPRIVATEKEY\"" >> ../terraform/gcp/$environment/global-values.yaml
-    awk '{if($0 !~ /END/)  printf "%s\\r\\n",$0;} END{printf "-----END PUBLIC KEY-----"}' ../terraform/gcp/$environment/certpubkey.pem | awk '{print "CERTIFICATESIGN_PUBLIC_KEY: \""$0"\""}' >> ../terraform/gcp/$environment/global-values.yaml
+    CERTPUBLICKEY=$(sed 's/KEY-----/KEY-----\\n/g' ../terraform/gcp/$environment/certpubkey.pem | sed 's/-----END/\\n-----END/g' | awk '{printf("%s",$0)}')
+
+    # Format private and public keys for certificate signing
+    CERTIFICATESIGNPRKEY=$(sed 's/BEGIN PRIVATE KEY-----/BEGIN PRIVATE KEY-----\\\\n/g' ../terraform/gcp/$environment/certkey.pem | sed 's/-----END PRIVATE KEY/\\\\n-----END PRIVATE KEY/g' | awk '{printf("%s",$0)}')
+    CERTIFICATESIGNPUKEY=$(sed 's/BEGIN PUBLIC KEY-----/BEGIN PUBLIC KEY-----\\\\n/g' ../terraform/gcp/$environment/certpubkey.pem | sed 's/-----END PUBLIC KEY/\\\\n-----END PUBLIC KEY/g' | awk '{printf("%s",$0)}')
+
+    # Output the keys to the global-values.yaml file for GCP
+    echo "  CERTIFICATE_PRIVATE_KEY: \"$CERTPRIVATEKEY\"" >> ../terraform/gcp/$environment/global-values.yaml
+    echo "  CERTIFICATE_PUBLIC_KEY: \"$CERTPUBLICKEY\"" >> ../terraform/gcp/$environment/global-values.yaml
+    echo "  CERTIFICATESIGN_PRIVATE_KEY: \"$CERTIFICATESIGNPRKEY\"" >> ../terraform/gcp/$environment/global-values.yaml
+    echo "  CERTIFICATESIGN_PUBLIC_KEY: \"$CERTIFICATESIGNPUKEY\"" >> ../terraform/gcp/$environment/global-values.yaml
 }
+
 
 function certificate_config() {
     # Check if the key is already present in RC 
@@ -68,38 +70,38 @@ function certificate_config() {
 }
 
 function install_component() {
-    # kubectl create configmap keycloak-key -n sunbird 2>/dev/null || true
-    # local current_directory="$(pwd)"
-    # if [ "$(basename "$current_directory")" != "helmcharts" ]; then
-    #     cd ../../../helmcharts 2>/dev/null || true
-    # fi
-    # local component="$1"
-    # kubectl create namespace sunbird 2>/dev/null || true
-    # echo -e "\nInstalling $component"
-    # local ed_values_flag=""
-    # if [ -f "$component/ed-values.yaml" ]; then
-    #     ed_values_flag="-f $component/ed-values.yaml --wait --wait-for-jobs"
-    # fi
+    # We need a dummy cm for configmap to start. Later Lernbb will create real one
+    kubectl create configmap keycloak-key -n sunbird 2>/dev/null || true
+    local current_directory="$(pwd)"
+    if [ "$(basename $current_directory)" != "helmcharts" ]; then
+        cd ../../../helmcharts 2>/dev/null || true
+    fi
+    local component="$1"
+    kubectl create namespace sunbird 2>/dev/null || true
+    echo -e "\nInstalling $component"
+    local ed_values_flag=""
+    if [ -f "$component/ed-values.yaml" ]; then
+        ed_values_flag="-f $component/ed-values.yaml --wait --wait-for-jobs"
+    fi
+    ### Generate the key pair required for certificate template
+      if [ $component = "learnbb" ]; then
+        if kubectl get job keycloak-kids-keys -n sunbird >/dev/null 2>&1; then
+            echo "Deleting existing job keycloak-kids-keys..."
+            kubectl delete job keycloak-kids-keys -n sunbird
+        fi
 
-    # # Generate the key pair required for the certificate template
-    # if [ "$component" = "learnbb" ]; then
-    #     if kubectl get job keycloak-kids-keys -n sunbird >/dev/null 2>&1; then
-    #         echo "Deleting existing job keycloak-kids-keys..."
-    #         kubectl delete job keycloak-kids-keys -n sunbird
-    #     fi
+        if [ -f "certkey.pem" ] && [ -f "certpubkey.pem" ]; then
+            echo "Certificate keys are already created. Skipping the keys creation..."
+        else
+            certificate_keys
+        fi
+      fi
 
-    #     if [ -f "certkey.pem" ] && [ -f "certpubkey.pem" ]; then
-    #         echo "Certificate keys are already created. Skipping the keys creation..."
-    #     else
-    #         certificate_keys
-    #     fi
-    # fi
-
-    helm upgrade --install "$component" "../../../helmcharts/$component" --debug --namespace sunbird -f "../../../helmcharts/$component/values.yaml" \
-        -f "../../../terraform/gcp/global-values.yaml" \
-        -f "../../../terraform/gcp/global-values-jwt-tokens.yaml" \
-        -f "../../../terraform/gcp/global-values-rsa-keys.yaml" \
-        -f "../../../terraform/gcp/global-cloud-values.yaml" --timeout 30m --debug
+    helm template  "$component" "../../../helmcharts/$component" --debug --namespace sunbird -f "../../../helmcharts/$component/values.yaml" \
+        -f "../../../terraform/gcp/template/global-values.yaml" \
+        -f "../../../terraform/gcp/template/global-values-jwt-tokens.yaml" \
+        -f "../../../terraform/gcp/template/global-values-rsa-keys.yaml" \
+        -f "../../../terraform/gcp/template/global-cloud-values.yaml" --timeout 30m --debug
 }
 
 function install_helm_components() {
@@ -174,18 +176,129 @@ function restart_workloads_using_keys() {
     echo -e "\nWaiting for all pods to start"
 }
 
-# certificate_config
-# generate_postman_env
-# restart_workloads_using_keys
-run_post_install
-# install_helm_components
+function run_post_install() {
+    local current_directory="$(pwd)"
+    if [ "$(basename $current_directory)" != "$environment" ]; then
+        cd ../terraform/gcp/$environment 2>/dev/null || true
+    fi
+    check_pod_status
+    echo "Starting post install..."
+    cp ../../../postman-collection/collection${RELEASE}.json .
+    postman collection run collection${RELEASE}.json --environment env.json --delay-request 500 --bail --insecure
+}
 
-# backup_configs
-# create_tf_backend
-# create_tf_resources
-# install_helm_components
-# dns_mapping
-# generate_postman_env
-# run_post_install
+function create_client_forms() {
+    local current_directory="$(pwd)"
+    if [ "$(basename $current_directory)" != "$environment" ]; then
+        cd ../terraform/gcp/$environment 2>/dev/null || true
+    fi
+    cp -rf ../../../postman-collection/ED-${RELEASE}  .
+    check_pod_status
+    #loop through files inside collection folder
+    for FILES in ED-${RELEASE}/*.json; do
+     echo "Creating client forms in.. $FILES"
+      postman collection run $FILES --environment env.json --delay-request 500 --bail --insecure
+    done 
+   }
 
-echo "Installation completed successfully!"
+ function cleanworkspace() {
+        rm  certkey.pem certpubkey.pem
+        sed -i '/CERTIFICATE_PRIVATE_KEY:/d' global-values.yaml
+        sed -i '/CERTIFICATE_PUBLIC_KEY:/d' global-values.yaml
+        sed -i '/CERTIFICATESIGN_PRIVATE_KEY:/d' global-values.yaml
+        sed -i '/CERTIFICATESIGN_PUBLIC_KEY:/d' global-values.yaml
+        echo "cleanup completed"
+}
+function destroy_tf_resources() {
+    source tf.sh
+    cleanworkspace
+    echo -e "Destroying resources on gcp cloud"
+    terragrunt run-all destroy
+}
+
+function invoke_functions() {
+    for func in "$@"; do
+        $func
+    done
+}
+function check_pod_status() {
+    echo -e "\nRemove any orphaned pods if they exist."
+    kubectl get pod -n sunbird --no-headers | grep -v Completed | grep -v Running | awk '{print $1}' | xargs -I {} kubectl delete -n sunbird pod {} || true
+    local timeout=$((SECONDS + 600))
+    consecutive_runs=0
+    echo "Ensure the post are stable for 100 seconds"
+    while [ $SECONDS -lt $timeout ]; do
+        if ! kubectl get pods --no-headers -n sunbird | grep -v Running | grep -v Completed; then
+            echo "All pods are running successfully."
+            break
+        else
+            ((consecutive_runs++))
+        fi
+
+        if [ $consecutive_runs -ge 10 ]; then
+            echo "Timed out after 10 tries. Some pods are still not running successfully. Check the crashing pod logs and resolve the issues. Once pods are running successfully, re-reun this script as below:"
+            echo "./install.sh run_post_install"
+            exit
+        fi
+
+        echo "Number of crashing pods found. Countdown to 10"
+        sleep 10
+    done
+    echo "All pods are running successfully."
+}
+RELEASE="release700"
+POSTMAN_COLLECTION_LINK="https://api.postman.com/collections/5338608-e28d5510-20d5-466e-a9ad-3fcf59ea9f96?access_key=PMAT-01HMV5SB2ZPXCGNKD74J7ARKRQ"
+CERTPUBLICKEY=""
+CERTPRIVATEKEY=""
+
+
+if [ $# -eq 0 ]; then
+    #create_tf_backend
+    #backup_configs
+    create_tf_resources
+    #cd ../../../helmcharts
+    #install_helm_components
+    #cd ../terraform/gcp/$environment
+    #restart_workloads_using_keys
+    #certificate_config
+    #dns_mapping
+    #generate_postman_env
+    #run_post_install
+else
+    case "$1" in
+        "create_tf_backend")
+            create_tf_backend
+            ;;
+        "create_tf_resources")
+            create_tf_resources
+            ;;
+        "generate_postman_env")
+            generate_postman_env
+            ;;
+        "dns_mapping")
+            dns_mapping
+            ;;
+        "install_component")
+            shift
+            install_component "$1"
+            ;;
+        "install_helm_components")
+            install_helm_components
+            ;;
+        "run_post_install")
+            run_post_install
+            ;;
+        "destroy_tf_resources")
+            destroy_tf_resources
+            ;;
+        "certificate_config")
+            certificate_config
+            ;;
+        "create_client_forms")
+            create_client_forms
+            ;;
+        *)
+            invoke_functions "$@"
+            ;;
+    esac
+fi

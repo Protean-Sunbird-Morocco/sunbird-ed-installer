@@ -1,8 +1,20 @@
-variable "environment_name" {
-    type        = string
-    description = "The name of the environment, derived from the building block and environment."
+variable "environment" {
+  type        = string
+  default     = "sunbird"
+  description = "Environment name. All resources will be prefixed with this value."
 }
 
+variable "building_block" {
+  description = "Building block name"
+  type        = string
+  default     = "ed"  # Set a default value or override from `environment.hcl`
+}
+
+variable "project_id" {
+  type        = string
+  description = "The ID of the GCP project."
+  default     = "sunbird-morocco-sandbox-434709"
+}
 variable "location" {
     type        = string
     description = "GCP region to create the resources."
@@ -15,10 +27,6 @@ variable "additional_tags" {
     default     = {}
 }
 
-variable "project_id" {
-    type        = string
-    description = "The project ID in GCP where the resources will be created."
-}
 
 variable "storage_class" {
     type        = string

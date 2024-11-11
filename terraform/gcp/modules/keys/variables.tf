@@ -1,26 +1,32 @@
 variable "environment" {
   type        = string
+  default     = "sunbird"
   description = "Environment name. All resources will be prefixed with this value."
+}
+
+variable "building_block" {
+  description = "Building block name"
+  type        = string
+  default     = "ed"  # Set a default value or override from `environment.hcl`
 }
 
 variable "project_id" {
   type        = string
-  description = "The GCP project ID."
+  description = "The ID of the GCP project."
+  default     = "sunbird-morocco-sandbox-434709"
 }
 
-variable "gcp_region" {
-  type        = string
-  description = "The region in which to create resources."
-}
 
 variable "storage_bucket_private" {
   type        = string
   description = "Private GCS bucket name."
+  default     = "ed-sunbird-private"
 }
 
 variable "location" {
   description = "The region for Google Cloud resources."
   type        = string
+  default     = "asia-south1"
 }
 
 variable "base_location" {
