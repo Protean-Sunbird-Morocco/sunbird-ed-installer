@@ -192,10 +192,10 @@ global:
   provisioningAnnotations: *provisioningAnnotations
   keycloak_kid_keys_configmap: keycloak-kids-keys
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
-  gcp_bucket_name: sunbird-public
+  gcp_bucket_name: ed-sunbird-public
   gcp_storage_account_name: sunbird
   gcp_storage_account_key: /Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
-  gcp_public_bucket_name: sunbird-public
+  gcp_public_bucket_name: ed-sunbird-public
   gcp_project_id: sunbird-morocco-sandbox-434709
   env: dev
 

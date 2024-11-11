@@ -103,7 +103,7 @@ commonLabels:
   name: learnbb
 # Gcp Container Details
 checkpoint_store_type: "gcp"
-cloud_storage_flink_bucketname: sunbird-flink-state-backend
+cloud_storage_flink_bucketname: ed-sunbird-flink-state-backend
 # AWS S3 Details
 s3_access_key: ""
 s3_secret_key: ""
@@ -132,7 +132,7 @@ cloud_storage: &cloud_storage
   container: "dummyContainer"
   endpoint: "https://dummy.endpoint.com"
   cloud_service_provider: "gcp"
-  cloud_storage_content_bucketname: "sunbird-content-bucket"
+  cloud_storage_content_bucketname: "ed-sunbird-content-bucket"
   cloud_private_storage_accountname: "sunbird"
   cloud_private_storage_secret: gcp-service-account-config
   gcp_service_account_key_file: key.json

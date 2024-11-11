@@ -102,13 +102,13 @@ druid_postgresql_db: "druid_raw"
 # Gcp Container Details
 gcp_storage_account_name: ""
 gcp_storage_account_key: ""
-gcp_storage_container: "sunbird-reports"
+gcp_storage_container: "ed-sunbird-reports"
 
 
 # Indexing service logs
 # For local disk (only viable in a cluster_type if this is a network mount):
 druid_indexer_logs_type: "google"
-druid_indexer_logs_container: "sunbird-reports"
+druid_indexer_logs_container: "ed-sunbird-reports"
 druid_indexer_logs_prefix: "backups/druid/druid-task-logs"
 druid_indexer_logs_directory: "backups/druid/druid-task-logs"
 

@@ -26,7 +26,7 @@ function backup_configs() {
 function create_tf_resources() {
     source tf.sh
     echo -e "\nCreating resources on gcp cloud"
-    terragrunt run-all apply --terragrunt-non-interactive
+    terragrunt run-all apply --terragrunt-non-interactive 
     chmod 600 ~/.kube/config
 }
 function certificate_keys() {
@@ -97,11 +97,11 @@ function install_component() {
         fi
       fi
 
-    helm upgrade --install "$component" "../../../helmcharts/$component" --debug --namespace sunbird -f "../../../helmcharts/$component/values.yaml" \
-        -f "../../../terraform/gcp/global-values.yaml" \
-        -f "../../../terraform/gcp/global-values-jwt-tokens.yaml" \
-        -f "../../../terraform/gcp/global-values-rsa-keys.yaml" \
-        -f "../../../terraform/gcp/global-cloud-values.yaml" --timeout 30m --debug
+    helm template  "$component" "../../../helmcharts/$component" --debug --namespace sunbird -f "../../../helmcharts/$component/values.yaml" \
+        -f "../../../terraform/gcp/template/global-values.yaml" \
+        -f "../../../terraform/gcp/template/global-values-jwt-tokens.yaml" \
+        -f "../../../terraform/gcp/template/global-values-rsa-keys.yaml" \
+        -f "../../../terraform/gcp/template/global-cloud-values.yaml" --timeout 30m --debug
 }
 
 function install_helm_components() {
@@ -253,17 +253,17 @@ CERTPRIVATEKEY=""
 
 
 if [ $# -eq 0 ]; then
-    create_tf_backend
-    backup_configs
+    #create_tf_backend
+    #backup_configs
     create_tf_resources
-    cd ../../../helmcharts
-    install_helm_components
-    cd ../terraform/gcp/$environment
-    restart_workloads_using_keys
-    certificate_config
-    dns_mapping
-    generate_postman_env
-    run_post_install
+    #cd ../../../helmcharts
+    #install_helm_components
+    #cd ../terraform/gcp/$environment
+    #restart_workloads_using_keys
+    #certificate_config
+    #dns_mapping
+    #generate_postman_env
+    #run_post_install
 else
     case "$1" in
         "create_tf_backend")

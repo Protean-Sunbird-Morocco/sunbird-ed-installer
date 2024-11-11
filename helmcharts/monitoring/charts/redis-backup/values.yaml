@@ -25,7 +25,7 @@ restartPolicy: "OnFailure"
 
 CRON_SCHEDULE: '"00 00 * * *"'
 REDIS_MASTER_POD: "redis-master-0"
-gcp_backups_container_name: "sunbird-backups"
+gcp_backups_container_name: "ed-sunbird-backups"
 
 global:
   gcp_storage_account_name: your_storage_account_name

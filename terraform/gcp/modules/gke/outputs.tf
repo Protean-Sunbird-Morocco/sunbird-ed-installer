@@ -18,3 +18,8 @@ output "cluster_name" {
   value       = google_container_cluster.primary.name
 }
 
+output "namespace" {
+  description = "The Kubernetes namespace"
+  value       = "sunbird"
+}
+

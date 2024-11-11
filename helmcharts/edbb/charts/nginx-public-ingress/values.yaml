@@ -138,7 +138,7 @@ sidecars: {}
 
 global:
   domain: "gcp-dev.sunbirded.org"
-  gcp_bucket_name: "sunbird-public"
+  gcp_bucket_name: "ed-sunbird-public"
   ## gcp_cloud_storage_base_url: "cloudworklabs.in"
   local_development: false
 

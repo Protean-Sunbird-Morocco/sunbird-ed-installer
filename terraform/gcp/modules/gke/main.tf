@@ -14,6 +14,9 @@ provider "kubernetes" {
   config_path = pathexpand("~/.kube/config")
 }
 
+# Declare google_client_config data source
+data "google_client_config" "provider" {}
+
 # Define locals based on the provided variables
 locals {
   common_tags = {
@@ -25,14 +28,14 @@ locals {
 
 # Reference the existing VPC
 data "google_compute_network" "existing_vpc" {
-  name    = "ed-sunbird-vpc" 
+  name    = "ed-sunbird-vpc"
   project = var.project_id
 }
 
 # Reference the existing Subnet
 data "google_compute_subnetwork" "existing_subnet" {
-  name   = "ed-sunbird-subnet" 
-  region = var.location
+  name    = "ed-sunbird-subnet"
+  region  = var.location
   project = var.project_id
 }
 
@@ -52,6 +55,7 @@ resource "google_container_cluster" "primary" {
   }
 }
 
+# GKE Worker Node Pool
 resource "google_container_node_pool" "worker_pool" {
   cluster    = google_container_cluster.primary.name
   name       = "worker-node-pool"
@@ -73,5 +77,21 @@ resource "google_container_node_pool" "worker_pool" {
   }
 
   depends_on = [google_container_cluster.primary]
+}
+
+# Get the Kubernetes cluster credentials
+data "google_container_cluster" "primary" {
+  name     = google_container_cluster.primary.name
+  location = var.location
+  project  = var.project_id
+}
+
+# Run gcloud command to update kubeconfig
+resource "null_resource" "configure_kubeconfig" {
+  depends_on = [google_container_cluster.primary]
+
+  provisioner "local-exec" {
+    command = "gcloud container clusters get-credentials ${google_container_cluster.primary.name} --region ${var.location} --project ${var.project_id}"
+  }
 }
 

@@ -57,4 +57,5 @@ variable "base_location" {
 variable "private_ingressgateway_ip" {
     type        = string
     description = "Private LB IP."
+    default = "10.0.0.10"
 }

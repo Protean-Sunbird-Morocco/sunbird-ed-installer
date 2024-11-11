@@ -19,13 +19,13 @@ variable "environment" {
 variable "building_block" {
   description = "Building block name"
   type        = string
-  default     = "ed"  # Set a default value or override from `environment.hcl`
+  default     = "ed"
 }
-
 
 variable "subnet_cidr" {
   description = "The CIDR range for the subnetwork."
   type        = string
+  default     = "10.0.1.0/24"
 }
 
 variable "worker_node_count" {
@@ -52,4 +52,10 @@ variable "worker_node_max_count" {
   default     = 10
 }
 
+# New variable to control namespace creation
+variable "create_namespace" {
+  description = "Boolean to control whether Terraform should create the namespace if it does not exist."
+  type        = bool
+  default     = true
+}
 

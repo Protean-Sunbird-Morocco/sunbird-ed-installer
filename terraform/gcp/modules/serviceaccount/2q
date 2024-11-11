@@ -48,16 +48,15 @@ resource "kubernetes_service_account" "ksa_sunbird" {
 resource "google_iam_workload_identity_pool" "sunbird_identity_pool" {
   project      = var.project_id
   display_name = "Sunbird Identity Pool"
-  workload_identity_pool_id = "sunbird-pool"  # Use a unique pool ID
 }
 
 # Create the Workload Identity Pool Provider
 resource "google_iam_workload_identity_pool_provider" "sunbird_provider" {
-  provider                    = google
-  workload_identity_pool_id   = google_iam_workload_identity_pool.sunbird_identity_pool.workload_identity_pool_id
-  project                     = var.project_id
-  name                        = "sunbird-provider"
-  display_name                = "Sunbird Identity Provider"
+  provider = google
+  workload_identity_pool_id = google_iam_workload_identity_pool.sunbird_identity_pool.workload_identity_pool_id
+  project = var.project_id
+  name     = "sunbird-provider"
+  display_name = "Sunbird Identity Provider"
   
   federation {
     identity_provider_config {
