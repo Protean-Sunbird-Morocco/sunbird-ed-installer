@@ -34,8 +34,8 @@ def submit_all_jobs
     log("Config file loaded")
     jobs.each do |job|
         if job == "monitor-job-summ"
-            # log("python")
-            # system('/bin/bash -l -c "'+ @submit_jobs_command +'"')
+            log("python")
+            system('/bin/bash -l -c "'+ @submit_jobs_command +'"')
             submit_job(job, config_hash[job])
         elsif report_jobs[job].nil?
             submit_job(job, config_hash[job])
