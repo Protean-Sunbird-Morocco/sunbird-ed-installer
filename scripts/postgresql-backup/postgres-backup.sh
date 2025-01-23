@@ -21,3 +21,8 @@ if [ "$CLOUD_SERVICE" == "azure" ]; then
                           --type block \
                           --file "$backup_dir/fulldb-$backup_date.sql.bz2"
 fi
+
+if [ "$CLOUD_SERVICE" == "gcp" ]; then
+    # Use gsutil to upload the file
+    gsutil cp "$backup_dir/fulldb-$backup_date.sql.bz2" gs://${gcp_bucket_name}/fulldb-$backup_date.sql.bz2
+fi

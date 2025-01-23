@@ -125,10 +125,10 @@
       "ioConfig": {
         "type": "index",
         "firehose": {
-          "type": "static-azure-blobstore",
+          "type": "gcp",
           "blobs": [
             {
-              "container": "{{ .Values.reports_container }}",
+              "container": "{{ .Values.reports_bucket }}",
               "path": "/collection-summary-reports-v2/collection-summary-report-latest.json"
             }
           ],

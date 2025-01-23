@@ -966,7 +966,7 @@ persistence:
 ## Log Persistence parameters
 ##
 logPersistence:
-  ## @param logPersistence.enabled Enable Kafka logs persistence using PVC, note that ZooKeeper persistence is unaffected
+  ## @param logPersistence.enabled Enable Kafka logs persistence using , note that ZooKeeper persistence is unaffected
   ##
   enabled: false
   ## @param logPersistence.existingClaim A manually managed Persistent Volume and Claim
@@ -1800,3 +1800,7 @@ externalZookeeper:
   ## @param externalZookeeper.servers List of external zookeeper servers to use. Typically used in combination with 'zookeeperChrootPath'. Must be empty if you use Kraft mode.
   ##
   servers: []
+
+
+
+

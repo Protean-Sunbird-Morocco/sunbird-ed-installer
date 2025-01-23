@@ -1,4 +1,7 @@
-.*.sw?
+# Ignore any key.json files in any subdirectory
+**/key.json
+
+# Existing entries
 .idea
 terragrunt.iml
 vendor
@@ -13,8 +16,17 @@ vendor
 terragrunt
 .DS_Store
 *.terrahelpbkp
+terraform/gcp/modules/gke/key.json
+terraform/gcp/modules/serviceaccount/key.json
+terraform/gcp/modules/serviceaccount/sunbird-service-account-key.json
 
 # Ignoring common charts
 **/charts/common
 # Ignoring test directories
 **/kitchen
+**/sunbird-morocco-sandbox.json
+**/global-values-jwt-tokens.yaml
+**/global-values-rsa-keys.yaml
+**/global-values.yaml
+**/global-cloud-values.yaml
+

@@ -1681,7 +1681,7 @@ spec:
                                       type: string
                                     type: object
                                 type: object
-                              storageClassName:
+                              storageClassName: 
                                 type: string
                               volumeMode:
                                 type: string
@@ -2356,7 +2356,7 @@ spec:
                                       type: string
                                     type: object
                                 type: object
-                              storageClassName:
+                              storageClassName: 
                                 type: string
                               volumeMode:
                                 type: string
@@ -2441,7 +2441,7 @@ spec:
                             required:
                             - volumeID
                             type: object
-                          azureDisk:
+                          gcpDisk:
                             properties:
                               cachingMode:
                                 type: string
@@ -2459,7 +2459,7 @@ spec:
                             - diskName
                             - diskURI
                             type: object
-                          azureFile:
+                          gcpFile:
                             properties:
                               readOnly:
                                 type: boolean
@@ -2692,7 +2692,7 @@ spec:
                                               type: string
                                             type: object
                                         type: object
-                                      storageClassName:
+                                      storageClassName: 
                                         type: string
                                       volumeMode:
                                         type: string
@@ -3629,7 +3629,7 @@ spec:
                                 type: string
                               type: object
                           type: object
-                        storageClassName:
+                        storageClassName: 
                           type: string
                         volumeMode:
                           type: string
@@ -3714,7 +3714,7 @@ spec:
                       required:
                       - volumeID
                       type: object
-                    azureDisk:
+                    gcpDisk:
                       properties:
                         cachingMode:
                           type: string
@@ -3732,7 +3732,7 @@ spec:
                       - diskName
                       - diskURI
                       type: object
-                    azureFile:
+                    gcpFile:
                       properties:
                         readOnly:
                           type: boolean
@@ -3965,7 +3965,7 @@ spec:
                                         type: string
                                       type: object
                                   type: object
-                                storageClassName:
+                                storageClassName: 
                                   type: string
                                 volumeMode:
                                   type: string

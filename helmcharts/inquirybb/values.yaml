@@ -4,7 +4,7 @@ provisioningAnnotations: &provisioningAnnotations
   "helm.sh/hook-weight": "-4"
 
 neo4j: &neo4j
-  enabled: true
+  enabled: false
   host: "neo4j"
   port: 7687
   boltPort: 8687
@@ -18,7 +18,7 @@ neo4j: &neo4j
     waitForNeo4j: "true"
 
 redis: &redis
-  enabled: true
+  enabled: false
   nameOverride: "redis"
   fullnameOverride: "redis"
   auth:
@@ -42,7 +42,7 @@ zookeeper: &zookeeper
     size: 2Gi
 
 elasticsearch: &es
-  enabled: true
+  enabled: false
   fullnameOverride: "elasticsearch"
   host: "elasticsearch"
   port: 9200
@@ -79,7 +79,7 @@ elasticsearch: &es
     tag: 11-debian-11-r54
 
 cassandra: &cassandra
-  enabled: true
+  enabled: false
   nameOverride: "cassandra"
   fullnameOverride: "cassandra"
   host: "cassandra"
@@ -101,7 +101,7 @@ cassandra: &cassandra
 
 kafka: &kafka
   zookeeper: *zookeeper
-  enabled: true
+  enabled: false
   nameOverride: "kafka"
   fullnameOverride: "kafka"
   clientProtocol: PLAINTEXT
@@ -119,13 +119,13 @@ kafka: &kafka
     replicationFactor: 1
     numPartitions: 1
     topics:
-    - name: "{{ .Values.global.env }}.object.import.request"
+    - name: "dev.object.import.request"
       partitions: 1
       replicationFactor: 1
-    - name: "{{ .Values.global.env }}.assessment.publish.request"
+    - name: "dev.assessment.publish.request"
       partitions: 1
       replicationFactor: 1
-    - name: "{{ .Values.global.env }}.delete.user"
+    - name: "dev.delete.user"
       partitions: 1
       replicationFactor: 1
     parallel: 1
@@ -133,13 +133,17 @@ kafka: &kafka
     size: 25Gi
 
 cloud_storage:
-  type: "azure"
+  type: "gcp"
+
 play_http: &play_http
   secret_key: "a-dummy-play-http-secret-key"
+
 schema: &schema
-  base_path: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/schemas/local"
+  base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}/schemas/local"
+
 graph_passport: &graph_passport
   key_base: "a-dummy-graph_passport-secret-key"
+
 installation: &installation
   id: ekstep
 
@@ -155,7 +159,7 @@ global:
   installation: *installation
   elasticsearch: *es
   provisioningAnnotations: *provisioningAnnotations
-
+  
 migration:
- cassandra:
-   waitTime: 120
+  cassandra:
+    waitTime: 120

@@ -135,13 +135,7 @@ reloader:
     #   requests:
     #     cpu: "10m"
     #     memory: "128Mi"
-    resources:
-      requests:
-        cpu: 100m
-        memory: 100Mi
-      limits:
-        cpu: 1
-        memory: 1G
+    resources: {}
     pod:
       annotations: {}
     priorityClassName: ""

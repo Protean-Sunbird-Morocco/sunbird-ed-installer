@@ -3404,7 +3404,7 @@
       "auth": "true",
       "port": "587",
       "host": "{{ .Values.global.mail_server_host }}",
-      "from": "{{ .Values.global.mail_server_from_email }}",
+      "from": "{{ .Values.mail_server_from_email }}",
       "ssl": "",
       "user": "{{ .Values.global.mail_server_username }}"
     },
@@ -3535,7 +3535,7 @@
           "subComponents": {},
           "config": {
             "host": [
-              "localhost"
+              "cassandra"
             ],
             "cachePolicy": [
               "DEFAULT"

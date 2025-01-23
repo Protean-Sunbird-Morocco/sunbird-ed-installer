@@ -11,6 +11,7 @@ metadata:
   name: {{ $jobName }}
   labels:
     app: secor
+    obsrvbb: "true"
 spec:
   serviceName: secor
   updateStrategy:
@@ -49,10 +50,13 @@ spec:
               value: "/opt/secor/config/log4j.docker.properties"
 
           volumeMounts:
-           - mountPath: /opt/secor/config
-             name: secor-config
-           - name: "data-path"
-             mountPath: /mnt/data
+            - mountPath: /opt/secor/config
+              name: secor-config
+            - name: "data-path"
+              mountPath: /mnt/data
+            - name: google-credentials-volume
+              mountPath: /mnt/gcp-credential.json
+              subPath: gcp-credential.json
           resources:
             requests:
               cpu: {{ get (get (get $.Values.secor_jobs $jobName) "requests") "cpu" }}
@@ -61,9 +65,12 @@ spec:
             runAsUser: 9999
 
       volumes:
-        - configMap:
+        - name: secor-config
+          configMap:
             name: {{ $jobName }}-config
-          name: secor-config
+        - name: google-credentials-volume
+          configMap:
+            name: gcp-config
 
   volumeClaimTemplates:
     - metadata:

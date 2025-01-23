@@ -73,7 +73,6 @@ static_resources:
                 google_grpc:
                   target_uri: 127.0.0.1:9191
                   stat_prefix: ext_authz
-                timeout: 5s
           - name: envoy.filters.http.router
   clusters:
   - name: service
@@ -88,9 +87,9 @@ static_resources:
             address:
               socket_address:
                 address: 127.0.0.1
-              {{- with index .Values.service.ports 0 }}
+                {{- with index .Values.service.ports 0 }}
                 port_value: {{ .targetPort }}
-              {{- end }}
+                {{- end }}
   - name: opa
     connect_timeout: 5s
     type: static

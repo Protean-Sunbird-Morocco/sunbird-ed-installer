@@ -25,8 +25,8 @@ restartPolicy: "OnFailure"
 
 CRON_SCHEDULE: '"00 00 * * *"'
 REDIS_MASTER_POD: "redis-master-0"
-azure_backups_container_name: "{{ .Values.global.azure_backups_container_name }}"
+gcp_backups_bucket_name: "ed-sunbird-backups"
 
 global:
-  azure_storage_account_name: your_storage_account_name
-  azure_storage_account_key: your_storage_account_key
+  gcp_storage_account_name: 
+  gcp_storage_account_key: 

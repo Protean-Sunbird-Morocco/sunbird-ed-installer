@@ -36,12 +36,12 @@ data_exhaust_Channel : ""
 data_exhaust_token: ""
 dp_vault_data_exhaust_token: ""
 data_exhaust_name : ""
-media_service_azure_token_client_secret: ""
-media_service_azure_token_client_key: ""
-media_service_azure_resource_group_name: ""
-media_service_azure_account_name : ""
-media_service_azure_tenant: ""
-media_service_azure_subscription_id: ""
+media_service_gcp_token_client_secret: ""
+media_service_gcp_token_client_key: ""
+media_service_gcp_resource_group_name: ""
+media_service_gcp_account_name : ""
+media_service_gcp_tenant: ""
+media_service_gcp_subscription_id: ""
 es_search_index: "compositesearch"
 channelSearchServiceEndpoint: "http://userorg-service:9000/v1/org/search"
 hierarchySearchServiceUrl: "http://content-service:9000/action/content"
@@ -89,7 +89,7 @@ producer_env: "dev.sunbird"
 spark_output_temp_dir: /data/analytics/tmp/
 
 #modelconfig.josn
-reports_container: "{{ .Values.global.azure_reports_container_name }}"
+reports_container: "reports"
 
 #start-jobmanager
 analytics_job_list: ["wfs", "content-rating-updater", "monitor-job-summ"]
@@ -99,10 +99,11 @@ analytics_cluster:
 jobmanager_logs_directory: "/data/analytics/logs/services"
 run_logs_directory: "/data/analytics/logs/data-products"
 
-blob_container_name: "{{ .Values.global.azure_telemetry_container_name }}"
-cloud_storage_type: "azure"
+reports_container: "reports"
+blob_container_name: "telemetry-data-store"
+cloud_storage_type: "google"
 dp_raw_telemetry_backup_location: "unique/raw/"
-cloud_storage_endpoint: https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net
+cloud_storage_endpoint: https://console.cloud.google.com/storage/browser/{{ .Values.global.gcp_public_bucket_name }}
 
 
 

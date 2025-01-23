@@ -56,6 +56,11 @@ spec:
               configMapKeyRef:
                 name: {{ .Values.global.keycloak_kid_keys_configmap }}
                 key: KEYCLOAK_PUBLIC_KEY
+          - name: CLOUD_PRIVATE_STORAGE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: gcp-credentials
+                key: gcp-credential.json
           envFrom:
           - configMapRef:
               name: {{ include "common.names.fullname" . }}-env

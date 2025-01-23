@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ include "common.names.fullname" . }}-claim
   labels:
+    app: inquirybb
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
     app: {{ include "common.names.fullname" . }}
   annotations: 
     helm.sh/resource-policy: "{{ .Values.neo4j.pvc.annotations }}"

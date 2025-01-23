@@ -13,8 +13,8 @@ podAnnotations: {}
 
 commonAnnotations:
   reloader.stakater.com/auto: "true"
-
-commonLabels: {}
+commonLabels:
+  name: learnbb
 
 livenessProbe: {}
 readinessProbe: {}

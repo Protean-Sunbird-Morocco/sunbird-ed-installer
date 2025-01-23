@@ -889,7 +889,7 @@ Because the kubelet service has a new name in the chart, make sure to clean up t
 
 #### Persistent Volumes
 
-If you would like to keep the data of the current persistent volumes, it should be possible to attach existing volumes to new PVCs and PVs that are created using the conventions in the new chart. For example, in order to use an existing Azure disk for a helm release called `prometheus-migration` the following resources can be created:
+If you would like to keep the data of the current persistent volumes, it should be possible to attach existing volumes to new PVCs and PVs that are created using the conventions in the new chart. For example, in order to use an existing gcp disk for a helm release called `prometheus-migration` the following resources can be created:
 
 ```yaml
 apiVersion: v1
@@ -899,7 +899,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  azureDisk:
+  gcpDisk:
     cachingMode: None
     diskName: pvc-prometheus-migration-prometheus-0
     diskURI: /subscriptions/f5125d82-2622-4c50-8d25-3f7ba3e9ac4b/resourceGroups/sample-migration-resource-group/providers/Microsoft.Compute/disks/pvc-prometheus-migration-prometheus-0

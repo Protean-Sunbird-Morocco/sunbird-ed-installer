@@ -5,6 +5,8 @@ metadata:
   name: {{ include "common.names.fullname" . }}
   annotations:
     {{- toYaml .Values.ingress.annotations | nindent 4 }}
+  labels:
+{{ include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
 spec:
   rules:
     {{- range .Values.ingress.hosts }}

@@ -1,0 +1,59 @@
+{
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+        "creationTimestamp": "2025-01-20T08:15:33Z",
+        "deletionTimestamp": "2025-01-22T06:23:29Z",
+        "labels": {
+            "kubernetes.io/metadata.name": "sunbird"
+        },
+        "name": "sunbird",
+        "resourceVersion": "2242600",
+        "uid": "caac67f4-ccd9-48cd-b3b2-911fb02825e6"
+    },
+    "spec": {
+        "finalizers": [
+           
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastTransitionTime": "2025-01-22T06:23:42Z",
+                "message": "All resources successfully discovered",
+                "reason": "ResourcesDiscovered",
+                "status": "False",
+                "type": "NamespaceDeletionDiscoveryFailure"
+            },
+            {
+                "lastTransitionTime": "2025-01-22T06:23:42Z",
+                "message": "All legacy kube types successfully parsed",
+                "reason": "ParsedGroupVersions",
+                "status": "False",
+                "type": "NamespaceDeletionGroupVersionParsingFailure"
+            },
+            {
+                "lastTransitionTime": "2025-01-22T06:24:12Z",
+                "message": "All content successfully deleted, may be waiting on finalization",
+                "reason": "ContentDeleted",
+                "status": "False",
+                "type": "NamespaceDeletionContentFailure"
+            },
+            {
+                "lastTransitionTime": "2025-01-22T06:23:42Z",
+                "message": "Some resources are remaining: druids.druid.apache.org has 1 resource instances",
+                "reason": "SomeResourcesRemain",
+                "status": "True",
+                "type": "NamespaceContentRemaining"
+            },
+            {
+                "lastTransitionTime": "2025-01-22T06:23:42Z",
+                "message": "Some content in the namespace has finalizers remaining: deletepvc.finalizers.druid.apache.org in 1 resource instances",
+                "reason": "SomeFinalizersRemain",
+                "status": "True",
+                "type": "NamespaceFinalizersRemaining"
+            }
+        ],
+        "phase": "Terminating"
+    }
+}

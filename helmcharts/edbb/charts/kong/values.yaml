@@ -3,6 +3,9 @@ fullnameOverride: "kong"
 
 replicaCount: 1
 
+commonLabels:
+  name: edbb
+
 image:
   repository: sunbirded.azurecr.io/kong
   tag: "0.14.1"
@@ -15,7 +18,8 @@ podSecurityContext: {}
 
 securityContext: {}
   # readOnlyRootFilesystem: false
-  # capabilities:
+  # capabilities:kubectl run -i --tty --rm debug --image=busybox -- sh
+
   #   drop:
   #   - ALL
 
@@ -33,7 +37,7 @@ ingress:
   enabled: false
   annotations: {}
   hosts:
-    - host: chart-example.local
+    - host: gcp-dev.sunbirded.org
       paths:
       - /
 
@@ -135,6 +139,7 @@ kong_proxy_access_log: "logs/access.log nginx_public_ingress_log_format"
 kong_ratelimit_cache_size: 12m
 kong_trusted_ips: 0.0.0.0/0,::/0
 kong_upstream_keepalive: "200"
+kong_pg_port: "5432"
 
 commonAnnotations:
   reloader.stakater.com/auto: "true"
@@ -142,12 +147,14 @@ commonAnnotations:
 postgresql: &postgresql
   enabled: true
   host: postgresql
+  port: 5432
   postgresqlUsername: postgres
   postgresqlPassword: postgres
 
 global:
-  azure_storage_account_name: ""
-  azure_storage_account_key: ""
+
+  gcp_service_account_key_configmap: gcp-config
+  gcp_service_account_key_file: gcp-credential.json
   postgresql: *postgresql
 
 provisioningAnnotations:

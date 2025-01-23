@@ -16,7 +16,7 @@ KEYCLOAK_ADMIN_USERNAME="${KEYCLOAK_ADMIN_USERNAME:-admin}"
 KEYCLOAK_ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD:-admin}"
 
 # Configmap namespace
-NAMESPACE="${NAMESPACE:-default}"
+NAMESPACE="${NAMESPACE:-sunbird-deployment-edbb}"
 
 # Query for 'kid'
 QUERY_KID="SELECT value FROM component_config CC INNER JOIN component C ON (CC.component_id = C.id) WHERE C.realm_id = 'sunbird' AND provider_id = 'hmac-generated' AND CC.name = 'kid';"

@@ -9,12 +9,12 @@ export DP_LOGS=$DATA_DIR
 export SERVICE_LOGS=$SERVICE_LOGS
 export JM_HOME={{ .Values.analytics_home }}/job-manager
 
-export azure_storage_key="{{ .Values.global.azure_storage_account_name }}"
-export azure_storage_secret="{{ .Values.global.azure_storage_account_key }}"
-export reports_azure_storage_key="{{ .Values.global.azure_storage_account_name }}"
-export reports_azure_storage_secret="{{ .Values.global.azure_storage_account_key }}"
-export druid_storage_account_key="{{ .Values.global.azure_storage_account_name }}"
-export druid_storage_account_secret="{{ .Values.global.azure_storage_account_key }}"
+export gcp_storage_key="{{ .Values.global.gcp_storage_account_name }}"
+export gcp_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
+export reports_gcp_storage_key="{{ .Values.global.gcp_storage_account_name }}"
+export reports_gcp_storage_secret="{{ .Values.global.gcp_storage_account_key }}"
+export druid_storage_account_key="{{ .Values.global.gcp_storage_account_name }}"
+export druid_storage_account_secret="{{ .Values.global.gcp_storage_account_key }}"
 
 
 export heap_conf_str="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Xms250m -Xmx5120m -XX:+UseStringDeduplication"

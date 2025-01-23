@@ -34,15 +34,11 @@ function certificate_keys() {
     echo "Creation of RSA keys for certificate signing"
     openssl genrsa -out ../terraform/azure/$environment/certkey.pem;
     openssl rsa -in ../terraform/azure/$environment/certkey.pem -pubout -out ../terraform/azure/$environment/certpubkey.pem;
-    CERTPRIVATEKEY=$(sed 's/KEY-----/KEY-----\\n/g' ../terraform/azure/$environment/certkey.pem | sed 's/-----END/\\n-----END/g' | awk '{printf("%s",$0)}')
-    CERTPUBLICKEY=$(sed 's/KEY-----/KEY-----\\n/g' ../terraform/azure/$environment/certpubkey.pem | sed 's/-----END/\\n-----END/g' | awk '{printf("%s",$0)}')
-    CERTIFICATESIGNPRKEY=$(sed 's/BEGIN PRIVATE KEY-----/BEGIN PRIVATE KEY-----\\\\n/g' ../terraform/azure/$environment/certkey.pem | sed 's/-----END PRIVATE KEY/\\\\n-----END PRIVATE KEY/g' | awk '{printf("%s",$0)}')
-    CERTIFICATESIGNPUKEY=$(sed 's/BEGIN PUBLIC KEY-----/BEGIN PUBLIC KEY-----\\\\n/g' ../terraform/azure/$environment/certpubkey.pem | sed 's/-----END PUBLIC KEY/\\\\n-----END PUBLIC KEY/g' | awk '{printf("%s",$0)}')
-    printf "\n" >> ../terraform/azure/$environment/global-values.yaml
-    echo "  CERTIFICATE_PRIVATE_KEY: \"$CERTPRIVATEKEY\"" >> ../terraform/azure/$environment/global-values.yaml
-    echo "  CERTIFICATE_PUBLIC_KEY: \"$CERTPUBLICKEY\"" >> ../terraform/azure/$environment/global-values.yaml
-    echo "  CERTIFICATESIGN_PRIVATE_KEY: \"$CERTIFICATESIGNPRKEY\"" >> ../terraform/azure/$environment/global-values.yaml
-    echo "  CERTIFICATESIGN_PUBLIC_KEY: \"$CERTIFICATESIGNPUKEY\"" >> ../terraform/azure/$environment/global-values.yaml
+    CERTPRIVATEKEY=`sed 's/KEY-----/KEY-----\\n/g' ../terraform/azure/$environment/certkey.pem | sed 's/-----END/\\n-----END/g' | awk '{printf("%s",$0)}' `
+    echo "CERTIFICATE_PRIVATE_KEY: \""$CERTPRIVATEKEY"\"" >> ../terraform/azure/$environment/global-values.yaml
+    awk '{if($0 !~ /END/)  printf "%s\\r\\n",$0;} END{printf "-----END PUBLIC KEY-----"}' ../terraform/azure/$environment/certpubkey.pem |awk '{print "CERTIFICATE_PUBLIC_KEY: \""$0"\""}' >> ../terraform/azure/$environment/global-values.yaml
+    echo "CERTIFICATESIGN_PRIVATE_KEY: \""$CERTPRIVATEKEY"\"" >> ../terraform/azure/$environment/global-values.yaml
+    awk '{if($0 !~ /END/)  printf "%s\\r\\n",$0;} END{printf "-----END PUBLIC KEY-----"}' ../terraform/azure/$environment/certpubkey.pem |awk '{print "CERTIFICATESIGN_PUBLIC_KEY: \""$0"\""}' >> ../terraform/azure/$environment/global-values.yaml
 }
 
 function certificate_config() {
@@ -251,7 +247,6 @@ if [ $# -eq 0 ]; then
     dns_mapping
     generate_postman_env
     run_post_install
-    create_client_forms
 else
     case "$1" in
     "create_tf_backend")

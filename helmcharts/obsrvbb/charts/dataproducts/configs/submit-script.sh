@@ -79,7 +79,7 @@ submit_cluster_job() {
    requestBody=${clusterConfig/'"className": "org.ekstep.analytics.job.JobExecutor"'/$argsStr}
    finalRequestBody=${requestBody/'org.ekstep.analytics.job.JobExecutor'/$classVariable}
    echo $finalRequestBody
-   response=$(curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.azurehdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}")
+   response=$(curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.gcphdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}")
    echo "Submitted job for batchNumer $i below is the response"
    echo $response
 }
@@ -118,7 +118,7 @@ if [ "$mode" = "via-partition" ]; then
             requestBody=${clusterConfig/'"className": "org.ekstep.analytics.job.JobExecutor"'/$argsStr}
             finalRequestBody=${requestBody/'org.ekstep.analytics.job.JobExecutor'/$classVariable}
             echo $finalRequestBody
-            curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.azurehdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}"
+            curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.gcphdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}"
         done
 
 elif [ "$mode" = "parallel-jobs" ]; then
@@ -157,7 +157,7 @@ elif [ "$mode" = "selected-partition" ]; then
      requestBody=${clusterConfig/'"className": "org.ekstep.analytics.job.JobExecutor"'/$argsStr}
      finalRequestBody=${requestBody/'org.ekstep.analytics.job.JobExecutor'/$classVariable}
      echo $finalRequestBody
-     curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.azurehdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}"
+     curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.gcphdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}"
 
 else
     if [ -z "$start_date" ]; then
@@ -179,5 +179,5 @@ else
     requestBody=${clusterConfig/'"className": "org.ekstep.analytics.job.JobExecutor"'/$argsStr}
     finalRequestBody=${requestBody/'org.ekstep.analytics.job.JobExecutor'/$classVariable}
     echo $finalRequestBody
-    curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.azurehdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}"    
+    curl -k --user "{{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}:{{ include "common.tplvalues.render" ( dict "value" .Values.admin_password "context" $ ) }}" -v -H "Content-Type: application/json" -X POST -d "$finalRequestBody" 'https://{{ include "common.tplvalues.render" ( dict "value" .Values.spark_cluster_name "context" $ ) }}.gcphdinsight.net/livy/batches' -H "X-Requested-By: {{ include "common.tplvalues.render" ( dict "value" .Values.admin_name "context" $ ) }}"    
 fi

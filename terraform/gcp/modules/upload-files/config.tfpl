@@ -1,0 +1,13 @@
+[gcpbucket]
+type = google cloud storage
+project = sunbird-morocco-sandbox-434709
+service_account_file = key.json 
+gcp_service_account_key_configmap: gcp-service-account-config
+gcp_service_account_key_file: key.json 
+
+
+[sunbird]
+type = azureblob
+account = ${sunbird_public_artifacts_account}
+sas_url = ${sunbird_public_artifacts_account_sas_url}
+

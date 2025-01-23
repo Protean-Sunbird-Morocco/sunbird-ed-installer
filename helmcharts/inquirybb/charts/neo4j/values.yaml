@@ -14,11 +14,11 @@ podAnnotations: {}
 commonAnnotations:
   reloader.stakater.com/auto: "true"
 
-commonLabels: {}
+commonLabels:
+  app: inquirybb
 
 livenessProbe: {}
 readinessProbe: {}
-
 
 service:
   type: ClusterIP
@@ -38,7 +38,7 @@ ingress: {}
 resources:
   requests:
     cpu: "0.5"
-    memory: "25Gi"
+    memory: "12Gi"
 
 autoscaling:
   enabled: false
@@ -90,8 +90,7 @@ neo4j:
     annotations: "keep"
     resources:
       requests:
-        storage: 2Gi
-
+        storage: 25Gi
 
 logstash:
   name: logstash
@@ -108,7 +107,5 @@ logstash:
     file_path: "/txn-handler/learning_graph_event_neo4j.log"
     sincedb_path: "/usr/share/logstash/.sincedb_learning_graph_event_mw"
 
-learning_graph_events: "{{ .Values.global.env }}.knowlg.learning.graph.events"
-backend_event_topic_id: "{{ .Values.global.env }}.knowlg.telemetry.backend"
-
-
+learning_graph_events: "dev.knowlg.learning.graph.events"
+backend_event_topic_id: "dev.knowlg.telemetry.backend"

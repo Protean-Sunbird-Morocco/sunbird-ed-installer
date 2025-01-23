@@ -12,6 +12,9 @@ ingress: {}
 podAnnotations: {}
 commonLabels: {}
 
+global:
+  env: dev
+
 podSecurityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1001
@@ -57,24 +60,26 @@ autoscaling:
           type: Utilization
           averageUtilization: 80
 
-livenessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-  httpGet:
-    path: /health
-    port: 9000
-readinessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-  httpGet:
-    path: /health
-    port: 9000
+  livenessProbe: null
+
+# livenessProbe:
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   timeoutSeconds: 5
+#   failureThreshold: 6
+#   successThreshold: 1
+#   httpGet:
+#     path: /health
+#     port: 9000
+# readinessProbe:
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   timeoutSeconds: 5
+#   failureThreshold: 6
+#   successThreshold: 1
+#   httpGet:
+#     path: /health
+#     port: 9000
 
 nodeSelector: {}
 tolerations: []
@@ -102,7 +107,7 @@ serviceMonitor:
 
 
 cloud_storage:
-  type: "azure"
+  type: "gcp"
 
 content:
   h5p_library_path: "https://sunbirdpublic.blob.core.windows.net/installation/h5p-standalone-1.3.4.zip"
@@ -137,8 +142,8 @@ cloud_storage_metadata_replace_absolute_path: true
 cloud_storage_upload_url_ttl: "54000"
 cloudstorage_relative_path_prefix_content: CONTENT_STORAGE_BASE_PATH
 cloudstorage_metadata_list: '["appIcon", "artifactUrl", "posterImage", "previewUrl", "thumbnail", "assetsMap", "certTemplate", "itemSetPreviewUrl", "grayScaleAppIcon", "sourceURL", "variants", "downloadUrl", "streamingUrl", "toc_url", "data", "question", "solutions", "editorState", "media", "pdfUrl", "transcripts"]'
-cloudstorage_write_base_path: '["https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"]'
-cloudstorage_read_base_path: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+cloudstorage_write_base_path: '["https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}"]'
+cloudstorage_read_base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}"
 
 envoy_probes:
   failureThreshold: 2

@@ -35,7 +35,6 @@ spec:
             git sparse-checkout init --cone
             git sparse-checkout set terraform/modules/helm/cassandra/cassandra-helm-chart/files
             git checkout
-            chmod -R 777 /opt/shared-volume
         volumeMounts:
           - name: shared-volume
             mountPath: /opt/shared-volume
@@ -47,11 +46,7 @@ spec:
         args:
         - |
           cd /opt/shared-volume/knowlg-automation/terraform/modules/helm/cassandra/cassandra-helm-chart/files
-          export ENV={{ .Values.global.env }}
-          
-          sed -i "s/{{"{{ env }}"}}/$ENV/g" generalized-cassandra.cql
-          echo cqlsh {{.Values.global.cassandra.host}} -f "generalized-cassandra.cql"
-          cqlsh {{.Values.global.cassandra.host}} -f "generalized-cassandra.cql"
+          for file in *.cql; do echo cqlsh {{.Values.global.cassandra.host}} -f "$file"; cqlsh {{.Values.global.cassandra.host}} -f "$file"; done
         volumeMounts:
           - name: shared-volume
             mountPath: /opt/shared-volume

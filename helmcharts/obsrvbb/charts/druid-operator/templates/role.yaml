@@ -12,6 +12,7 @@ metadata:
   name: {{ template "druid-operator.fullname" . }}
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    obsrvbb: "true"
 rules:
   - apiGroups:
       - ""

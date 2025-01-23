@@ -9,7 +9,8 @@ image:
   pullSecrets: []
 
 podAnnotations: {}
-
+commonLabels:
+  name: learnbb
 podSecurityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1001
@@ -179,8 +180,8 @@ notification_service_base_url: "http://notification-service:9000"
 keys_basepath: "/keys/"
 PORTAL_SERVICE_PORT: "http://player:3000"
 sunbird_installation_display_name_for_sms: "Sunbird"
-sunbird_sso_lb_ip: http://keycloak:8080/
-sunbird_cloud_service_provider: "azure"
+sunbird_sso_lb_ip: ""
+sunbird_cloud_service_provider: "gcp"
 isMultiDCEnabled: "false"
 java_options: -Xmx600m
 log4j_java_options: "-Dlog4j2.formatMsgNoLookups=true"

@@ -1,6 +1,10 @@
 nameOverride: "report"
 fullnameOverride: "report"
 
+
+commonLabels:
+  name: edbb
+
 replicaCount: 1
 
 image:
@@ -37,13 +41,7 @@ ingress:
       paths:
       - /
 
-resources:
-  requests:
-    cpu: 100m
-    memory: 100Mi
-  limits:
-    cpu: 1
-    memory: 1G
+resources: {}
 
 autoscaling:
   enabled: false
@@ -86,7 +84,7 @@ tolerations: []
 affinity: {}
 
 configmap:
-  enabled: false
+  enabled: true
   mountPath: /config
 
 serviceAccount:
@@ -169,9 +167,7 @@ postgresql: &postgresql
 
 global:
   postgresql: *postgresql
-  domain: "https://dummy.sunbird.com"
+  domain: "gcp-dev.sunbirded.org"
 
 commonAnnotations:
   reloader.stakater.com/auto: "true"
-
-sunbird_portal_auth_server_client: portal

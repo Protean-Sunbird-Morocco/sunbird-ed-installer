@@ -1,6 +1,9 @@
 nameOverride: "nginx-private-ingress"
 fullnameOverride: "nginx-private-ingress"
 
+commonLabels:
+  name: edbb
+
 replicaCount: 1
 
 image:
@@ -18,7 +21,7 @@ podAnnotations: {}
 
 service:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    cloud.google.com/load-balancer-type: "Internal"
   type: LoadBalancer
   ports:
     - name: http
@@ -40,7 +43,6 @@ resources:
   limits:
     cpu: 500m
     memory: 500Mi
-
 
 autoscaling: {}
   # enabled: false
@@ -69,8 +71,8 @@ autoscaling: {}
 #   initialDelaySeconds: 5
 #   periodSeconds: 5
 
-# # readinessProbe: {}
-# # Example:
+# readinessProbe: {}
+# Example:
 # readinessProbe:
 #   httpGet:
 #     path: "/ready"
@@ -103,11 +105,10 @@ serviceMonitor: {}
   # honorLabels: true
   # jobLabel: "app.kubernetes.io/name"
 
-# Example values.yaml structure
 initContainers: {}
   # - name: init-myservice
   #   image: busybox:1.28
-  #   command: ['sh', '-c', "until nslookup kubernetes.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+  #   command: ['sh', '-c', "until nslookup kubernetes.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done']
 
 sidecars: {}
   # - name: log-reader # Sidecar container
@@ -125,3 +126,7 @@ sidecars: {}
 
 commonAnnotations:
   reloader.stakater.com/auto: "true"
+
+# Add the global section here
+global:
+  private_ingressgateway_ip: "10.0.1.21"

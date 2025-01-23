@@ -1,6 +1,9 @@
 nameOverride: "router"
 fullnameOverride: "router"
 
+commonLabels:
+  name: edbb
+
 replicaCount: 0
 
 image:

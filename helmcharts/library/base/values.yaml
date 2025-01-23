@@ -1,6 +1,9 @@
 nameOverride: ""
 fullnameOverride: ""
 
+commonLabels:
+  name: library-base
+
 replicaCount: 1
 
 image:
@@ -12,15 +15,11 @@ image:
 podAnnotations: {}
 
 podSecurityContext:
-  runAsNonRoot: true
-  runAsUser: 1001
-  fsGroup: 1001
+  runAsNonRoot: false
+  runAsUser: 0
+  fsGroup: 0
 
 securityContext: {}
-  # readOnlyRootFilesystem: false
-  # capabilities:
-  #   drop:
-  #   - ALL
 
 service:
   type: ClusterIP
@@ -57,23 +56,22 @@ autoscaling:
           type: Utilization
           averageUtilization: 80
 
-# livenessProbe: {}
-# Example:
-livenessProbe:
-  httpGet:
-    path: "/healthz"
-    port: 8080
-  initialDelaySeconds: 5
-  periodSeconds: 5
+  livenessProbe: null
+           
 
-# readinessProbe: {}
-# Example:
-readinessProbe:
-  httpGet:
-    path: "/ready"
-    port: 8080
-  initialDelaySeconds: 5
-  periodSeconds: 5
+# livenessProbe:
+#   httpGet:
+#     path: "/healthz"
+#     port: 8080
+#   initialDelaySeconds: 5
+#   periodSeconds: 5
+
+# readinessProbe:
+#   httpGet:
+#     path: "/ready"
+#     port: 8080
+#   initialDelaySeconds: 5
+#   periodSeconds: 5
 
 nodeSelector: {}
 tolerations: []
@@ -82,6 +80,25 @@ affinity: {}
 configmap:
   enabled: true
   mountPath: /config
+
+
+# configmap:
+#   enabled: true
+#   mountPath: /etc/nginx/conf.d/default.conf
+#   data:
+#     default.conf: |
+#       server {
+#           listen 80;
+#           server_name localhost;
+          
+#           location / {
+#               root /usr/share/nginx/html;
+#               index index.html index.htm;
+#           }
+
+#           # Disable client body buffering to avoid using the temp directory
+#           client_body_buffer_size 0;
+#       }
 
 serviceAccount:
   create: true
@@ -95,7 +112,14 @@ serviceMonitor:
   honorLabels: true
   jobLabel: "app.kubernetes.io/name"
 
-# Example values.yaml structure
+extraVolumes:
+  - name: nginx-cache
+    emptyDir: {}
+
+extraVolumeMounts:
+  - name: nginx-cache
+    mountPath: /var/cache/nginx
+
 initContainers: {}
   # - name: init-myservice
   #   image: busybox:1.28
@@ -105,7 +129,7 @@ sidecars: {}
   # - name: log-reader # Sidecar container
   #   image: busybox # Use another busybox image
   #   command: ["/bin/sh"] # Override the default command
-  #   args: ["-c", "tail -f /var/log/app.log"] # Run a shell script that tails the log file
+  #   args: ["-c", "tail -f /var/log/app.log"]
 
 opa:
   enabled: false

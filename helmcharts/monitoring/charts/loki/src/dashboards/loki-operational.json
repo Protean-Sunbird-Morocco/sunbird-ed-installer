@@ -5690,23 +5690,24 @@
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "histogram_quantile(.99, sum(rate(loki_azure_blob_request_duration_seconds_bucket{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (operation, le))",
+                        "expr": "histogram_quantile(.99, sum(rate(storage.googleapis.com/request_latencies_bucket{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (operation, le))",
                         "intervalFactor": 1,
                         "legendFormat": ".99-{{operation}}",
                         "refId": "A"
                      },
                      {
-                        "expr": "histogram_quantile(.9, sum(rate(loki_azure_blob_request_duration_seconds_bucket{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (operation, le))",
+                        "expr": "histogram_quantile(.9, sum(rate(storage.googleapis.com/request_latencies_bucket{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (operation, le))",
                         "hide": false,
                         "legendFormat": ".9-{{operation}}",
                         "refId": "B"
                      },
                      {
-                        "expr": "histogram_quantile(.5, sum(rate(loki_azure_blob_request_duration_seconds_bucket{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (operation, le))",
+                        "expr": "histogram_quantile(.5, sum(rate(storage.googleapis.com/request_latencies_bucket{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (operation, le))",
                         "hide": false,
                         "legendFormat": ".5-{{operation}}",
                         "refId": "C"
                      }
+                     
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
@@ -5793,11 +5794,12 @@
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "sum(rate(loki_azure_blob_request_duration_seconds_count{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (status_code, operation)",
+                        "expr": "sum(rate(storage.googleapis.com/request_count{cluster=\"$cluster\", namespace=\"$namespace\"}[5m])) by (status_code, method)",
                         "intervalFactor": 1,
-                        "legendFormat": "{{status_code}}-{{operation}}",
+                        "legendFormat": "{{status_code}}-{{method}}",
                         "refId": "A"
                      }
+                     
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
@@ -5842,7 +5844,7 @@
                }
             ],
             "targets": [ ],
-            "title": "Azure Blob",
+            "title": "Google Cloud Storage",
             "type": "row"
          },
          {

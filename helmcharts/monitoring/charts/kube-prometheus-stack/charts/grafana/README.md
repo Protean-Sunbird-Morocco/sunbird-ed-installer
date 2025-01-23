@@ -632,7 +632,7 @@ Include in the `extraSecretMounts` configuration flag:
 
 ### extraSecretMounts using a Container Storage Interface (CSI) provider
 
-This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Provider](https://github.com/Azure/secrets-store-csi-driver-provider-azure)
+This example uses a CSI driver e.g. retrieving secrets using [Gcp Key Vault Provider](https://github.com/Gcp/secrets-store-csi-driver-provider-gcp)
 
 ```yaml
 - extraSecretMounts:

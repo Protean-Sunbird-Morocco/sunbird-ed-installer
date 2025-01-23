@@ -8,7 +8,8 @@ image:
   pullPolicy: IfNotPresent
   pullSecrets: []
 podAnnotations: {}
-
+commonLabels:
+  name: learnbb
 podSecurityContext: {}
   # runAsNonRoot: false
   # runAsUser: 0
@@ -111,6 +112,8 @@ serviceMonitor:
 
 PORT: 8079
 QR_TYPE: "URL"
+CERTIFICATESIGN_PRIVATE_KEY: ""
+CERTIFICATESIGN_PUBLIC_KEY: ""
 SIGNING_KEY_TYPE: "RSA"
 CACHE_CONTEXT_URLS: ""
 java_options: -Xmx600m

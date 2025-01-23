@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
+  name: {{ include "common.names.fullname" . }}   ## kong
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
@@ -11,7 +11,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "common.names.name" . }}
+      app.kubernetes.io/name: {{ include "common.names.name" . }}  ## kong
   template:
     metadata:
       labels:
@@ -31,7 +31,7 @@ spec:
           image: busybox
           command: ["/bin/sh", "-c"]
           args:
-          - "timeout 300 sh -c 'until nc -z {{.Values.global.postgresql.host}} {{.Values.global.postgresql.port}}; do echo waiting for postgres; sleep 10; done'"
+          - "timeout 300 sh -c 'until nc -zv {{.Values.global.postgresql.host}} {{.Values.global.postgresql.port}}; do echo waiting for postgres; sleep 10; done'"
       {{- with .Values.initContainers }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

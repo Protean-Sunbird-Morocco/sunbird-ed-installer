@@ -4,8 +4,11 @@ knowlg_automation_repo_branch: release-5.5.0
 provisioningAnnotations: &provisioningAnnotations
   "helm.sh/hook-weight": "-4"
 
+commonLabels:
+  app: knowledgebb
+
 neo4j: &neo4j
-  enabled: true
+  enabled: false
   host: "neo4j"
   port: 7687
   boltPort: 8687
@@ -19,7 +22,7 @@ neo4j: &neo4j
     waitForNeo4j: "true"
 
 elasticsearch: &es
-  enabled: true
+  enabled: false
   fullnameOverride: "elasticsearch"
   host: "elasticsearch"
   port: 9200
@@ -56,7 +59,7 @@ elasticsearch: &es
     tag: 11-debian-11-r54
 
 redis: &redis
-  enabled: true
+  enabled: false
   nameOverride: "redis"
   fullnameOverride: "redis"
   auth:
@@ -72,7 +75,7 @@ redis: &redis
       size: 25Gi
 
 cassandra: &cassandra
-  enabled: true
+  enabled: false
   nameOverride: "cassandra"
   fullnameOverride: "cassandra"
   host: "cassandra"
@@ -102,7 +105,7 @@ zookeeper: &zookeeper
 
 kafka: &kafka
   zookeeper: *zookeeper
-  enabled: true
+  enabled: false
   nameOverride: "kafka"
   fullnameOverride: "kafka"
   clientProtocol: PLAINTEXT
@@ -163,7 +166,7 @@ kafka: &kafka
 play_http: &play_http
   secret_key: "secretKey"
 schema: &schema
-  base_path: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net/{{ .Values.global.azure_public_container_name }}/schemas/local"
+  base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}/schemas/local"
 graph_passport: &graph_passport
   key_base: "secretKey"
 installation: &installation
@@ -189,6 +192,7 @@ global:
   provisioningAnnotations: *provisioningAnnotations
   keycloak_kid_keys_configmap: keycloak-kids-keys
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
+  
 
 content:
   opa_enabled: true

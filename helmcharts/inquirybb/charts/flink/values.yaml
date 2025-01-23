@@ -3,6 +3,9 @@ fullnameOverride: "flink"
 
 replicaCount: 1
 
+commonLabels:
+  app: inquirybb
+
 image:
   repository: sunbirded.azurecr.io/data-pipeline
   tag: release-7.0.0_RC7_7425f7c_15
@@ -31,6 +34,7 @@ service:
 
 ingress: {}
 
+
 resources:
   requests:
     cpu: 100m
@@ -56,7 +60,6 @@ autoscaling:
         target:
           type: Utilization
           averageUtilization: 80
-
 
 nodeSelector: {}
 tolerations: []
@@ -84,7 +87,6 @@ sidecars: {}
 opa:
   enabled: false
 
-
 jobmanager:
   rpc_port: 6123
   blob_port: 6124
@@ -106,7 +108,7 @@ taskmanager:
 ### base-config related vars
 oci_flink_s3_storage_endpoint: "s3/storage/endpoint"
 postgres_max_connections: 2
-flink_container_name: flink-check-points-store
+flink_container_name: ed-sunbird-flink-check-points-store
 checkpoint_interval: 60000
 checkpoint_pause_between_seconds: 5000
 checkpoint_compression_enabled: true
@@ -117,24 +119,24 @@ producer_max_request_size: 1572864
 ### QuestionSet Publish Config
 master_category_validation_enabled: "Yes"
 
-inquiry_assessment_publish_kafka_topic_name: "{{ .Values.global.env }}.assessment.publish.request"
-inquiry_assessment_post_publish_kafka_topic_name: "{{ .Values.global.env }}.assessment.postpublish.request"
-inquiry_assessment_publish_group: "{{ .Values.global.env }}-questionset-publish-group"
-question_keyspace_name: "{{ .Values.global.env }}_question_store"
-hierarchy_keyspace_name: "{{ .Values.global.env }}_hierarchy_store"
+inquiry_assessment_publish_kafka_topic_name: "dev.assessment.publish.request"
+inquiry_assessment_post_publish_kafka_topic_name: "dev.assessment.postpublish.request"
+inquiry_assessment_publish_group: "dev-questionset-publish-group"
+question_keyspace_name: "dev_question_store"
+hierarchy_keyspace_name: "dev_hierarchy_store"
 kp_print_service_base_url: "http://print:5000"
 # CNAME Config
 cloudstorage_relative_path_prefix: "CONTENT_STORAGE_BASE_PATH"
-cloudstorage_base_path: "https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
+cloudstorage_base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}"
 cloudstorage_metadata_list: '["appIcon","posterImage","artifactUrl","downloadUrl","variants","previewUrl","pdfUrl"]'
-valid_cloudstorage_base_urls: '["https://{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"]'
+valid_cloudstorage_base_urls: '["https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}"]'
 cloudstorage_replace_absolute_path: false
 ### QuestionSet RePublish Job Config
-inquiry_assessment_republish_kafka_topic_name: "{{ .Values.global.env }}.assessment.republish.request"
-inquiry_assessment_republish_group: "{{ .Values.global.env }}-questionset-republish-group"
+inquiry_assessment_republish_kafka_topic_name: "dev.assessment.republish.request"
+inquiry_assessment_republish_group: "dev-questionset-republish-group"
 ### user_pii Job Config
-user_pii_updater_kafka_topic_name: "{{ .Values.global.env }}.delete.user"
-user_pii_updater_group: "{{ .Values.global.env }}-user-pii-updater-group"
+user_pii_updater_kafka_topic_name: "dev.delete.user"
+user_pii_updater_group: "dev-user-pii-updater-group"
 user_pii_target_object_types: '{
   "Question": ["1.0", "1.1"],
   "QuestionSet": ["1.0", "1.1"],
@@ -148,7 +150,7 @@ email_notification_subject: "User Account Deletion Notification"
 email_notification_regards: "Team"
 
 cloud_storage: 
-  type: "azure"
+  type: "gcp"
 
 log4j_console_properties: |
   # This affects logging for both user code and Flink
@@ -190,8 +192,8 @@ base_config: |
       }
     }
     job {
-      env = "{{ .Values.global.env }}"
-      enable.distributed.checkpointing = true
+      env = "dev"
+      enable.distributed.checkpointing = false
       {{- if eq "oci" .Values.cloud_storage.type }}
             statebackend {
               s3 {
@@ -202,6 +204,16 @@ base_config: |
                 }
               }
               base.url = "s3://"${job.statebackend.s3.storage.container}"/"${job.statebackend.s3.storage.checkpointing.dir}
+            }
+      {{- else if eq "gcp" .Values.cloud_storage.type }}
+            statebackend {
+              gcs {
+                storage {
+                  bucket = "{{ .Values.global.gcp_public_bucket_name }}"
+                  checkpointing.dir = "checkpoint"
+                }
+              }
+              base.url = "gs://"${job.statebackend.gcs.storage.bucket}"/"${job.statebackend.gcs.storage.checkpointing.dir}
             }
       {{- else }}
       statebackend {
@@ -272,10 +284,9 @@ flink_jobs:
       print_service.base_url = "{{ .Values.kp_print_service_base_url }}"
       #Cloud Storage Config
       cloud_storage_type: "{{ .Values.cloud_storage.type }}"
-      cloud_storage_key: "{{ .Values.global.azure_storage_account_name }}"
-      cloud_storage_secret: "{{ .Values.global.azure_storage_account_key }}"
+      cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_container: "{{ .Values.global.gcp_public_bucket_name }}"
 
       master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {
@@ -320,10 +331,9 @@ flink_jobs:
       print_service.base_url = "{{ .Values.kp_print_service_base_url }}"
       #Cloud Storage Config
       cloud_storage_type: "{{ .Values.cloud_storage.type }}"
-      cloud_storage_key: "{{ .Values.global.azure_storage_account_name }}"
-      cloud_storage_secret: "{{ .Values.global.azure_storage_account_key }}"
+      cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
       cloud_storage_endpoint: ""
-      cloud_storage_container: "{{ .Values.global.azure_public_container_name }}"
+      cloud_storage_container: "{{ .Values.global.gcp_public_bucket_name }}"
       
       master.category.validation.enabled ="{{ .Values.master_category_validation_enabled }}"
       cloudstorage {

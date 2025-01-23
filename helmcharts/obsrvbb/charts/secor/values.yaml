@@ -1,17 +1,20 @@
-# Azure Container Details
-azure_account: "{{.Values.global.azure_storage_account_name}}"
-azure_secret: "{{ .Values.global.azure_storage_account_key }}"
-azure_container_name: "{{ .Values.global.azure_telemetry_container_name }}"
+# Gcp Container Details
+gcp_account: "{{.Values.global.gcp_storage_account_name}}"
+gcp_secret: "{{ .Values.global.gcp_storage_account_key }}"
+gcp_bucket_name: "ed-sunbird-telemetry-data-store"
 
 s3_access_key: "cloud_private_storage_accountname"
 s3_secret_id: "cloud_private_storage_secret"
 s3_region: "cloud_private_storage_region"
 s3_endpoint: "cloud_private_storage_endpoint"
 s3_path_style_access: "s3_path_style_access"
-s3_bucket_name: "{{ .Values.global.azure_telemetry_container_name }}"
+s3_bucket_name: "telemetry-data-store"
 
-storage_type: "Azure"
-storageClass: "default"
+commonLabels:
+  name: obsrvbb
+
+storage_type: "GS"
+storageClass: "standard-rwo"
 
 image:
   pullSecrets: []
@@ -39,7 +42,7 @@ base_config: &base_config
   kafka_broker_host: "{{.Values.global.kafka.host}}"
   zookeeper_quorum: "{{.Values.global.zookeeper.host}}:{{.Values.global.zookeeper.port}}"
   max_file_size: "100000000"
-  max_file_age: "14400"
+  max_file_age: "60"
   partition_prefix_enabled: "false"
   partition_prefix_key: "nil"
   partition_prefix_mapping: "{}"

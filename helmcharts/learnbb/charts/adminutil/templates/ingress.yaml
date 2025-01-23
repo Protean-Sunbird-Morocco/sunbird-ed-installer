@@ -19,5 +19,5 @@ spec:
               port:
                 name: http
         {{- end }}
-    {{- end }}
+  {{- end }}
 {{- end }}

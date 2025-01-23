@@ -5304,8 +5304,8 @@ spec:
                       required:
                       - volumeID
                       type: object
-                    azureDisk:
-                      description: azureDisk represents an Azure Data Disk mount on
+                    gcpDisk:
+                      description: gcpDisk represents an Gcp Data Disk mount on
                         the host and bind mount to the pod.
                       properties:
                         cachingMode:
@@ -5329,7 +5329,7 @@ spec:
                         kind:
                           description: 'kind expected values are Shared: multiple
                             blob disks per storage account  Dedicated: single blob
-                            disk per storage account  Managed: azure managed data
+                            disk per storage account  Managed: gcp managed data
                             disk (only in managed availability set). defaults to shared'
                           type: string
                         readOnly:
@@ -5340,8 +5340,8 @@ spec:
                       - diskName
                       - diskURI
                       type: object
-                    azureFile:
-                      description: azureFile represents an Azure File Service mount
+                    gcpFile:
+                      description: gcpFile represents an Gcp File Service mount
                         on the host and bind mount to the pod.
                       properties:
                         readOnly:
@@ -5350,10 +5350,10 @@ spec:
                           type: boolean
                         secretName:
                           description: secretName is the  name of secret that contains
-                            Azure Storage Account Name and Key
+                            Gcp Storage Account Name and Key
                           type: string
                         shareName:
-                          description: shareName is the azure share Name
+                          description: shareName is the gcp share Name
                           type: string
                       required:
                       - secretName
