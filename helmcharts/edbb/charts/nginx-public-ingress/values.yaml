@@ -7,8 +7,8 @@ commonLabels:
 replicaCount: 1
 
 image:
-  repository: sunbirded.azurecr.io/proxy
-  tag: "release-7.0.0_8e6b2db_23"
+  repository:  sunbirded.azurecr.io/nginx-certbot
+  tag: "v3"
   pullPolicy: IfNotPresent
   pullSecrets: []
 

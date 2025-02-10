@@ -30,4 +30,3 @@ terraform/gcp/modules/serviceaccount/sunbird-service-account-key.json
 **/global-values.yaml
 **/global-cloud-values.yaml
 
-"helmcharts/edbb/gcp-credential.json" 

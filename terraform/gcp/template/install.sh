@@ -282,12 +282,12 @@ if [ $# -eq 0 ]; then
     #create_tf_backend
     #backup_configs
     #create_tf_resources
-    #cd ../../../helmcharts
-    #install_helm_components
-    #cd ../terraform/gcp/$environment
-    #restart_workloads_using_keys
-    #certificate_config
-    #dns_mapping
+    cd ../../../helmcharts
+    install_helm_components
+    cd ../terraform/gcp/$environment
+    restart_workloads_using_keys
+    certificate_config
+    dns_mapping
     generate_postman_env
     run_post_install
     

@@ -8,7 +8,7 @@ commonLabels:
   app: knowledgebb
 
 neo4j: &neo4j
-  enabled: false
+  enabled: true
   host: "neo4j"
   port: 7687
   boltPort: 8687

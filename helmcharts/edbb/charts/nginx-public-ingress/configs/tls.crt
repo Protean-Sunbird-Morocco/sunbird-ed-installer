@@ -1,1 +1,1 @@
-{{ .Values.proxy_certificate }}
+{{ .Values.global.proxy_certificate }}
