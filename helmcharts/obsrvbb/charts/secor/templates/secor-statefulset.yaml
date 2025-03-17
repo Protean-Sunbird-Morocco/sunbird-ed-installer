@@ -55,8 +55,8 @@ spec:
             - name: "data-path"
               mountPath: /mnt/data
             - name: google-credentials-volume
-              mountPath: /mnt/key.json
-              subPath: key.json 
+              mountPath: /mnt/gcp-credential.json
+              subPath: gcp-credential.json
           resources:
             requests:
               cpu: {{ get (get (get $.Values.secor_jobs $jobName) "requests") "cpu" }}
@@ -70,7 +70,7 @@ spec:
             name: {{ $jobName }}-config
         - name: google-credentials-volume
           configMap:
-            name: gcp-service-account-config
+            name: gcp-config
 
   volumeClaimTemplates:
     - metadata:

@@ -103,7 +103,7 @@ reports_container: "reports"
 blob_container_name: "telemetry-data-store"
 cloud_storage_type: "google"
 dp_raw_telemetry_backup_location: "unique/raw/"
-cloud_storage_endpoint: https://console.cloud.google.com/storage/browser/ed-sunbird-public
+cloud_storage_endpoint: https://console.cloud.google.com/storage/browser/{{ .Values.global.gcp_public_bucket_name }}
 
 
 

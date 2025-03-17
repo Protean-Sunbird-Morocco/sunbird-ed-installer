@@ -54,7 +54,7 @@ spec:
             {{- end }}
 
             {{- if eq .Values.checkpoint_store_type "gcp" }}
-              "-Dfs.gs.bucket={{ .Values.global.gcp_bucket_name }}",
+              "-Dfs.gs.bucket={{ .Values.global.gcp_public_bucket_name }}",
               "-Dfs.gs.project.id={{ .Values.global.gcp_project_id }}",
             {{- end }}
 
@@ -142,7 +142,7 @@ spec:
             {{- end }}
 
             {{- if eq .Values.checkpoint_store_type "gcp" }}
-              "-Dfs.gs.bucket={{ .Values.global.gcp_bucket_name }}",
+              "-Dfs.gs.bucket={{ .Values.global.gcp_public_bucket_name }}",
               "-Dfs.gs.project.id={{ .Values.global.gcp_project_id }}",
             {{- end }}
 

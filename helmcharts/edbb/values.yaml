@@ -128,6 +128,7 @@ global:
   sunbird_logged_default_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb3J0YWxfbG9nZ2VkaW5fZmFsbGJhY2tfdG9rZW4ifQ.gghyNSAt6R99J-klgdpA8PhN7echwRCQi1g7vU2IR4E
   adminutil_learner_api_auth_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbnV0aWxfbGVhcm5lcl9hcGlfdG9rZW4ifQ.nx8sgrStNr9nYwAblqaANFDOVIKI4ppl1tzX8WtnOyo
   random_string: sunbird12345
+  gcp-credentials: gcp-credential.json
 
 knowledgemw:
   opa_enabled: true

@@ -105,7 +105,7 @@ taskmanager:
   cpu_requests: 0.3
 
 global:
-  gcp_project_id: sunbird-morocco-sandbox-434709
+  gcp_project_id: 
   env: dev
 
 # S3 Details
@@ -117,8 +117,8 @@ s3_path_style_access: ""
 cloud_storage:
   type: "gcp"
 cloudstorage_metadatalist: '["appIcon","posterImage","artifactUrl","downloadUrl","variants","previewUrl","pdfUrl", "streamingUrl", "toc_url"]'
-cloudstorage_write_base_path: '["https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"]'
-cloudstorage_read_base_path: "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/"
+cloudstorage_write_base_path: '["https://storage.googleapis.com/{{.Values.global.gcp_public_bucket_name}}/"]'
+cloudstorage_read_base_path: "https://storage.googleapis.com/{{.Values.global.gcp_public_bucket_name}}/"
 cloudstorage_relative_path_prefix: "CONTENT_STORAGE_BASE_PATH"
 
 log4j_console_properties: |
@@ -180,7 +180,7 @@ base_config: |
         }
 
         gcs {
-            bucket = "{{ .Values.global.gcp_bucket_name }}"
+            bucket = "ed-sunbird-flink-check-points-store"
             checkpointing.dir = "checkpoint"
         }
         
@@ -257,7 +257,7 @@ flink_jobs:
       cloudstorage.metadata.replace_absolute_path=true
       cloudstorage.relative_path_prefix= "CONTENT_STORAGE_BASE_PATH"
       cloudstorage.read_base_path="{{ include "common.tplvalues.render" (dict "value" .Values.cloudstorage_read_base_path "context" $) }}"
-      cloudstorage.write_base_path=["https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}/"] 
+      cloudstorage.write_base_path=["https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}/"] 
       cloudstorage.mecloudstorage.metadata.list={{ .Values.cloudstorage_metadatalist }}
       cloud_storage_container="{{ .Values.global.gcp_public_bucket_name }}"
 

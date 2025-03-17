@@ -70,7 +70,7 @@ spec:
     # gcp
     druid.gcp.account = {{ .Values.global.gcp_storage_account_name }}
     druid.gcp.key = {{ .Values.global.gcp_storage_account_key }}
-    druid.gcp.container = {{ .Values.gcp_storage_container }}
+    druid.gcp.container = {{ .Values.gcp_storage_bucket }}
     #druid.storage.storageDirectory = {{ .Values.druid_storage_directory }}
     druid.storage.disableAcl=true
 
@@ -82,8 +82,8 @@ spec:
     druid.indexer.logs.disableAcl=true
 
     {{- if eq .Values.druid_deepstorage_type "google" }}
-    druid.indexer.logs.container={{ .Values.druid_indexer_logs_container }}
-    druid.indexer.logs.s3Bucket={{ .Values.gcp_storage_container }}
+    druid.indexer.logs.container={{ .Values.druid_indexer_logs_bucket }}
+    druid.indexer.logs.s3Bucket={{ .Values.gcp_storage_bucket}}
     druid.indexer.logs.s3Prefix= {{ .Values.druid_indexer_logs_prefix }}
     {{- end }}
 

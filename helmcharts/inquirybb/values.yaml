@@ -4,7 +4,7 @@ provisioningAnnotations: &provisioningAnnotations
   "helm.sh/hook-weight": "-4"
 
 neo4j: &neo4j
-  enabled: true
+  enabled: false
   host: "neo4j"
   port: 7687
   boltPort: 8687
@@ -42,7 +42,7 @@ zookeeper: &zookeeper
     size: 2Gi
 
 elasticsearch: &es
-  enabled: true
+  enabled: false
   fullnameOverride: "elasticsearch"
   host: "elasticsearch"
   port: 9200
@@ -139,7 +139,7 @@ play_http: &play_http
   secret_key: "a-dummy-play-http-secret-key"
 
 schema: &schema
-  base_path: "https://storage.googleapis.com/ed-sunbird-public/schemas/local"
+  base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}/schemas/local"
 
 graph_passport: &graph_passport
   key_base: "a-dummy-graph_passport-secret-key"
@@ -159,16 +159,7 @@ global:
   installation: *installation
   elasticsearch: *es
   provisioningAnnotations: *provisioningAnnotations
-  gcp_storage_account_name: sunbird
-  gcp_public_container_name: ed-sunbird-public
-  env: dev
-  gcp_bucket_name: ed-sunbird-public
-  private_ingressgateway_ip: 10.0.0.10
-  gcp_project_id: sunbird-morocco-sandbox-434709
-  gcp_service_account_key_configmap: gcp-service-account-config
-  gcp_service_account_key_file: key.json
-  gcp_storage_account_key: /Users/krishna/Downloads/Secrets/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
-
+  
 migration:
   cassandra:
     waitTime: 120

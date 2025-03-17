@@ -68,9 +68,9 @@ spec:
     druid.storage.type={{ .Values.druid_deepstorage_type }}
     # AWS
     # Azure
-    druid.google.account = {{ .Values.global.gcp_storage_account_name }}
+    druid.google.account = {{ .Values.global.gcp_storage_account_name }} 
     druid.google.key = {{ .Values.global.gcp_storage_account_key }}
-    druid.google.bucket = {{ .Values.global.gcp_bucket_name }}
+    druid.google.bucket = {{ .Values.global.gcp_storage_bucket }}
     #druid.storage.storageDirectory = {{ .Values.druid_storage_directory }}
     druid.storage.disableAcl=true
 
@@ -82,7 +82,7 @@ spec:
     druid.indexer.logs.disableAcl=true
 
     {{- if eq .Values.druid_deepstorage_type "google" }}
-    druid.indexer.logs.bucket={{ .Values.global.gcp_bucket_name }}
+    druid.indexer.logs.bucket={{ .Values.global.druid_indexer_logs_bucket }}
     {{- end }}
 
     # Service discovery

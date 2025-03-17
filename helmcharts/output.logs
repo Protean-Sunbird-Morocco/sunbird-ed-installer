@@ -5767,11 +5767,11 @@ player:
         provisioning:
           annotations:
             helm.sh/hook-weight: "-4"
-      gcp_bucket_name: ed-sunbird-public
-      gcp_private_container_name: ""
-      gcp_service_account_key_configmap: gcp-service-account-config
-      gcp_service_account_key_file: key.json
-      gcp_storage_account_name: sunbird
+      gcp_public_bucket_name: 
+      gcp_private_bucket_name: 
+      gcp_service_account_key_configmap: 
+      gcp_service_account_key_file: 
+      gcp_storage_account_name: 
       kafka:
         clientProtocol: PLAINTEXT
         commonAnnotations:
@@ -5922,11 +5922,11 @@ player:
       provisioning:
         annotations:
           helm.sh/hook-weight: "-4"
-    gcp_bucket_name: ed-sunbird-public
-    gcp_private_container_name: ""
-    gcp_service_account_key_configmap: gcp-service-account-config
-    gcp_service_account_key_file: key.json
-    gcp_storage_account_name: sunbird
+    gcp_public_bucket_name: 
+    gcp_private_bucket_name: ""
+    gcp_service_account_key_configmap: 
+    gcp_service_account_key_file: 
+    gcp_storage_account_name: 
     kafka:
       clientProtocol: PLAINTEXT
       commonAnnotations:
@@ -35588,7 +35588,7 @@ metadata:
 
     reloader.stakater.com/auto: "true"
 data:
-  GCP_STORAGE_ACCOUNT: sunbird
+  GCP_STORAGE_ACCOUNT: 
   GCP_STORAGE_KEY: 
   sunbird_public_storage_account_name: "https://storage.googleapis.com/ed-sunbird-public/"
   cloud_service_provider: gcp

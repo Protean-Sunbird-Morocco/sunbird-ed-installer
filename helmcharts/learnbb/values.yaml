@@ -31,7 +31,7 @@ postgresql: &postgresql
     - name: "enc-keys"
     - name: "registry"
 elasticsearch: &es
-  enabled: false
+  enabled: true
   fullnameOverride: "elasticsearch"
   host: "elasticsearch"
   port: 9200
@@ -122,7 +122,7 @@ kafka: &kafka
   persistence:
     size: 25Gi
 druid: &druid
-  enabled: true
+  enabled: false
   fullnameOverride: "druid"
   host: druid-raw-routers
   port: 8888
@@ -139,7 +139,7 @@ druid: &druid
   druid_indexer_logs_bucket: 
 
 neo4j: &neo4j
-  enabled: false
+  enabled: true
   host: "neo4j"
   port: 7687
   boltPort: 8687
@@ -164,14 +164,8 @@ global:
   keycloak_kid_keys_configmap: keycloak-kids-keys
   keycloak_key_configmap: keycloak-key
   kong_desktop_device_consumer_names_for_opa: '["portal", "desktop"]'
-  gcp_storage_account_name: sunbird
-  gcp_public_container_name: ed-sunbird-public
-  gcp_bucket_name: ed-sunbird-public
   gcp_project_id: sunbird-morocco-sandbox-434709
   cassandra.host: cassandra
-  gcp_service_account_key_configmap: gcp-service-account-config
-  gcp_service_account_key_file: key.json
-  gcp_storage_account_key: /Users/parmindersingh/Downloads/sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
   env: dev
   cassandra.port: 9042
   sunbird_sso_username: admin

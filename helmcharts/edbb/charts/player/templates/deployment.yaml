@@ -60,7 +60,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: gcp-credentials
-                key: sunbird-morocco-sandbox-434709-c0322f0c3ef4.json
+                key: gcp-credential.json
           envFrom:
           - configMapRef:
               name: {{ include "common.names.fullname" . }}-env

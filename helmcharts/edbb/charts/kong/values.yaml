@@ -153,8 +153,8 @@ postgresql: &postgresql
 
 global:
 
-  gcp_service_account_key_configmap: gcp-service-account-config
-  gcp_service_account_key_file: key.json 
+  gcp_service_account_key_configmap: gcp-config
+  gcp_service_account_key_file: gcp-credential.json
   postgresql: *postgresql
 
 provisioningAnnotations:

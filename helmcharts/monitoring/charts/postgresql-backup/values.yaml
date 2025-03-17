@@ -30,7 +30,7 @@ PGPASSWORD: "postgres"
 GCP_STORAGE_ACCOUNT: ""
 GCP_KEY: ""
 CLOUD_SERVICE: "gcp"
-gcp_backups_container_name: "ed-sunbird-backups"
+gcp_backups_bucket_name: "ed-sunbird-backups"
 
 postgresql: &postgresql
   enabled: true

@@ -144,15 +144,15 @@ s3_path_style_access: ""
 
 #GCP Container Details
 gcp_account: "sunbird"
-gcp_service_account_key_configmap: gcp-service-account-config
-gcp_service_account_key_file: key.json 
+gcp_service_account_key_configmap: gcp-config
+gcp_service_account_key_file: gcp-credential.json 
 
 # GCP Container Details
 checkpoint_store_type: "gcp"
 cloud_storage_flink_bucketname: ed-sunbird-flink-state-backend
 cloud_storage_content_bucketname: ed-sunbird-content-dev
 cert_container_name: dev-e-credentials
-cloud_storage_endpoint: https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/
+cloud_storage_endpoint: https://storage.googleapis.com/{{.Values.global.gcp_public_bucket_name}}/
 
 
 flink_dp_storage_container: ""
@@ -342,7 +342,7 @@ base_config: |
       port = "{{ .Values.global.cassandra.port }}"
     }
     schema {
-      basePath = "https://storage.googleapis.com/{{.Values.global.gcp_bucket_name}}/contents/schemas/local"
+      basePath = "https://storage.googleapis.com/{{.Values.global.gcp_public_bucket_name}}/contents/schemas/local"
       supportedVersion = {
         itemset = "2.0"
       }

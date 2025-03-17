@@ -53,7 +53,7 @@ spec:
 
     {{- if eq .Values.cloud_storage.type "gcp" }}
             "-Dfs.gs.project.id={{ .Values.global.gcp_project_id }}",
-            "-Dfs.gs.system.bucket={{ .Values.global.gcp_bucket_name }}",
+            "-Dfs.gs.system.bucket={{ .Values.global.gcp_public_bucket_name }}",
             "-Dgoogle.cloud.auth.service.account.enable=true",
             "-Dgoogle.cloud.auth.service.account.keyfile={{ .Values.global.gcp_storage_account_key }}",
     {{- end }}
@@ -154,7 +154,7 @@ spec:
 
    {{- if eq .Values.cloud_storage.type "gcp" }}
             "-Dfs.gs.project.id={{ .Values.global.gcp_project_id }}",
-            "-Dfs.gs.system.bucket={{ .Values.global.gcp_bucket_name }}",
+            "-Dfs.gs.system.bucket={{ .Values.global.gcp_public_bucket_name }}",
             "-Dgoogle.cloud.auth.service.account.enable=true",
             "-Dgoogle.cloud.auth.service.account.keyfile={{ .Values.global.gcp_storage_account_key }}",
   {{- end }}

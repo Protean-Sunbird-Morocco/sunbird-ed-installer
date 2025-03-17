@@ -117,10 +117,9 @@ domain_name: &domain_name "localhost"
 proto: &proto "https"
 instance: &instance "dev"
 # gcp Container Details
-gcp_account: "sunbird"
-gcp_service_account_key_configmap: gcp-service-account-config
-gcp_service_account_key: gcp-service-account-config
-gcp_service_account_key_file: key.json
+gcp_service_account_key_configmap: gcp-config
+gcp_service_account_key: gcp-config
+gcp_service_account_key_file: gcp-credential.json
 env_name: &env_name "local"
 domain_name: &domain_name "localhost"
 proto: &proto "https"
@@ -133,13 +132,13 @@ cloud_storage: &cloud_storage
   endpoint: "https://dummy.endpoint.com"
   cloud_service_provider: "gcp"
   cloud_storage_content_bucketname: "ed-sunbird-content-bucket"
-  cloud_private_storage_accountname: "sunbird"
-  cloud_private_storage_secret: gcp-service-account-config
-  gcp_service_account_key_file: key.json
+  cloud_private_storage_accountname: 
+  cloud_private_storage_secret: gcp-config 
+  gcp_service_account_key_file: gcp-credential.json
 core_vault_sunbird_fcm_account_key: "your-fcm-account-key"
 sunbird_msg_91_auth: "your-msg-91-auth-key"
 cassandra_isMultiDCEnabled: false
-kp_schema_base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}/schemas/local"
+kp_schema_base_path: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}/schemas/local"
 lms_service_base_url: "http://lms-service:9000"
 kp_search_service_base_url: "http://search-service:9000"
 content_read_api_host: "http://content-service:9000"
@@ -160,8 +159,8 @@ cert_cloud_storage_type: "gcp"
 cert_cloud_storage_secret: "{{ .Values.global.gcp_storage_account_key }}"
 cert_cloud_storage_key: "{{ .Values.global.gcp_storage_account_name }}"
 cert_cloud_storage_endpoint: ""
-cloud_storage_base_url: "https://storage.googleapis.com/{{ .Values.global.gcp_bucket_name }}"
-cloud_storage_cname_url: "https://{{ .Values.global.gcp_bucket_name }}.storage.googleapis.com"
+cloud_storage_base_url: "https://storage.googleapis.com/{{ .Values.global.gcp_public_bucket_name }}"
+cloud_storage_cname_url: "https://{{ .Values.global.gcp_public_bucket_name }}.storage.googleapis.com"
 kafka_topic_course_batch_job_request: "{{ .Values.global.env }}.coursebatch.job.request"
 kafka_topic_telemetry_raw: "{{ .Values.global.env }}.telemetry.raw"
 kafka_topic_activity_agg_failed: "{{ .Values.global.env }}.activity.agg.failed"
@@ -349,7 +348,7 @@ base_config: |
             statebackend {
               gcs {
                 storage {
-                  bucket = "{{ .Values.global.gcp_bucket_name }}"
+                  bucket = "{{ .Values.global.gcp_public_bucket_name }}"
                   checkpointing.dir = "checkpoint"
                 }
               }
@@ -359,7 +358,7 @@ base_config: |
       statebackend {
         blob {
           storage {
-            account = "{{ .Values.global.gcp_storage_account_name }}.blob.core.windows.net"
+            account = "{{ .Values.global.azure_storage_account_name }}.blob.core.windows.net"
             container = "{{ .Values.global.azure_public_container_name }}"
             checkpointing.dir = "checkpoint"
           }
@@ -603,7 +602,7 @@ flink_jobs:
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.gcp_public_container_name }}"
+      content_cloud_storage_container = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
     flink-conf: |
       jobmanager.memory.flink.size: 1024m
@@ -636,14 +635,14 @@ flink_jobs:
         certreg.table ="{{ .Values.cert_registry_table }}"
       }
       cert_domain_url = "https://{{ .Values.global.domain }}"
-      cert_container_name = "{{ .Values.global.gcp_bucket_name }}"
+      cert_container_name = "{{ .Values.global.gcp_public_bucket_name }}"
       cert_cloud_storage_type = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_type "context" $) }}"
       cert_cloud_storage_secret = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_secret "context" $) }}"
       cert_cloud_storage_endpoint = "{{ .Values.cert_cloud_storage_endpoint }}"
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.gcp_bucket_name }}"
+      content_cloud_storage_container = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"
@@ -687,13 +686,13 @@ flink_jobs:
         certreg.table ="{{ .Values.cert_registry_table }}"
       }
       cert_domain_url = "{{ .Values.global.domain }}"
-      cert_container_name = "{{ .Values.global.gcp_bucket_name }}"
+      cert_container_name = "{{ .Values.global.gcp_public_bucket_name }}"
       cert_cloud_storage_type = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_type "context" $) }}"
       cert_cloud_storage_secret = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_secret "context" $) }}"
       cert_cloud_storage_key = "{{ include "common.tplvalues.render" (dict "value" .Values.cert_cloud_storage_key "context" $) }}"
       cloud_storage_base_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_base_url "context" $) }}"
       cloud_store_base_path_placeholder = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_store_base_path_placeholder "context" $) | default "CLOUD_BASE_PATH" }}"
-      content_cloud_storage_container = "{{ .Values.global.gcp_bucket_name }}"
+      content_cloud_storage_container = "{{ .Values.global.gcp_public_bucket_name }}"
       cloud_storage_cname_url = "{{ include "common.tplvalues.render" (dict "value" .Values.cloud_storage_cname_url "context" $) }}"
       service {
         certreg.basePath = "{{ .Values.cert_reg_service_base_url }}"

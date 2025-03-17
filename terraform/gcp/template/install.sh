@@ -97,11 +97,12 @@ function install_component() {
         fi
       fi
 
-    helm template  "$component" "../../../helmcharts/$component" --debug --namespace sunbird -f "../../../helmcharts/$component/values.yaml" \
-        -f "../../../terraform/gcp/template/global-values.yaml" \
-        -f "../../../terraform/gcp/template/global-values-jwt-tokens.yaml" \
-        -f "../../../terraform/gcp/template/global-values-rsa-keys.yaml" \
-        -f "../../../terraform/gcp/template/global-cloud-values.yaml" --timeout 30m --debug
+    helm upgrade --install  "$component" "$component" --debug --namespace sunbird -f "$component/values.yaml" \
+         $ed_values_flag \
+        -f "../terraform/gcp/$environment/global-values.yaml" \
+        -f "../terraform/gcp/$environment/global-values-jwt-tokens.yaml" \
+        -f "../terraform/gcp/$environment/global-values-rsa-keys.yaml" \
+        -f "../terraform/gcp/$environment/global-cloud-values.yaml" --timeout 30m --debug
 }
 
 function install_helm_components() {
@@ -172,8 +173,33 @@ function run_post_install() {
 function restart_workloads_using_keys() {
     echo -e "\nRestart workloads using keycloak keys and wait for them to start..."
     kubectl rollout restart deployment -n sunbird neo4j knowledge-mw player content cert-registry groups adminutil userorg lms notification registry analytics
-    kubectl rollout status deployment -n sunbird neo4j knowledge-mw player content cert-registry groups adminutil userorg lms notification registry analytics
+    kubectl rollout status deployment -n sunbird  knowledge-mw player content cert-registry groups adminutil userorg lms notification registry analytics
     echo -e "\nWaiting for all pods to start"
+}
+
+function generate_postman_env() {
+    local current_directory="$(pwd)"
+    if [ "$(basename $current_directory)" != "$environment" ]; then
+        cd ../terraform/azure/$environment 2>/dev/null || true
+    fi
+    domain_name=$(kubectl get cm -n sunbird lms-env -ojsonpath='{.data.sunbird_web_url}')
+    api_key=$(kubectl get cm -n sunbird player-env -ojsonpath='{.data.sunbird_api_auth_token}')
+    keycloak_secret=$(kubectl get cm -n sunbird player-env -ojsonpath='{.data.sunbird_portal_session_secret}')
+    keycloak_admin=$(kubectl get cm -n sunbird userorg-env -ojsonpath='{.data.sunbird_sso_username}')
+    keycloak_password=$(kubectl get cm -n sunbird userorg-env -ojsonpath='{.data.sunbird_sso_password}')
+    generated_uuid=$(uuidgen)
+    temp_file=$(mktemp)
+    cp postman.env.json "${temp_file}"
+    sed -e "s|REPLACE_WITH_DOMAIN|${domain_name}|g" \
+        -e "s|REPLACE_WITH_APIKEY|${api_key}|g" \
+        -e "s|REPLACE_WITH_SECRET|${keycloak_secret}|g" \
+        -e "s|REPLACE_WITH_KEYCLOAK_ADMIN|${keycloak_admin}|g" \
+        -e "s|REPLACE_WITH_KEYCLOAK_PASSWORD|${keycloak_password}|g" \
+        -e "s|GENERATE_UUID|${generated_uuid}|g" \
+        "${temp_file}" >"env.json"
+
+    echo -e "A env.json file is created in this directory: terraform/azure/$environment"
+    echo "Import the env.json file into postman to invoke other APIs"
 }
 
 function run_post_install() {
@@ -181,10 +207,10 @@ function run_post_install() {
     if [ "$(basename $current_directory)" != "$environment" ]; then
         cd ../terraform/gcp/$environment 2>/dev/null || true
     fi
-    check_pod_status
+    #check_pod_status
     echo "Starting post install..."
     cp ../../../postman-collection/collection${RELEASE}.json .
-    postman collection run collection${RELEASE}.json --environment env.json --delay-request 500 --bail --insecure
+    postman collection run collection${RELEASE}.json --environment postman.env.json --delay-request 500 --bail --insecure
 }
 
 function create_client_forms() {
@@ -193,11 +219,11 @@ function create_client_forms() {
         cd ../terraform/gcp/$environment 2>/dev/null || true
     fi
     cp -rf ../../../postman-collection/ED-${RELEASE}  .
-    check_pod_status
+    #check_pod_status
     #loop through files inside collection folder
     for FILES in ED-${RELEASE}/*.json; do
      echo "Creating client forms in.. $FILES"
-      postman collection run $FILES --environment env.json --delay-request 500 --bail --insecure
+      postman collection run $FILES --environment postman.env.json --delay-request 500 --bail --insecure
     done 
    }
 
@@ -255,15 +281,16 @@ CERTPRIVATEKEY=""
 if [ $# -eq 0 ]; then
     #create_tf_backend
     #backup_configs
-    create_tf_resources
-    #cd ../../../helmcharts
-    #install_helm_components
-    #cd ../terraform/gcp/$environment
-    #restart_workloads_using_keys
-    #certificate_config
-    #dns_mapping
-    #generate_postman_env
-    #run_post_install
+    #create_tf_resources
+    cd ../../../helmcharts
+    install_helm_components
+    cd ../terraform/gcp/$environment
+    restart_workloads_using_keys
+    certificate_config
+    dns_mapping
+    generate_postman_env
+    run_post_install
+    
 else
     case "$1" in
         "create_tf_backend")
