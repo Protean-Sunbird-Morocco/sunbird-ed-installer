@@ -25,10 +25,23 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.initContainers }}
       initContainers:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        - name: wait-for-elasticsearch
+          image: curlimages/curl:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              while true; do
+                status=$(curl --silent --location "http://elasticsearch:9200/_cluster/health" | grep -o '"status":"[^"]*' | grep -o '[^"]*$');
+                status=$(echo $status | tr '[:upper:]' '[:lower:]');
+                if [[ "$status" == "green" || "$status" == "yellow" ]]; then
+                  echo "Elasticsearch is healthy";
+                  break;
+                else
+                  echo "Elasticsearch is not reachable, retrying..."
+                  sleep 5;
+                fi;
+              done
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -96,7 +109,7 @@ spec:
               --set=plugins.print_decision_logs_on_failure.stdout=true \
               --log-level=error \
               --ignore=.*
-          image: keshavprasad/opa:0.34.2-envoy
+          image: sunbirded.azurecr.io/opa:0.34.2-envoy
           imagePullPolicy: IfNotPresent
           name: opa
           livenessProbe:

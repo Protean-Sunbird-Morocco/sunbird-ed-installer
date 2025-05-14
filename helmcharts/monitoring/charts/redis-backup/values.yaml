@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 image:
-  repository: "keshavprasad/redis-backup"
+  repository: "sunbirded.azurecr.io/redis-backup"
   pullPolicy: IfNotPresent
   imagePullSecrets: ""
   tag: "0.0.1"
@@ -25,7 +25,7 @@ restartPolicy: "OnFailure"
 
 CRON_SCHEDULE: '"00 00 * * *"'
 REDIS_MASTER_POD: "redis-master-0"
-azure_backups_container_name: "{{ .Values.global.azure_backups_container_name }}"
+azure_backups_container_name: "{{ .Values.global.public_container_name }}/backups"
 
 global:
   azure_storage_account_name: your_storage_account_name
