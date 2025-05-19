@@ -36,7 +36,7 @@ serviceAccount:
 
 base_config: &base_config
   enabled: true
-  replicas: 1
+  replicas: 0
   service_name: "raw_telemetry_backup"
   timestamp_key: "syncts"
   fallback_timestamp_key: "@timestamp"
@@ -63,90 +63,112 @@ secor_jobs:
   raw-telemetry-backup:
     <<: *base_config
     consumer_group: "{{.Values.global.env}}.telemetry.raw.backup"
-    base_path: "telemetry-data-store//raw"
+    topic: "{{.Values.global.env}}.telemetry.raw.backup"
+    base_path: "telemetry-data-store/raw"
   failed-telemetry-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.failed.backup"
+    topic: "{{ .Values.global.env }}.telemetry.failed.backup"
     base_path: "telemetry-data-store/failed"
   unique-telemetry-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.unique.backup"
+    topic: "{{ .Values.global.env }}.telemetry.unique.backup"
     base_path: "telemetry-data-store/unique/raw"
   denorm-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.denorm.backup"
+    topic: "{{ .Values.global.env }}.telemetry.denorm.backup"
     base_path: "telemetry-data-store/telemetry-denormalized"
   derived-denorm-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.summary.backup"
+    topic: "{{ .Values.global.env }}.summary.backup"
     base_path: "telemetry-data-store/telemetry-denormalized/summary"
   channel-telemetry-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.channel.backup"
+    topic: "{{ .Values.global.env }}.telemetry.channel.backup"
     base_path: "telemetry-data-store/data-exhaust/raw"
   channel-summary-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.summary.channel.backup"
+    topic: "{{ .Values.global.env }}.summary.channel.backup"
     base_path: "telemetry-data-store/data-exhaust/summary"
   extractor-failed-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.extractor.failed.backup"
+    topic: "{{ .Values.global.env }}.extractor.failed.backup"
     base_path: "telemetry-data-store/extractor-failed"
   assess-raw-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.assess.raw"
+    topic: "{{ .Values.global.env }}.telemetry.assess.raw"
     base_path: "telemetry-data-store/telemetry-raw-assess"
   telemetry-duplicate-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.duplicate.backup"
+    topic: "{{ .Values.global.env }}.telemetry.duplicate.backup"
     base_path: "telemetry-data-store/telemetry-duplicate"
   extractor-duplicate-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.extractor.duplicate.backup"
+    topic: "{{ .Values.global.env }}.extractor.duplicate.backup"
     base_path: "telemetry-data-store/extractor-duplicate"
   derived-telemetry-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.derived.unique.backup"
+    topic: "{{ .Values.global.env }}.telemetry.derived.unique.backup"
     base_path: "telemetry-data-store/unique/summary"
   device-profile-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.events.device.profile.backup"
-    base_path: "telemetry-data-store/evice-profile-events"
+    topic: "{{ .Values.global.env }}.events.device.profile.backup"
+    base_path: "telemetry-data-store/device-profile-events"
   learning-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.learning.graph.events.backup"
+    topic: "{{ .Values.global.env }}.learning.graph.events.backup"
     base_path: "telemetry-data-store/learning-events"
   learning-failed-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.failed.learning.events.backup"
+    topic: "{{ .Values.global.env }}.failed.learning.events.backup"
     base_path: "telemetry-data-store/learning-failed-events"
   assess-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.assess.events.backup"
+    topic: "{{ .Values.global.env }}.telemetry.assess.events.backup"
     base_path: "telemetry-data-store/telemetry-batch-assess"
   batch-assess-failed-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.assess.failed.events.backup"
+    topic: "{{ .Values.global.env }}.telemetry.assess.failed.events.backup"
     base_path: "telemetry-data-store/telemetry-batch-assess-failed"
   ingestion-telemetry-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.telemetry.ingestion.events.backup"
+    topic: "{{ .Values.global.env }}.telemetry.ingestion.events.backup"
     base_path: "telemetry-data-store/ingestion-telemetry"
   content-consumption-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.coursebatch.job.request.backup"
+    topic: "{{ .Values.global.env }}.coursebatch.job.request.backup"
     base_path: "telemetry-data-store/content-consumption-events"
   issue-certificate-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.issue.certificate.request.backup"
+    topic: "{{ .Values.global.env }}.issue.certificate.request.backup"
     base_path: "telemetry-data-store/issue-certificate-events"
   content-auto-creation-events-backup:
     <<: *base_config
     consumer_group: "{{ .Values.global.env }}.auto.creation.job.request.backup"
+    topic: "{{ .Values.global.env }}.auto.creation.job.request.backup"
     base_path: "telemetry-data-store/content-auto-creation-events"
   error-telemetry-backup:
     <<: *base_config
     consumer_group: '{{ .Values.global.env }}.druid.events.error.backup'
+    topic: '{{ .Values.global.env }}.druid.events.error.backup'
     base_path: "telemetry-data-store/error_events"
 
 image:

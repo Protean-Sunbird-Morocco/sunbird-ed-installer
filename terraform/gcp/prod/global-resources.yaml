@@ -1,0 +1,151 @@
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      retention: "30d"
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 50Gi
+redis: 
+  master:
+    persistence:
+      size: 25Gi
+    primary:
+    resources:
+      limits:
+        cpu: 0.5
+        memory: 8Gi
+      requests:
+        cpu: 0.5
+        memory: 4Gi 
+
+cassandra: 
+  persistence:
+    size: 500Gi
+  resources:
+    requests:
+      cpu: 520m
+      memory: 6Gi
+    limits:
+      cpu: 750m
+      memory: 12Gi #tested with memory less than 10Gi, but the application encountered Out Of Memory (OOM) issues during execution
+
+postgresql: 
+  persistence:
+    size: 25Gi
+  databases:
+  - name: "kong"
+  - name: "druid_raw"
+  primary:
+    resources:
+      limits:
+        cpu: 512m
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+
+
+zookeeper: 
+  persistence:
+    size: 50Gi
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi 
+
+kafka: 
+  persistence:
+    size: 500Gi
+  resources:
+    limits:
+      cpu: 1
+      memory: 2048Mi
+    requests:
+      cpu: 750m
+      memory: 1024Mi
+
+neo4j: 
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"     
+
+elasticsearch:
+  master:
+    resources:
+      requests:
+        cpu: "1"
+        memory: "4Gi"
+      limits:
+        cpu: "2"
+        memory: "8Gi"
+    heapSize: 2G
+    persistence:
+      size: 100Gi  
+
+druid-raw-cluster:
+  druid_indexer_persistent_volume_size: 50Gi 
+  druid_historical_persistent_volume_size: 50Gi
+  resources:
+    druid_broker:
+      requests:
+        cpu: 100m
+        memory: 1024Mi
+      limits:
+      cpu: 200m
+      memory: 2048Mi
+    druid_coordinator:
+      requests:
+        cpu: 250m
+        memory: 750Mi
+      limits:
+      cpu: 250m
+      memory: 1024Mi
+    druid_overlord:
+      requests:
+        cpu: 250m
+        memory: 750Mi
+      limits:
+      cpu: 250m
+      memory: 1024Mi
+    druid_historical:
+      requests:
+        cpu: 750m
+        memory: 512Mi
+      limits:
+      cpu: 1
+      memory: 2048Mi
+    druid_indexer:
+      requests:
+        cpu: 200m
+        memory: 8Gi
+      limits:
+      cpu: 200m
+      memory: 16Gi
+    druid_router:
+      requests:
+        cpu: 250m
+        memory: 500Mi
+      limits:
+      cpu: 512m
+      memory: 1024Mi
+
+spark:
+  resources:
+    limits:
+      cpu: 0.5
+      memory: 2Gi
+    requests:
+      cpu: 0.5
+      memory: 1Gi       
+

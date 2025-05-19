@@ -41,10 +41,10 @@ resources:
   druid_indexer:
     requests:
       cpu: 200m
-      memory: 10Gi
+      memory: 16Gi
     limits:
      cpu: 200m
-     memory: 11Gi
+     memory: 8Gi
   druid_router:
     requests:
       cpu: 250m
@@ -206,7 +206,7 @@ druid_query_groupBy_maxOnDiskStorage: 524288000
 
 # Segmentstorage (default 1 gb storage)
 druid_segmentCache_locations: '{"path": "/druid/data/store", "maxSize": 10737418240}'
-druid_historical_persistent_volume_size: 25Gi
+druid_historical_persistent_volume_size: 500Gi
 
 druid_segmentCache_numLoadingThreads: 4
 
@@ -267,7 +267,7 @@ druid_indexer_fork_property_druid_server_http_numThreads: 25 # max(10, (Number o
 
 druid_indexer_numConcurrentMerges: 1
 
-druid_indexer_persistent_volume_size: 25Gi
+druid_indexer_persistent_volume_size: 50Gi
 
 indexer_intial_delay: 60
 
