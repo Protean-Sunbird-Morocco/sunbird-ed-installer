@@ -108,7 +108,7 @@ function install_component() {
 }
 
 function install_helm_components() {
-    components=( "edbb" )
+    components=("monitoring" "edbb" "learnbb" "knowledgebb" "obsrvbb" "inquirybb" "additional")
     #  components=( "obsrvbb" )
     for component in "${components[@]}"; do
         install_component "$component"
@@ -269,19 +269,19 @@ CERTPRIVATEKEY=""
 
 
 if [ $# -eq 0 ]; then
-    # create_tf_backend
-    # backup_configs
-    # create_tf_resources
-    # cd ../../../helmcharts
-    # install_helm_components
-    # cd ../terraform/gcp/$environment
-    # post_install_nodebb_plugins
-    # restart_workloads_using_keys
+    create_tf_backend
+    backup_configs
+    create_tf_resources
+    cd ../../../helmcharts
+    install_helm_components
+    cd ../terraform/gcp/$environment
+    post_install_nodebb_plugins
+    restart_workloads_using_keys
     certificate_config
-    # dns_mapping
-    # generate_postman_env
-    # run_post_install
-    # create_client_forms
+    dns_mapping
+    generate_postman_env
+    run_post_install
+    create_client_forms
     
 else
     case "$1" in
