@@ -218,18 +218,18 @@ druid-operator:
 
 cassandra: 
   persistence:
-    size: 25Gi
+    size: 500Gi
   resources:
     requests:
       cpu: 520m
-      memory: 3Gi
+      memory: 6Gi
     limits:
       cpu: 750m
-      memory: 10Gi 
+      memory: 12Gi
 
 druid-raw-cluster:
-  druid_indexer_persistent_volume_size: 25Gi 
-  druid_historical_persistent_volume_size: 25Gi
+  druid_indexer_persistent_volume_size: 50Gi 
+  druid_historical_persistent_volume_size: 500Gi
   resources:
     druid_broker:
       requests:
@@ -262,10 +262,10 @@ druid-raw-cluster:
     druid_indexer:
       requests:
         cpu: 200m
-        memory: 10Gi
+        memory: 8Gi
       limits:
         cpu: 200m
-        memory: 11Gi
+        memory: 16Gi
     druid_router:
       requests:
         cpu: 250m
@@ -283,14 +283,14 @@ groups:
       cpu: 1
       memory: 1G
 
-# keycloak:
-#   resources:
-#     requests:
-#       cpu: 250m
-#       memory: 512Mi
-#     limits:
-#         cpu: 750m
-#         memory: 750Mi
+keycloak:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1024Mi
+    limits:
+        cpu: 1
+        memory: 2048Mi
 
 lms:
   resources:
@@ -337,7 +337,9 @@ userorg:
       cpu: 1
       memory: 1024Mi
 
-kafka:
+kafka: 
+  persistence:
+    size: 500Gi
   resources:
     limits:
       cpu: 1
@@ -345,8 +347,6 @@ kafka:
     requests:
       cpu: 750m
       memory: 1024Mi
-    persistence:
-      size: 10Gi
   metrics:
     kafka:
       resources:
@@ -357,24 +357,28 @@ kafka:
           cpu: 100m
           memory: 256Mi
 
-neo4j:
+
+neo4j: 
   resources:
     requests:
-      cpu: "0.5"
-      memory: "2Gi"
+      cpu: "500m"
+      memory: "1Gi"
     limits:
       cpu: "1"
-      memory: "4Gi"
+      memory: "2Gi"    
   neo4j:
     pvc:
       resources:
         requests:
-          storage: 25Gi
+          storage: 100Gi
 
 postgresql: 
   persistence:
     size: 25Gi
   resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
     requests:
       cpu: 250m
       memory: 256Mi
@@ -387,10 +391,10 @@ redis:
       resources:
         limits:
           cpu: 0.5
-          memory: 2Gi
+          memory: 8Gi
         requests:
           cpu: 0.5
-          memory: 1Gi 
+          memory: 4Gi 
 
 spark:
   resources:
@@ -402,20 +406,20 @@ spark:
       memory: 1Gi
   persistence:
     spark_data_pvc:
-      size: 25Gi
+      size: 50Gi
     log_data_pvc:
-      size: 25Gi   
+      size: 50Gi   
 
 zookeeper: 
   persistence:
-    size: 2Gi
+    size: 50Gi
   resources:
     limits:
       cpu: 256m
       memory: 512Mi
     requests:
       cpu: 100m
-      memory: 128Mi 
+      memory: 128Mi
 
 #Obsrvbb
 analytics:
@@ -556,7 +560,7 @@ kube-prometheus-stack:
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
-                storage: 25Gi
+                storage: 50Gi
       resources:
         requests:
           cpu: 500m
@@ -587,9 +591,10 @@ elasticsearch:
     resources:
       requests:
         cpu: "1"
-        memory: "2Gi"
+        memory: "4Gi"
       limits:
         cpu: "2"
-        memory: "4Gi"
+        memory: "8Gi"
+    heapSize: 2G
     persistence:
-      size: 25Gi
+      size: 100Gi          
