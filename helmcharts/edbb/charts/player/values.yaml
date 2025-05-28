@@ -4,8 +4,8 @@ fullnameOverride: "player"
 replicaCount: 1
 
 image:
-  repository: sunbirded.azurecr.io/player
-  tag: "release-7.0.0_RC16_25baa89_2461"
+  repository: asia-south1-docker.pkg.dev/sunbird-morocco-sandbox-434709/sunbird-morocco-artifact-dev/player
+  tag: "v5.29"
   pullPolicy: IfNotPresent
   pullSecrets: []
 
