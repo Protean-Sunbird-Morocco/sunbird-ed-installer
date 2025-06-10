@@ -13,7 +13,7 @@ data:
     content.metadata.visibility.parent=["textbookunit", "courseunit", "lessonplanunit"]
 
     # Language-Service Configuration
-    language.graph_ids=["as","bn","en","gu","hi","hoc","jun","ka","mai","mr","unx","or","san","sat","ta","te","urd","pj"]
+    language.graph_ids=["as","bn","en","gu","hi","hoc","jun","ka","mai","mr","unx","or","san","sat","ta","te","urd","pj","ar","fr"]
 
     # Redis Configuration
     redis.host="{{ .Values.global.redis.host }}"
@@ -160,7 +160,7 @@ data:
     platform.cache.ttl=3600000
     platform.object.bookmark.expiry="15"
 
-    language.map={"Hindi":"hi", "English":"en", "Telugu":"te", "Kannada":"ka", "Tamil":"ta", "Assamese":"as", "Bengali":"bn", "Bodo":"bo", "Gujarati":"gu", "Konkani":"ko", "Malayalam":"ml", "Marathi":"mr", "Nepali":"ne", "Odia":"or", "Punjabi":"pj", "Sanskrit":"san"}
+    language.map={"Hindi":"hi", "English":"en", "Telugu":"te", "Kannada":"ka", "Tamil":"ta", "Assamese":"as", "Bengali":"bn", "Bodo":"bo", "Gujarati":"gu", "Konkani":"ko", "Malayalam":"ml", "Marathi":"mr", "Nepali":"ne", "Odia":"or", "Punjabi":"pj", "Sanskrit":"san", "Arabic":"ar", "French":"fr"}
 
     framework.max_term_creation_limit=200
 
